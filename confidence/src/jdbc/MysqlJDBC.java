@@ -8,11 +8,11 @@ public class MysqlJDBC {
 
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-	static final String DB_URL = "jdbc:mysql://localhost/teddy";
+	static final String DB_URL = "jdbc:mysql://localhost/confidence";
 
 	//  Database credentials
     static final String USER = "root";
-    Connection conn = null;
+    private Connection conn ;
    
     public MysqlJDBC() throws ClassNotFoundException{
  

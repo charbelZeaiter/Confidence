@@ -62,7 +62,7 @@
 	try
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		String url="jdbc:mysql://localhost/teddy";
+		String url="jdbc:mysql://localhost/confidence";
 		String username="root";
 		String query="select description,num_votes from questions";
 
