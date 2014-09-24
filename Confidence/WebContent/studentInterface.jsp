@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+     <%@ page import="java.sql.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
   <head>
@@ -38,13 +39,13 @@
 		<div class="row">
 		  <div class="col-md-12">
 		  	<br />
-		  	<form method="post" action="Controller">
+		  	<form method="post" action="Controller?aAction=navigation&page=studentInterface">
 				<div class="row">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
-						<input type="hidden" id="aAction" value="post_text" />
+						<input type="hidden" id="aAction"  value="post_text" />
 						<div class="input-group">
-					    	<input class="form-control" type="text" id="aText" />
+					    	<input class="form-control" type="text" id="aText" name="questionText" />
 					      	<span class="input-group-btn">
 					        	<button class="btn btn-primary" type="submit">Post!</button>
 					      	</span>
@@ -56,17 +57,54 @@
 		  </div>
 		</div>
 		<br />
-		<div class="row">
-		  <div class="col-md-4">.col-md-4</div>
-		  <div class="col-md-4">
-		  	<div class="panel panel-default">
-			  <div class="panel-body">
-			    Current lecture questions/comments go here...
-			  </div>
+
+	<%
+	try
+	{
+		Class.forName("com.mysql.jdbc.Driver");
+		String url="jdbc:mysql://localhost/teddy";
+		String username="root";
+		String query="select description,num_votes from questions";
+
+		//mysqlJDBC conn=new mysqlJDBC();
+		Connection conn=DriverManager.getConnection(url,username,null);
+		Statement stmt=conn.createStatement();
+		ResultSet rs=stmt.executeQuery(query);
+
+		while(rs.next())
+		{
+
+			%>
+			<div class="row">
+				
+			  	<div class="col-md-4">
+			  		<div class="panel panel-default">
+				  		<div class="panel-body">
+	    				<tr><td><%=rs.getString("description") %></td></tr>
+	    				<tr><td><%=rs.getInt("num_votes") %></td></tr>
+				  		</div>
+					</div>
+			  	</div>
+			  	
 			</div>
-		  </div>
-		  <div class="col-md-4">.col-md-4</div>
-		</div>
+	        <%
+
+		}
+	%>
+    	</table>
+    <%
+    	rs.close();
+    	stmt.close();
+    	conn.close();
+    	}
+		catch(Exception e)
+		{
+    		e.printStackTrace();
+    	}
+	%>
+
+			
+
 		
 
 	<!-- Content Here -->

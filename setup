@@ -1,0 +1,9 @@
+download mysql 
+run the mysql server
+dowload mysql-connector-java-5.1.32-bin.jar
+create MYSQL JDBC Driver definition :preferences>data management >driver definition> add 
+	(delete old jar and add the new one (mysql-connector-java-5.1.32-bin.jar))
+
+In mysql : stop constraint check
+
+	
