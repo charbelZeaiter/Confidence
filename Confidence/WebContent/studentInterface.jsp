@@ -39,7 +39,7 @@
 		<div class="row">
 		  <div class="col-md-12">
 		  	<br />
-		  	<form method="post" action="Controller?aAction=navigation&page=studentInterface">
+		  	<form method="post" action="Controller?aAction=postque&page=studentInterface">
 				<div class="row">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
@@ -62,12 +62,12 @@
 	try
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		String url="jdbc:mysql://localhost/confidence";
+		String url="jdbc:mysql://localhost:3306/Confidence";
 		String username="root";
-		String query="select description,num_votes from questions";
+		String query="SELECT que_id,description,num_votes FROM questions ORDER BY num_votes DESC";
 
 		//mysqlJDBC conn=new mysqlJDBC();
-		Connection conn=DriverManager.getConnection(url,username,null);
+		Connection conn=DriverManager.getConnection(url,username,"root");
 		Statement stmt=conn.createStatement();
 		ResultSet rs=stmt.executeQuery(query);
 
@@ -80,6 +80,14 @@
 			  	<div class="col-md-4">
 			  		<div class="panel panel-default">
 				  		<div class="panel-body">
+				  		<tr><td> 
+				  			<FORM NAME="form1" METHOD="POST" action="Controller?aAction=upvote">
+				  			<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="<%= rs.getString("que_id") %>">
+				  			<input type="submit" value="Upvote" />
+				  			</FORM>
+				  			
+				  		</td></tr>
+				  		<tr><td><%=rs.getString("que_id") %></td></tr>
 	    				<tr><td><%=rs.getString("description") %></td></tr>
 	    				<tr><td><%=rs.getInt("num_votes") %></td></tr>
 				  		</div>
