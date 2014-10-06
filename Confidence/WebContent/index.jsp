@@ -24,6 +24,7 @@
 				<ul class="nav nav-tabs" role="tablist">
 					<li class="active"><a href="Controller?aAction=navigation&amp;page=home">Home</a></li>
 					<li><a href="Controller?aAction=navigation&amp;page=studentInterface">Student Interface</a></li>
+					<li><a href="Controller?aAction=navigation&amp;page=lecturerInterface">Lecturer Interface</a></li>
 					<li><a href="Controller?aAction=navigation&amp;page=home">Etc...</a></li>
 				</ul>
 			</div>

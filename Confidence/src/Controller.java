@@ -60,6 +60,11 @@ public class Controller extends HttpServlet {
 					request.setAttribute("questions", getQuestions());
 					nextPage = "studentInterface.jsp";
 
+				} else if(toPage.equals("lecturerInterface")) {
+					
+					request.setAttribute("questions", getQuestions());
+					nextPage = "lecturerInterface.jsp";
+
 				} else if(toPage.equals("questions")) {
 					
 					nextPage = "questions.jsp";
