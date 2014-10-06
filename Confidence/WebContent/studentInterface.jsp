@@ -56,8 +56,9 @@
 		<br />
 		<c:forEach items="${questions}" var="question" >
 		<div class="row">
+			<div class="col-md-4"></div>
 			<div class="col-md-4">
-				<div class="panel panel-default">
+				<div class="panel panel-default question">
 					<div class="panel-body">
 						<table>
 							<tr>
@@ -76,9 +77,6 @@
 			</div>
 		</div>
 		</c:forEach>
-		<table></table>
-	
-		<!-- Content Here -->
 	
 	</div>
 	
