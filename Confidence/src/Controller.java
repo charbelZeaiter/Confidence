@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,12 +52,18 @@ public class Controller extends HttpServlet {
 				// Set page to dispatch to.
 				if(toPage.equals("home"))
 				{
+					
 					nextPage = "index.jsp";
+					
 				} else if(toPage.equals("studentInterface")) {
+					
+					request.setAttribute("questions", getQuestions());
 					nextPage = "studentInterface.jsp";
 
 				} else if(toPage.equals("questions")) {
+					
 					nextPage = "questions.jsp";
+					
 				}
 
 			}
@@ -76,44 +84,79 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String aAction = request.getParameter("aAction");
-		String text= request.getParameter("questionText");
+		String question = request.getParameter("questionText");
 		String nextPage = "studentInterface.jsp";  
 
 		if(aAction != null){
 			System.out.println(aAction);
 			if(aAction.equals("postque")){
 				String toPage = request.getParameter("page");
-				try {
-					MysqlJDBC m=new MysqlJDBC();
-					try {
-						String sql= "insert into questions(stu_id,forum_id,description,num_votes)  values ('1','1',\""+text+"\",0)";
-						m.insert(sql);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				submitQuestion(question);
+				request.setAttribute("questions", getQuestions());
 				RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
 				myRequestDispatcher.forward(request, response);  
 			} else if (aAction.equals("upvote")) {
-				try {
-					MysqlJDBC m=new MysqlJDBC();
-
-					String que_id = request.getParameter("que_id");
-					System.out.println("upvoting!" + que_id);
-					String sql= "UPDATE questions SET num_votes = num_votes + 1 WHERE que_id = " + que_id + ";";
-					m.insert(sql);
-					RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
-					myRequestDispatcher.forward(request, response);  
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				String que_id = request.getParameter("que_id");
+				upvoteQuestion(que_id);
+				request.setAttribute("questions", getQuestions());
+				RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
+				myRequestDispatcher.forward(request, response); 
 			}
-
 		}
+	}
+	
+	public void submitQuestion(String question) {
+		try {
+			MysqlJDBC m=new MysqlJDBC();
+			try {
+				String sql= "insert into questions(stu_id,forum_id,description,num_votes)  values ('1','1',\""+question+"\",0)";
+				m.insert(sql);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void upvoteQuestion(String questionId) {
+		try {
+			MysqlJDBC m=new MysqlJDBC();
+			try {
+				String sql= "UPDATE questions SET num_votes = num_votes + 1 WHERE que_id = " + questionId + ";";
+				m.insert(sql);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList getQuestions() {
+		ArrayList questions = new ArrayList();
+		try {
+			MysqlJDBC m=new MysqlJDBC();
+			try {
+				// Get all questions
+				String sql = "SELECT que_id,description,num_votes FROM questions ORDER BY num_votes DESC";
+				ResultSet rs = m.select(sql);
+				while (rs.next()){
+					HashMap<String, String> row = new HashMap<String, String>();
+					row.put("id", rs.getString("que_id"));
+					row.put("description", rs.getString("description"));
+					row.put("num_votes", rs.getString("num_votes"));
+					questions.add(row);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return questions;
 	}
 }
 
