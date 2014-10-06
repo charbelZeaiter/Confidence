@@ -59,23 +59,18 @@
 			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<tr>
-							<td>
-								<FORM NAME="form1" METHOD="POST" action="Controller?aAction=upvote">
-									<INPUT TYPE="HIDDEN" NAME="que_id" VALUE=${question.id}> 
-									<input type="submit" value="Upvote" />
-								</FORM>
-							</td>
-						</tr>
-						<tr>
-							<td>${question.id}</td>
-						</tr>
-						<tr>
-							<td>${question.description}</td>
-						</tr>
-						<tr>
-							<td>${question.num_votes}</td>
-						</tr>
+						<table>
+							<tr>
+								<td class="col-md-1">
+									<FORM NAME="form1" METHOD="POST" action="Controller?aAction=upvote">
+										<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}"> 
+										<input type="image" src="images/upvote-small.png" value="Upvote" style="width: 40px;"/>
+									</FORM>
+								</td>
+								<td class="col-md-9">[ID${question.id}] ${question.description}</td>
+								<td class="col-md-2" style="text-align:center;">${question.num_votes}</td>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</div>
