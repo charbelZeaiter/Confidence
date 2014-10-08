@@ -48,6 +48,11 @@
 			</div>
 		</div>
 		<br>
+		<div class="row">
+			<div class="col-md-4"><a href="Controller?aAction=navigation&amp;page=createSitting">Create A Sitting</a></div>
+			<div class="col-md-4"></div>
+			<div class="col-md-4"></div>
+		</div>
 		<c:forEach items="${questions}" var="question" >
 		<div class="row questionPanel">
 			<div class="col-md-4"></div>

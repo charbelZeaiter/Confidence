@@ -1,11 +1,12 @@
 
 
 import java.io.IOException;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
@@ -55,6 +56,10 @@ public class Controller extends HttpServlet {
 					
 					nextPage = "index.jsp";
 					
+				} else if(toPage.equals("createSitting")) {
+					
+					nextPage = "createSitting.jsp";
+
 				} else if(toPage.equals("studentInterface")) {
 					
 					request.setAttribute("questions", getQuestions());
@@ -89,25 +94,43 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String aAction = request.getParameter("aAction");
-		String question = request.getParameter("questionText");
 		String nextPage = "studentInterface.jsp";  
-
+		
 		if(aAction != null){
 			System.out.println(aAction);
 			if(aAction.equals("postque")){
 				String toPage = request.getParameter("page");
+				String question = request.getParameter("questionText");
 				submitQuestion(question);
 				request.setAttribute("questions", getQuestions());
-				RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
-				myRequestDispatcher.forward(request, response);  
+				
+				nextPage = "studentInterface.jsp";
+				
 			} else if (aAction.equals("upvote")) {
+				
 				String que_id = request.getParameter("que_id");
 				upvoteQuestion(que_id);
 				request.setAttribute("questions", getQuestions());
-				RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
-				myRequestDispatcher.forward(request, response); 
+				
+				nextPage = "studentInterface.jsp";
+				
+			} else if (aAction.equals("createSitting")) {
+
+				String pwd = request.getParameter("aPWD");
+				int sittingId = this.insertNewSitting(pwd);
+				
+				request.setAttribute("sittingId", sittingId);
+				request.setAttribute("pwd", pwd);
+				
+				System.out.println("Sitting Id: "+sittingId);
+				System.out.println("Password: "+pwd);
+				
+				nextPage = "createSitting.jsp";
 			}
 		}
+		
+		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
+		myRequestDispatcher.forward(request, response);
 	}
 	
 	public void submitQuestion(String question) {
@@ -135,6 +158,40 @@ public class Controller extends HttpServlet {
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private int insertNewSitting(String aPWD) {
+		
+		try {
+			
+			MysqlJDBC m=new MysqlJDBC();
+
+            // Create sql statement and pass values in.
+            String sqlQuery = "INSERT INTO sitting (password) VALUES (?)";
+            
+            PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            
+            ps.setString(1, aPWD);
+            
+            // Execute query;
+            
+            int result = ps.executeUpdate();
+            
+            assert(result == 1);
+            
+            ResultSet myRS = ps.getGeneratedKeys();
+            myRS.next();
+            int id = myRS.getInt(1);
+        
+            return id;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return -1;
 		}
 	}
 	

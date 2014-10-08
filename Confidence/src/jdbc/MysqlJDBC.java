@@ -9,7 +9,7 @@ public class MysqlJDBC {
 
 	//  Database credentials
     static final String USER = "root";
-    static final String PASS = "root";
+    static final String PASS = "password";
     private Connection conn ;
    
     public MysqlJDBC() throws ClassNotFoundException{
@@ -32,6 +32,10 @@ public class MysqlJDBC {
     	Statement stmt = conn.createStatement();
     	return stmt.executeQuery(sql);
     }
-
+    
+    public Connection getConnection()
+    {
+    	return this.conn;
+    }
 }
 
