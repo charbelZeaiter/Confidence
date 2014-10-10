@@ -7,7 +7,7 @@
 	<meta charset="utf-8" content="">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Lecturer Interface</title>
+	<title>Facilitator Interface</title>
 	
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
@@ -34,24 +34,27 @@
 	<div id="wrap">
 		<div class="row">
 			<div class="col-md-12">
-				<h1>Lecturer Interface</h1>
+				<h1>Facilitator Interface</h1>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="nav nav-tabs" role="tablist">
-					<li><a href="Controller?aAction=navigation&amp;page=home">Home</a></li>
-					<li><a href="Controller?aAction=navigation&amp;page=studentInterface">Student Interface</a></li>
-					<li><a href="Controller?aAction=navigation&amp;page=lecturerInterface">Lecturer Interface</a></li>
-					<li><a href="Controller?aAction=navigation&amp;page=home">Etc...</a></li>
+					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Home</a></li>
+					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Etc...</a></li>
 				</ul>
 			</div>
 		</div>
 		<br>
 		<div class="row">
-			<div class="col-md-4"><a href="Controller?aAction=navigation&amp;page=createSitting">Create A Sitting</a></div>
+			<div class="col-md-4"><a href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A Sitting</a></div>
 			<div class="col-md-4"></div>
-			<div class="col-md-4"></div>
+			<div class="col-md-4">
+				<c:if test="${ !empty sittingId }">
+					<p style="color:green;">Sitting ID: ${sittingId}<p>
+					<p style="color:green;">Access password: ${accessPWD}<p>
+				</c:if>
+			</div>
 		</div>
 		<c:forEach items="${questions}" var="question" >
 		<div class="row questionPanel">

@@ -24,19 +24,9 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<ul class="nav nav-tabs" role="tablist">
-					<li><a href="Controller?aAction=navigation&amp;page=home">Home</a></li>
-					<li class="active"><a href="Controller?aAction=navigation&amp;page=studentInterface">Student Interface</a></li>
-					<li><a href="Controller?aAction=navigation&amp;page=lecturerInterface">Lecturer Interface</a></li>
-					<li><a href="Controller?aAction=navigation&amp;page=home">Etc...</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
 				<br />
 				<form method="post"
-					action="Controller?aAction=postque&amp;page=studentInterface">
+					action="Controller?aAction=postque&amp;page=studentSittingInterface">
 					<div class="row">
 						<div class="col-md-4"></div>
 						<div class="col-md-4">

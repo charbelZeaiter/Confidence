@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import jdbc.MysqlJDBC;
 
@@ -37,7 +38,12 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
+		/*
+		 * TODO: 
+		 * 1. Action = Controller ?? fix please: line 75. 
+		 */
+		
 		// Get 'action' parameter from URL.
 		String aAction = request.getParameter("aAction");
 
@@ -53,22 +59,12 @@ public class Controller extends HttpServlet {
 				// Set page to dispatch to.
 				if(toPage.equals("home"))
 				{
-					
 					nextPage = "index.jsp";
 					
-				} else if(toPage.equals("createSitting")) {
-					
-					nextPage = "createSitting.jsp";
-
 				} else if(toPage.equals("studentInterface")) {
 					
 					request.setAttribute("questions", getQuestions());
 					nextPage = "studentInterface.jsp";
-
-				} else if(toPage.equals("lecturerInterface")) {
-					
-					request.setAttribute("questions", getQuestions());
-					nextPage = "lecturerInterface.jsp";
 
 				} else if(toPage.equals("questions")) {
 					
@@ -92,19 +88,33 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String aAction = request.getParameter("aAction");
-		String nextPage = "studentInterface.jsp";  
 		
-		if(aAction != null){
-			System.out.println(aAction);
+		/*
+		 * TODO: 
+		 * 1. Database queries need to be done like in facilitator section with 'preparedstatements'.
+		 * 2. Need to validate form data.
+		 * 3. Need to protect against multiple posts on refresh and back actions.		 
+		 */
+		
+		String aAction = request.getParameter("aAction");
+		String nextPage = "sittingAccess.jsp";  
+		
+		System.out.println(aAction);
+		
+		if(aAction != null)
+		{
 			if(aAction.equals("postque")){
+				
+				// Access server session.
+				HttpSession mySession = request.getSession();
+				int sittingId = (Integer) mySession.getAttribute("sittingId");
+				
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
-				submitQuestion(question);
+				submitQuestion(question, sittingId);
 				request.setAttribute("questions", getQuestions());
 				
-				nextPage = "studentInterface.jsp";
+				nextPage = "studentSittingInterface.jsp";
 				
 			} else if (aAction.equals("upvote")) {
 				
@@ -112,20 +122,28 @@ public class Controller extends HttpServlet {
 				upvoteQuestion(que_id);
 				request.setAttribute("questions", getQuestions());
 				
-				nextPage = "studentInterface.jsp";
+				nextPage = "studentSittingInterface.jsp";
 				
-			} else if (aAction.equals("createSitting")) {
-
+			} else if (aAction.equals("sittingAccessRequest")) {
+				
+				int sittingId = Integer.parseInt(request.getParameter("aSittingId"));
 				String pwd = request.getParameter("aPWD");
-				int sittingId = this.insertNewSitting(pwd);
 				
-				request.setAttribute("sittingId", sittingId);
-				request.setAttribute("pwd", pwd);
+				// Check details against database.
+				boolean exists = checkSittingDB(sittingId, pwd);
 				
-				System.out.println("Sitting Id: "+sittingId);
-				System.out.println("Password: "+pwd);
-				
-				nextPage = "createSitting.jsp";
+				if(exists) {
+					// Setup session.
+					HttpSession mySession = request.getSession();
+					mySession.setAttribute("sittingId", sittingId);
+					
+					
+					nextPage = "studentSittingInterface.jsp";
+				} else {
+					// Turn 'invalid sitting' flag on.
+					request.setAttribute("invalidSitting", 1);
+				}
+
 			}
 		}
 		
@@ -133,11 +151,11 @@ public class Controller extends HttpServlet {
 		myRequestDispatcher.forward(request, response);
 	}
 	
-	public void submitQuestion(String question) {
+	public void submitQuestion(String question, int aSittingId) {
 		try {
 			MysqlJDBC m=new MysqlJDBC();
 			try {
-				String sql= "insert into questions(stu_id,forum_id,description,num_votes)  values ('1','1',\""+question+"\",0)";
+				String sql= "insert into questions(stu_id,forum_id,description,num_votes, sitting_id)  values ('1','1',\""+question+"\",0,\""+aSittingId+"\")";
 				m.insert(sql);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -158,40 +176,6 @@ public class Controller extends HttpServlet {
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}
-	}
-	
-	private int insertNewSitting(String aPWD) {
-		
-		try {
-			
-			MysqlJDBC m=new MysqlJDBC();
-
-            // Create sql statement and pass values in.
-            String sqlQuery = "INSERT INTO sitting (password) VALUES (?)";
-            
-            PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            
-            ps.setString(1, aPWD);
-            
-            // Execute query;
-            
-            int result = ps.executeUpdate();
-            
-            assert(result == 1);
-            
-            ResultSet myRS = ps.getGeneratedKeys();
-            myRS.next();
-            int id = myRS.getInt(1);
-        
-            return id;
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			return -1;
 		}
 	}
 	
@@ -220,5 +204,45 @@ public class Controller extends HttpServlet {
 		}	
 		return questions;
 	}
+	
+	private boolean checkSittingDB(int aSittingId, String aPWD)
+	{
+		boolean result = false;
+		
+		try{
+			MysqlJDBC m = new MysqlJDBC();
+			
+			// Create sql statement and pass values in.
+            String sqlQuery = "SELECT password FROM sittings WHERE sitting_id = ?";
+            
+            PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery);
+            
+            // Set values in query.
+            ps.setInt(1, aSittingId);
+            
+            // Execute query and loop through saving results.
+            ResultSet rset = ps.executeQuery();
+            
+            // If next returns true it means there are records.
+            if(rset.next())
+            {
+            	// Check that passwords match.
+	           String databasePWD = rset.getString("password");
+	           if(aPWD.equals(databasePWD))
+	           {
+	        	   result = true;
+	           }
+            }  
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+
 }
 

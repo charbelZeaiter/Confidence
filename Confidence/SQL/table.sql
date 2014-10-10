@@ -1,6 +1,25 @@
+DROP TABLE `facilitators`;
+DROP TABLE `sittings`;
 DROP TABLE `questions`;
-DROP TABLE `sitting`;
 
+CREATE TABLE `facilitators` (
+  `facilitator_id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`facilitator_id`)
+  )
+  ;
+  
+-- A sitting is another word for a lecture/lab/tute 'session'. Didnt
+-- want to use 'session' as it maybe confused with server session.
+CREATE TABLE `sittings` (
+  `sitting_id` INT NOT NULL AUTO_INCREMENT,
+  `facilitator_id` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`sitting_id`)
+  )
+  ;
+  
 CREATE TABLE `questions` (
   `que_id` INT NOT NULL AUTO_INCREMENT,
   `stu_id` VARCHAR(45) NOT NULL,
@@ -15,11 +34,12 @@ CREATE TABLE `questions` (
   )
   ;
 
--- A sitting is another word for a lecture/lab/tute 'session'. Didnt
--- want to use 'session' as it maybe confused with server session.
-CREATE TABLE `sitting` (
-  `sitting_id` INT NOT NULL AUTO_INCREMENT,
-  `password` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`sitting_id`)
-  )
-  ;
+  
+  
+  
+  
+  
+  
+  
+  
+  
