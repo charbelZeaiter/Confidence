@@ -43,7 +43,7 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		// Get 'action' parameter from URL.
 		String aAction = request.getParameter("aAction");
 
@@ -60,9 +60,9 @@ public class Controller extends HttpServlet {
 				if(toPage.equals("home"))
 				{
 					nextPage = "index.jsp";
-					
+
 				} else if(toPage.equals("studentInterface")) {
-					
+
 					request.setAttribute("questions", questionManager.getQuestions());
 					nextPage = "studentInterface.jsp";
 
@@ -80,58 +80,58 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		/*
 		 * TODO: 
 		 * 1. Database queries need to be done like in facilitator section with 'preparedstatements'.
 		 * 2. Need to validate form data.
 		 * 3. Need to protect against multiple posts on refresh and back actions.		 
 		 */
-		
+
 		String aAction = request.getParameter("aAction");
 		String nextPage = "sittingAccess.jsp";  
-		
+
 		System.out.println(aAction);
-		
+
 		if(aAction != null)
 		{
 			if(aAction.equals("postque")){
-				
+
 				// Access server session.
 				HttpSession mySession = request.getSession();
 				int sittingId = (Integer) mySession.getAttribute("sittingId");
-				
+
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
 				questionManager.submitQuestion(question, sittingId);
 				request.setAttribute("questions", questionManager.getQuestions());
-				
+
 				nextPage = "studentSittingInterface.jsp";
-				
+
 			} else if (aAction.equals("upvote")) {
-				
+
 				String que_id = request.getParameter("que_id");
 				questionManager.upvoteQuestion(que_id);
 				request.setAttribute("questions", questionManager.getQuestions());
-				
+
 				nextPage = "studentSittingInterface.jsp";
-				
+
 			} else if (aAction.equals("sittingAccessRequest")) {
-				
+
 				int sittingId = Integer.parseInt(request.getParameter("aSittingId"));
 				String pwd = request.getParameter("aPWD");
-				
+
 				// Check details against database.
 				boolean exists = sittingManager.checkSittingDB(sittingId, pwd);
-				
+
 				if(exists) {
 					// Setup session.
 					HttpSession mySession = request.getSession();
 					mySession.setAttribute("sittingId", sittingId);
 					request.setAttribute("questions", questionManager.getQuestions());
-					
+
 					nextPage = "studentSittingInterface.jsp";
-					
+
 				} else {
 					// Turn 'invalid sitting' flag on.
 					request.setAttribute("invalidSitting", 1);
@@ -139,7 +139,7 @@ public class Controller extends HttpServlet {
 
 			}
 		}
-		
+
 		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
 		myRequestDispatcher.forward(request, response);
 	}

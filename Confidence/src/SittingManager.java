@@ -7,39 +7,39 @@ import jdbc.MysqlJDBC;
 
 
 public class SittingManager {
-	
+
 	MysqlJDBC mysql;
 
 	public SittingManager() throws ClassNotFoundException {
 		mysql = new MysqlJDBC();
 	}
-	
+
 	public int insertNewSitting(int aFacilitatorRecordId, String aPWD) {
 		int result = -1;
-		
+
 		try {
-            // Create sql statement and pass values in.
-            String sqlQuery = "INSERT INTO sittings (facilitator_id, password) VALUES (?, ?)";
-            PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            
-            // Set query values.
-            ps.setInt(1, aFacilitatorRecordId);
-            ps.setString(2, aPWD);
-            
-            // Execute query;
-            result = ps.executeUpdate();
-            ResultSet rset = ps.getGeneratedKeys();
-            
-            // Check if result set has rows.
-            if(rset.next())
-            {
-            	return rset.getInt(1);
-            }
+			// Create sql statement and pass values in.
+			String sqlQuery = "INSERT INTO sittings (facilitator_id, password) VALUES (?, ?)";
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+
+			// Set query values.
+			ps.setInt(1, aFacilitatorRecordId);
+			ps.setString(2, aPWD);
+
+			// Execute query;
+			result = ps.executeUpdate();
+			ResultSet rset = ps.getGeneratedKeys();
+
+			// Check if result set has rows.
+			if(rset.next())
+			{
+				return rset.getInt(1);
+			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
@@ -69,7 +69,7 @@ public class SittingManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 

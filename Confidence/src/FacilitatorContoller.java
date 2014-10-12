@@ -30,7 +30,7 @@ public class FacilitatorContoller extends HttpServlet {
 	private QuestionManager questionManager;
 	private SittingManager sittingManager;
 	private LoginManager loginManager;
-	
+
 	/**
 	 * @throws ClassNotFoundException 
 	 * @see HttpServlet#HttpServlet()
@@ -46,12 +46,12 @@ public class FacilitatorContoller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		/*
 		 * TODO: 
 		 * 1. Need to add security checks when accessing pages after login. 
 		 */
-		
+
 		// Get 'action' parameter from URL.
 		String aAction = request.getParameter("aAction");
 
@@ -68,12 +68,12 @@ public class FacilitatorContoller extends HttpServlet {
 				if(toPage.equals("signup"))
 				{
 					nextPage = this.PRIVATE_PATH+"facilitatorSignup.jsp";	
-					
+
 				} else if(toPage.equals("createSitting")) {
-										
+
 					nextPage = this.PRIVATE_PATH+"createSitting.jsp";
 				}
-				
+
 			}
 		}
 
@@ -87,98 +87,98 @@ public class FacilitatorContoller extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		/*
 		 * TODO: 
 		 * 1. Need to protect against multiple posts on refresh and back actions.
 		 * 2. Need to validate form data.		 
 		 */
-		
+
 		String aAction = request.getParameter("aAction");
 		String nextPage = "facilitatorLogin.jsp";
-		
+
 		System.out.println(aAction);
-		
+
 		if(aAction != null)
 		{
 			if(aAction.equals("signupRequest")){
-				
+
 				// Get form fields.
 				String facilitatorId = request.getParameter("aFacilitatorId");
 				String pwd = request.getParameter("aPWD");
-				
+
 				// Insert entry into database.
 				this.signupDBInsert(facilitatorId, pwd);
-				
+
 				// Proceed to facilitator login.
 				nextPage = "facilitatorLogin.jsp";
-				
+
 			} else if(aAction.equals("loginRequest")) {
-				
+
 				// Get form fields.
 				String facilitatorId = request.getParameter("aFacilitatorId");
 				String pwd = request.getParameter("aPWD");
-				
+
 				// Check login details in database and return record Id.
 				int facilitatorRecId = loginManager.checkLoginDB(facilitatorId, pwd);
-				
+
 				if(facilitatorRecId > -1) {
-					
+
 					// Setup session.
 					HttpSession mySession = request.getSession();
 					mySession.setAttribute("facilitatorRecId", facilitatorRecId);
 					request.setAttribute("questions", questionManager.getQuestions());
-					
+
 					// Proceed to facilitator login.
 					nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
-					
+
 				} else {
-					
+
 					// Failed login.
 					request.setAttribute("loginFailed", 1);
 				} 
-				
+
 			} else if (aAction.equals("createSittingRequest")) {
-				
+
 				String pwd = request.getParameter("aPWD");
 				int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
-				
+
 				// Insert sitting into database.
 				int sittingId = sittingManager.insertNewSitting(facilitatorRecordId, pwd);
-				
+
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
-				
+
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
 			} 
-			
+
 		}
-		
+
 		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
 		myRequestDispatcher.forward(request, response);
 	}
-	
-	
+
+
 	private void signupDBInsert(String aFacilitatorId, String aPWD) {
-		
+
 		try {
-			
+
 			MysqlJDBC m = new MysqlJDBC();
 
-            // Create sql statement and pass values in.
-            String sqlQuery = "INSERT INTO facilitators (username, password) VALUES (?, ?)";
-            PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery);
-            
-            // Set values in query.
-            ps.setString(1, aFacilitatorId);
-            ps.setString(2, aPWD);
-            
-            // Execute query;
-            int result = ps.executeUpdate();
-            
-            // Check that insert occurred.
-            assert(result == 1);
-         
+			// Create sql statement and pass values in.
+			String sqlQuery = "INSERT INTO facilitators (username, password) VALUES (?, ?)";
+			PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery);
+
+			// Set values in query.
+			ps.setString(1, aFacilitatorId);
+			ps.setString(2, aPWD);
+
+			// Execute query;
+			int result = ps.executeUpdate();
+
+			// Check that insert occurred.
+			assert(result == 1);
+
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -186,7 +186,7 @@ public class FacilitatorContoller extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 
 }

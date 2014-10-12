@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -21,29 +21,26 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-					<br />
-						<div class="row">
-						<div class="col-md-4"></div>
-							<div class="col-md-4">
-								<form method="post" action="FacilitatorController">
-									<input type="hidden" id="aAction" name="aAction" value="createSittingRequest" />
-									Please Enter a Password: 
-									<div class="input-group">
-										<input class="form-control" type="text" id="aPWD" name="aPWD"/> 
-										<span class="input-group-btn">
-											<button class="btn btn-primary" type="submit">Create</button>
-										</span>
-									</div>
-								</form>
+				<br />
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<form method="post" action="FacilitatorController">
+							<input type="hidden" id="aAction" name="aAction" value="createSittingRequest" /> Please Enter a Password:
+							<div class="input-group">
+								<input class="form-control" type="text" id="aPWD" name="aPWD" />
+								<span class="input-group-btn">
+									<button class="btn btn-primary" type="submit">Create</button>
+								</span>
 							</div>
-							<div class="col-md-4"></div>
-						</div>
+						</form>
+					</div>
+					<div class="col-md-4"></div>
 				</div>
 			</div>
-		<!-- Content Here -->
-
+		</div>
 	</div>
-	
+
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
