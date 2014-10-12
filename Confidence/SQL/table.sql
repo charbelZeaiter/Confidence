@@ -34,7 +34,7 @@ CREATE TABLE `questions` (
   PRIMARY KEY (`que_id`)
   )
   ;
-
+alter table questions add session_id varchar(100);
 create table  `votes_audit` (
 	`sitting_id` VARCHAR(45) NOT NULL,
 	`session_id` VARCHAR(45) NOT NULL,
