@@ -1,6 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -10,11 +8,11 @@
 	<title>Facilitator Interface</title>
 	
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
+	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="bootstrap-3.2.0-dist/js/bootstrap.min.js" type="text/javascript"></script>
-		
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 	
 	<!-- Bootstrap -->
 	<link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,13 +20,12 @@
 	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 	
 	<script>
-		$(document).ready(function(){
-		  $(".tick").click(function(){
-			  $(this).parentsUntil(".questionPanel").fadeOut();
-		  });
+		$(document).ready(function() {
+			$(".tick").click(function() {
+				$(this).parentsUntil(".questionPanel").fadeOut();
+			});
 		});
 	</script>
-	
 </head>
 <body>
 	<div id="wrap">
@@ -47,39 +44,38 @@
 		</div>
 		<br>
 		<div class="row">
-			<div class="col-md-4"><a href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A Sitting</a></div>
+			<div class="col-md-4">
+				<a href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A Sitting</a>
+			</div>
 			<div class="col-md-4"></div>
 			<div class="col-md-4">
 				<c:if test="${ !empty sittingId }">
-					<p style="color:green;">Sitting ID: ${sittingId}<p>
-					<p style="color:green;">Access password: ${accessPWD}<p>
+					<p style="color: green;">Sitting ID: ${sittingId}<p>
+					<p style="color: green;">Access password: ${accessPWD}<p>
 				</c:if>
 			</div>
 		</div>
-		<c:forEach items="${questions}" var="question" >
-		<div class="row questionPanel">
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
-				<div class="panel panel-default question">
-					<div class="panel-body">
-						<table>
-							<tr>
-								<td class="col-md-1">
-									<img class="tick" src="images/tick.png" value="Upvote" style="width: 40px;"/>
-								</td>
-								<td class="col-md-9">[ID${question.id}] ${question.description}</td>
-								<td class="col-md-2" style="text-align:center;">${question.num_votes}</td>
-							</tr>
-						</table>
+		<c:forEach items="${questions}" var="question">
+			<div class="row questionPanel">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<div class="panel panel-default question">
+						<div class="panel-body">
+							<table>
+								<tr>
+									<td class="col-md-1"><img class="tick" src="images/tick.png" value="Upvote" style="width: 40px;" /></td>
+									<td class="col-md-9">[ID${question.id}] ${question.description}</td>
+									<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		</c:forEach>
-	
 	</div>
-	
+
 	<jsp:include page="footer.jsp" />
-	
+
 </body>
 </html>

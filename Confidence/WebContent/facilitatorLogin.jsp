@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -22,46 +22,46 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-					<br />
-						<div class="row">
-							<div class="col-md-4">
-								<c:if test="${ !empty loginFailed }">
-							   		<p style="color:red;">Login Failed!<p>
-								</c:if>
-							</div>
-							<div class="col-md-4">
-								<form method="post" action="FacilitatorController">
-									<p>Please Login:</p>
-									<table>
-										<tr>
-											<td>Facilitator Id: </td>
-											<td><input type="text" id="aFacilitatorId" name="aFacilitatorId"/></td>
-										</tr>
-										<tr>
-											<td>Password: </td>
-											<td><input type="text" id="aPWD" name="aPWD"/></td>
-										</tr>
-										<tr>
-											<td><input type="hidden" id="aAction" name="aAction" value="loginRequest" /></td>
-											<td><input class="btn btn-primary" type="submit" value="Login" /></td>
-										</tr>
-									</table>
-								</form>
-							</div>
-							<div class="col-md-4"></div>
-						</div>
-						<br />
-						<div class="row">
-							<div class="col-md-4"></div>
-							<div class="col-md-4"><a href="FacilitatorController?aAction=navigation&amp;page=signup">Sign-Up</a></div>
-							<div class="col-md-4"></div>
-						</div>
+				<br />
+				<div class="row">
+					<div class="col-md-4">
+						<c:if test="${ !empty loginFailed }">
+							<p style="color: red;">Login Failed!<p>
+						</c:if>
+					</div>
+					<div class="col-md-4">
+						<form method="post" action="FacilitatorController">
+							<p>Please Login:</p>
+							<table>
+								<tr>
+									<td>Facilitator Id:</td>
+									<td><input type="text" id="aFacilitatorId" name="aFacilitatorId" /></td>
+								</tr>
+								<tr>
+									<td>Password:</td>
+									<td><input type="text" id="aPWD" name="aPWD" /></td>
+								</tr>
+								<tr>
+									<td><input type="hidden" id="aAction" name="aAction" value="loginRequest" /></td>
+									<td><input class="btn btn-primary" type="submit" value="Login" /></td>
+								</tr>
+							</table>
+						</form>
+					</div>
+					<div class="col-md-4"></div>
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<a href="FacilitatorController?aAction=navigation&amp;page=signup">Sign-Up</a>
+					</div>
+					<div class="col-md-4"></div>
 				</div>
 			</div>
-		<!-- Content Here -->
-
+		</div>
 	</div>
-	
+
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
