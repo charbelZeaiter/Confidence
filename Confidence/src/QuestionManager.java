@@ -33,10 +33,11 @@ public class QuestionManager {
 		return questions;
 	}
 
-	public void submitQuestion(String question, int aSittingId) {
+	public void submitQuestion(String question, int aSittingId ,String sessionId) {
 
 		try {
-			String sql= "insert into questions(stu_id,forum_id,description,num_votes, sitting_id)  values ('1','1',\""+question+"\",0,\""+aSittingId+"\")";
+			String sql= "insert into questions(stu_id,forum_id,description,num_votes, sitting_id,session_id)  " +
+					"values ('1','1',\""+question+"\",0,\""+aSittingId+"\",\""+sessionId+"\")";
 			mysql.insert(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -44,13 +45,13 @@ public class QuestionManager {
 
 	}
 
-	public void upvoteQuestion(String questionId) {
+	public void upvoteQuestion(String questionId,String session_id) {
 
 		try {
-			String sql= "UPDATE questions SET num_votes = num_votes + 1 WHERE que_id = " + questionId + ";";
+			String sql= "UPDATE questions SET num_votes = num_votes + 1 ,session_id = \""+session_id+"\""+"WHERE que_id = " + questionId + ";";
 			mysql.insert(sql);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 
 	}

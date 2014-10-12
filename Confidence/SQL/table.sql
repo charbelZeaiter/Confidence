@@ -1,6 +1,7 @@
 DROP TABLE `facilitators`;
 DROP TABLE `sittings`;
 DROP TABLE `questions`;
+DROP TABLE `votes_audit`;
 
 CREATE TABLE `facilitators` (
   `facilitator_id` INT NOT NULL AUTO_INCREMENT,
@@ -34,7 +35,15 @@ CREATE TABLE `questions` (
   )
   ;
 
-  
+create table  `votes_audit` (
+	`sitting_id` VARCHAR(45) NOT NULL,
+	`session_id` VARCHAR(45) NOT NULL,
+	`que_id` INT ,
+	`vote_date` DATETIME,
+	PRIMARY KEY (`que_id`,`session_id`,`sitting_id`)
+)
+	
+	 
   
   
   
