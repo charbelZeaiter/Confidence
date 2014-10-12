@@ -27,12 +27,19 @@ public class FacilitatorContoller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final String PRIVATE_PATH = "WEB-INF/FacilitatorsPages/";
 
+	private QuestionManager questionManager;
+	private SittingManager sittingManager;
+	private LoginManager loginManager;
+	
 	/**
+	 * @throws ClassNotFoundException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public FacilitatorContoller() {
+	public FacilitatorContoller() throws ClassNotFoundException {
 		super();
-		// TODO Auto-generated constructor stub
+		questionManager = new QuestionManager();
+		sittingManager = new SittingManager();
+		loginManager = new LoginManager();
 	}
 
 	/**
@@ -113,16 +120,17 @@ public class FacilitatorContoller extends HttpServlet {
 				String pwd = request.getParameter("aPWD");
 				
 				// Check login details in database and return record Id.
-				int facilitatorRecId = this.checkLoginDB(facilitatorId, pwd);
+				int facilitatorRecId = loginManager.checkLoginDB(facilitatorId, pwd);
 				
 				if(facilitatorRecId > -1) {
 					
 					// Setup session.
 					HttpSession mySession = request.getSession();
 					mySession.setAttribute("facilitatorRecId", facilitatorRecId);
+					request.setAttribute("questions", questionManager.getQuestions());
 					
 					// Proceed to facilitator login.
-					nextPage = this.PRIVATE_PATH+"facilitatorInterface.jsp";
+					nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
 					
 				} else {
 					
@@ -136,12 +144,12 @@ public class FacilitatorContoller extends HttpServlet {
 				int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
 				
 				// Insert sitting into database.
-				int sittingId = this.insertNewSitting(facilitatorRecordId, pwd);
+				int sittingId = sittingManager.insertNewSitting(facilitatorRecordId, pwd);
 				
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 				
-				nextPage = this.PRIVATE_PATH+"facilitatorInterface.jsp";
+				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
 			} 
 			
 		}
@@ -179,82 +187,7 @@ public class FacilitatorContoller extends HttpServlet {
 		}
 	}
 	
-	private int checkLoginDB(String aFacilitatorId, String aPWD)
-	{
-		try{
-			MysqlJDBC m = new MysqlJDBC();
-			
-			// Create sql statement and pass values in.
-            String sqlQuery = "SELECT facilitator_id FROM facilitators WHERE username = ? and password = ?";
-            
-            PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery);
-            
-            // Set values in query.
-            ps.setString(1, aFacilitatorId);
-            ps.setString(2, aPWD);
-            
-            // Execute query and loop through saving results.
-            ResultSet rset = ps.executeQuery();
-            
-            // If next returns true it means there are records.
-            if(rset.next())
-            {
-	           int facilitatorRecordId = rset.getInt("facilitator_id");
-	           
-	           //System.out.println("id: "+facilitatorRecordId);
-	           
-	           return facilitatorRecordId;
-            } else {
-            	// No records.
-            	return -1;
-            }
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			return -1;
-		}
 
-	}
-	
-	private int insertNewSitting(int aFacilitatorRecordId, String aPWD) {
-		
-		try {
-			
-			MysqlJDBC m=new MysqlJDBC();
 
-            // Create sql statement and pass values in.
-            String sqlQuery = "INSERT INTO sittings (facilitator_id, password) VALUES (?, ?)";
-            PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            
-            // Set query values.
-            ps.setInt(1, aFacilitatorRecordId);
-            ps.setString(2, aPWD);
-            
-            // Execute query;
-            int result = ps.executeUpdate();
-            ResultSet rset = ps.getGeneratedKeys();
-            
-            // Check if result set has rows.
-            if(rset.next())
-            {
-            	return rset.getInt(1);
-            }
-            
-            return -1;
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
-	
-	
-	
 }
 

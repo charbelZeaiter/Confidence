@@ -26,23 +26,23 @@ import jdbc.MysqlJDBC;
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private QuestionManager questionManager;
+	private SittingManager sittingManager;
+
 	/**
+	 * @throws ClassNotFoundException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Controller() {
+	public Controller() throws ClassNotFoundException {
 		super();
-		// TODO Auto-generated constructor stub
+		questionManager = new QuestionManager();
+		sittingManager = new SittingManager();
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		/*
-		 * TODO: 
-		 * 1. Action = Controller ?? fix please: line 75. 
-		 */
 		
 		// Get 'action' parameter from URL.
 		String aAction = request.getParameter("aAction");
@@ -63,18 +63,10 @@ public class Controller extends HttpServlet {
 					
 				} else if(toPage.equals("studentInterface")) {
 					
-					request.setAttribute("questions", getQuestions());
+					request.setAttribute("questions", questionManager.getQuestions());
 					nextPage = "studentInterface.jsp";
 
-				} else if(toPage.equals("questions")) {
-					
-					nextPage = "questions.jsp";
-					
 				}
-
-			}
-			if(aAction.equals("Controller")){
-				nextPage = "index.jsp";
 			}
 		}
 
@@ -111,16 +103,16 @@ public class Controller extends HttpServlet {
 				
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
-				submitQuestion(question, sittingId);
-				request.setAttribute("questions", getQuestions());
+				questionManager.submitQuestion(question, sittingId);
+				request.setAttribute("questions", questionManager.getQuestions());
 				
 				nextPage = "studentSittingInterface.jsp";
 				
 			} else if (aAction.equals("upvote")) {
 				
 				String que_id = request.getParameter("que_id");
-				upvoteQuestion(que_id);
-				request.setAttribute("questions", getQuestions());
+				questionManager.upvoteQuestion(que_id);
+				request.setAttribute("questions", questionManager.getQuestions());
 				
 				nextPage = "studentSittingInterface.jsp";
 				
@@ -130,15 +122,16 @@ public class Controller extends HttpServlet {
 				String pwd = request.getParameter("aPWD");
 				
 				// Check details against database.
-				boolean exists = checkSittingDB(sittingId, pwd);
+				boolean exists = sittingManager.checkSittingDB(sittingId, pwd);
 				
 				if(exists) {
 					// Setup session.
 					HttpSession mySession = request.getSession();
 					mySession.setAttribute("sittingId", sittingId);
-					
+					request.setAttribute("questions", questionManager.getQuestions());
 					
 					nextPage = "studentSittingInterface.jsp";
+					
 				} else {
 					// Turn 'invalid sitting' flag on.
 					request.setAttribute("invalidSitting", 1);
@@ -150,99 +143,6 @@ public class Controller extends HttpServlet {
 		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
 		myRequestDispatcher.forward(request, response);
 	}
-	
-	public void submitQuestion(String question, int aSittingId) {
-		try {
-			MysqlJDBC m=new MysqlJDBC();
-			try {
-				String sql= "insert into questions(stu_id,forum_id,description,num_votes, sitting_id)  values ('1','1',\""+question+"\",0,\""+aSittingId+"\")";
-				m.insert(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void upvoteQuestion(String questionId) {
-		try {
-			MysqlJDBC m=new MysqlJDBC();
-			try {
-				String sql= "UPDATE questions SET num_votes = num_votes + 1 WHERE que_id = " + questionId + ";";
-				m.insert(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public ArrayList getQuestions() {
-		ArrayList questions = new ArrayList();
-		try {
-			MysqlJDBC m=new MysqlJDBC();
-			try {
-				// Get all questions
-				String sql = "SELECT que_id,description,num_votes FROM questions ORDER BY num_votes DESC";
-				ResultSet rs = m.select(sql);
-				while (rs.next()){
-					HashMap<String, String> row = new HashMap<String, String>();
-					row.put("id", rs.getString("que_id"));
-					row.put("description", rs.getString("description"));
-					row.put("num_votes", rs.getString("num_votes"));
-					questions.add(row);
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		return questions;
-	}
-	
-	private boolean checkSittingDB(int aSittingId, String aPWD)
-	{
-		boolean result = false;
-		
-		try{
-			MysqlJDBC m = new MysqlJDBC();
-			
-			// Create sql statement and pass values in.
-            String sqlQuery = "SELECT password FROM sittings WHERE sitting_id = ?";
-            
-            PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery);
-            
-            // Set values in query.
-            ps.setInt(1, aSittingId);
-            
-            // Execute query and loop through saving results.
-            ResultSet rset = ps.executeQuery();
-            
-            // If next returns true it means there are records.
-            if(rset.next())
-            {
-            	// Check that passwords match.
-	           String databasePWD = rset.getString("password");
-	           if(aPWD.equals(databasePWD))
-	           {
-	        	   result = true;
-	           }
-            }  
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-
 
 }
 
