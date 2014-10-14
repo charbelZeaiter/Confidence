@@ -31,6 +31,7 @@
 							<input type="hidden" id="aAction" value="post_text" />
 							<div class="input-group">
 								<input class="form-control" type="text" id="aText" name="questionText" /> <span class="input-group-btn">
+								    <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
 									<button class="btn btn-primary" type="submit">Post!</button>
 								</span>
 							</div>
@@ -41,6 +42,28 @@
 			</div>
 		</div>
 		<br />
+		
+		<div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div>
+                    <div class="panel-body">
+                        Sort By:
+                        <form method="post" action="Controller?aAction=sort">
+                            <select name="sortby" onchange='this.form.submit()'>
+                                <option value="upvote"
+                                    <c:if test="${sorted =='upvote'}"> selected </c:if>>Up
+                                    votes</option>
+                                <option value="date"
+                                    <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+                            </select>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
 		<c:forEach items="${questions}" var="question">
 			<div class="row">
 				<div class="col-md-4"></div>
@@ -52,6 +75,7 @@
 									<td class="col-md-1">
 										<FORM NAME="form1" METHOD="POST" action="Controller?aAction=upvote">
 											<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}">
+                                            <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
 											<input type="image" src="images/upvote-small.png" value="Upvote" style="width: 40px;" />
 										</FORM>
 									</td>
@@ -65,7 +89,19 @@
 			</div>
 		</c:forEach>
 	</div>
-
+    <form method="post" action="Controller?aAction=refresh">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <input type="hidden" id="aAction" value="refresh" />
+                <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}"> 
+                <div class="input-group">
+                    <button class="btn btn-primary" type="submit">Refresh!</button>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </form>
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

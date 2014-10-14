@@ -96,6 +96,8 @@ public class FacilitatorContoller extends HttpServlet {
 
 		String aAction = request.getParameter("aAction");
 		String nextPage = "facilitatorLogin.jsp";
+		String sort = request.getParameter("sorted");
+		request.setAttribute("sorted", sort);
 
 		System.out.println(aAction);
 
@@ -127,7 +129,7 @@ public class FacilitatorContoller extends HttpServlet {
 					// Setup session.
 					HttpSession mySession = request.getSession();
 					mySession.setAttribute("facilitatorRecId", facilitatorRecId);
-					request.setAttribute("questions", questionManager.getQuestions());
+					request.setAttribute("questions", questionManager.getQuestions(sort));
 
 					// Proceed to facilitator login.
 					nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
@@ -150,6 +152,44 @@ public class FacilitatorContoller extends HttpServlet {
 				request.setAttribute("accessPWD", pwd);
 
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+			}  else if (aAction.equals("refresh")) {
+				String sittingId = request.getParameter("sittingId");
+				String pwd = request.getParameter("aPWD");
+
+				// Insert sitting into database.
+
+				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("sittingId", sittingId);
+				request.setAttribute("accessPWD", pwd);
+
+				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+			} else if (aAction.equals("remove")) {
+				
+				String sittingId = request.getParameter("sittingId");
+				String pwd = request.getParameter("aPWD");
+				
+				String que_id = request.getParameter("que_id");
+				questionManager.removeQuestion(que_id);
+				request.setAttribute("questions", questionManager.getQuestions(sort));
+				
+				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("sittingId", sittingId);
+				request.setAttribute("accessPWD", pwd);
+				
+				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+			} else if (aAction.equals("sort")) {
+				
+				String sittingId = request.getParameter("sittingId");
+				String pwd = request.getParameter("aPWD");
+				
+				sort = request.getParameter("sortby");
+				request.setAttribute("sorted", sort);
+				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("sittingId", sittingId);
+				request.setAttribute("accessPWD", pwd);
+				
+				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+
 			} 
 
 		}
