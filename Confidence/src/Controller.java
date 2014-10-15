@@ -61,10 +61,14 @@ public class Controller extends HttpServlet {
 				{
 					nextPage = "index.jsp";
 
-				} else if(toPage.equals("studentInterface")) {
+				} else if (toPage.equals("sittingAccess")) {
+					
+					nextPage = "sittingAccess.jsp";
+					
+				} else if(toPage.equals("studentSittingInterface")) {
 
 					request.setAttribute("questions", questionManager.getQuestions());
-					nextPage = "studentInterface.jsp";
+					nextPage = "studentSittingInterface.jsp";
 
 				}
 			}
