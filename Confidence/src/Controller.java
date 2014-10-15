@@ -99,6 +99,7 @@ public class Controller extends HttpServlet {
 
 		if(aAction != null)
 		{
+			String session_id= request.getSession().getId();
 			if(aAction.equals("postque")){
 
 				// Access server session.
@@ -107,7 +108,8 @@ public class Controller extends HttpServlet {
 
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
-				questionManager.submitQuestion(question, sittingId);
+				
+				questionManager.submitQuestion(question, sittingId,session_id);
 				request.setAttribute("questions", questionManager.getQuestions());
 
 				nextPage = "studentSittingInterface.jsp";
@@ -115,7 +117,7 @@ public class Controller extends HttpServlet {
 			} else if (aAction.equals("upvote")) {
 
 				String que_id = request.getParameter("que_id");
-				questionManager.upvoteQuestion(que_id);
+				questionManager.upvoteQuestion(que_id,session_id);
 				request.setAttribute("questions", questionManager.getQuestions());
 
 				nextPage = "studentSittingInterface.jsp";
