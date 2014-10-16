@@ -18,9 +18,9 @@
     <script>
     
         $(document).ready(function() {
-        		setInterval(function() {
-        			$.get("Controller?aAction=studentAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
-            }, 2000);
+            setInterval(function() {
+        		$.get("Controller?aAction=studentAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
+            }, 10000);
         });
     </script>
     
@@ -58,7 +58,7 @@
 				<br>
 				
 				<c:if test="${ !empty questions }">
-					<p>Sort By:</p>
+					<p> </p>
 					<form method="post" action="Controller?aAction=sort">
 						<div class="col-xs-3"></div>
 						<div class="col-xs-6">

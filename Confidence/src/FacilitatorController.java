@@ -202,6 +202,8 @@ public class FacilitatorController extends HttpServlet {
 				// Get form fields.
 				String facilitatorId = request.getParameter("aFacilitatorId");
 				String pwd = request.getParameter("aPWD");
+				String fname = request.getParameter("fname");
+				String lname = request.getParameter("lname");
 				
 				// Validate that fields are not empty.
 				if(facilitatorId.isEmpty() && pwd.isEmpty())
@@ -222,10 +224,22 @@ public class FacilitatorController extends HttpServlet {
 					request.setAttribute("loginType", "facilitatorSignup");
 					request.setAttribute("error", "'password' cannot be empty!");
 					
+				} else if(fname.isEmpty()) {
+					
+					nextPage = "login.jsp"; 
+					request.setAttribute("loginType", "facilitatorSignup");
+					request.setAttribute("error", "'First name' cannot be empty!");
+					
+				} else if(lname.isEmpty()) {
+					
+					nextPage = "login.jsp"; 
+					request.setAttribute("loginType", "facilitatorSignup");
+					request.setAttribute("error", "'Last name' cannot be empty!");
+					
 				} else {
 				
 					// Insert entry into database.
-					if (loginManager.signupDBInsert(facilitatorId, pwd)) {
+					if (loginManager.signupDBInsert(facilitatorId, pwd, fname, lname)) {
 						// Proceed to facilitator login.
 						request.setAttribute("loginType", "facilitatorLogin");
 						nextPage = "login.jsp";
@@ -337,6 +351,14 @@ public class FacilitatorController extends HttpServlet {
 				request.setAttribute("accessPWD", pwd);
 				
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+
+			}  else if (aAction.equals("closeSitting")) {
+				int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
+				int sittingID = Integer.parseInt(request.getParameter("sittingId"));
+				sittingManager.closeSitting(sittingID);
+				
+				this.setUpToDisplayAllSittings(request, facilitatorRecordId);
+				nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
 
 			} 
 

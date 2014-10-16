@@ -34,7 +34,7 @@
 		.panel {
 			background-color: rgba(255, 255, 255, 0.9);
 			text-align: center;
-			width: 420px;
+			width: 500px;
 			height: 300px;
 			position:absolute;
 			margin-top:-150px;

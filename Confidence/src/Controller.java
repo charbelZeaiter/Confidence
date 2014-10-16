@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,140 +29,196 @@ public class Controller extends HttpServlet {
 	private SurveyManager surveyManager;
 
 	/**
-	 * @throws ClassNotFoundException 
+	 * @throws ClassNotFoundException
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public Controller() throws ClassNotFoundException {
 		super();
 		questionManager = new QuestionManager();
 		sittingManager = new SittingManager();
-		surveyManager =  new SurveyManager();
+		surveyManager = new SurveyManager();
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
 		// Get 'action' parameter from URL.
 		String aAction = request.getParameter("aAction");
 
 		// Set default landing page.
-		String nextPage = "login.jsp";  
+		String nextPage = "login.jsp";
 
 		HttpSession mySession = request.getSession();
 		Object sittingIdString = mySession.getAttribute("sittingId");
 		int sittingId = 0;
-		
+
 		if (sittingIdString != null) {
-			sittingId = (Integer) mySession.getAttribute("sittingId");	
+			sittingId = (Integer) mySession.getAttribute("sittingId");
 		}
-		
-		if(aAction != null){
-			if(aAction.equals("navigation"))
-			{
+
+		if (aAction != null) {
+			if (aAction.equals("navigation")) {
 				// Get page to navigate to.
 				String toPage = request.getParameter("page");
 
 				// Set page to dispatch to.
-				if(toPage.equals("studentLogin")) {
-					
+				if (toPage.equals("studentLogin")) {
+
 					request.setAttribute("loginType", "studentLogin");
 					nextPage = "login.jsp";
-					
-				} else if(toPage.equals("studentSittingInterface")) {
-					
-					request.setAttribute("questions", questionManager.getQuestions("", sittingId));
+
+				} else if (toPage.equals("studentSittingInterface")) {
+
+					request.setAttribute("questions",
+							questionManager.getQuestions("", sittingId));
 					nextPage = "studentSittingInterface.jsp";
 
-				} else if(toPage.equals("home")) {
+				} else if (toPage.equals("home")) {
 
-					request.setAttribute("questions", questionManager.getQuestions("", sittingId));
+					request.setAttribute("questions",
+							questionManager.getQuestions("", sittingId));
 					nextPage = "studentSittingInterface.jsp";
 
-				} else if(toPage.equals("survey")) {
+				} else if (toPage.equals("survey")) {
 					request.setAttribute("responses", surveyManager.getStats());
-					request.setAttribute("questions", surveyManager.getQuestions());
-					request.setAttribute("choices", new String[] {"1","2","3","4","5"});
+					request.setAttribute("questions",
+							surveyManager.getQuestions());
+					request.setAttribute("choices", new String[] { "1", "2",
+							"3", "4", "5" });
 					nextPage = "surveyResults.jsp";
 
-				} 
+				}
 
-				
-			} else if(aAction.equals("logOut")){
-				
+			} else if (aAction.equals("logOut")) {
+
 				// Clear session.
 				request.getSession().invalidate();
-				
-			} else if(aAction.equals("studentAJAX")){
-				
-				ArrayList<HashMap<String, String>> questionList = questionManager.getQuestions("", sittingId);
-				
+
+			} else if (aAction.equals("studentAJAX")) {
+				String sort = request.getParameter("sorted");
+				request.setAttribute("sorted", sort);
 				StringBuilder output = new StringBuilder();
-				
-				for(HashMap<String, String> item : questionList)
-				{
+				if (!sittingManager.checkSittingStatus(sittingId)) {
+					ArrayList<HashMap<String, String>> questionList = surveyManager.getQuestions();
+					//output.append("<div class=\"modal fade\" id=\"feedbackForm\" tabindex=\"-1\" role=\"dialog\"");
+					//output.append("aria-labelledby=\"feedbackFormLabel\" aria-hidden=\"false\">");
+					output.append("<div class=\"modal-dialog\">");
+					output.append("<form action=\"Controller?aAction=submitSurvey&amp;page=survey\" method=\"post\">");
+					output.append("<div class=\"input-group\">");
+					output.append("<div class=\"modal-content\">");
+					output.append("<div class=\"modal-header\">");
+					output.append("<h4 class=\"modal-title\" id=\"feedbackFormLabel\">LectureFeedback</h4>");
+
+					output.append("</div>");
+					output.append("<div class=\"modal-body col-md-12\">");
+					output.append("<div class=\"col-md-2\"></div>");
+					output.append("<div class=\"col-md-8\">");
+
+					// for loop here
+					for (HashMap<String, String> item : questionList) {
+						output.append("<label for = \"choices_"+item.get("id")+"\">"+item.get("question")+" </label>");
+						output.append("<ul class=\"list-inline\" id = \"choices_"+item.get("id")+"\">");
+						// for loop
+						for (int j = 1; j <= 5; j++) {
+							String value = Integer.toString(j);
+							output.append("<li><div class = \"radio\"><label>");
+							output.append("<input type = \"radio\" name=\""+item.get("id")+"\" value=\""+value+"\"/> "+value+"");
+							output.append("</label></div></li>");
+						}
+						// for loop end
+						output.append("</ul>");
+						// for loop end
+					}
+
+					output.append("</div>");
+					output.append("<div class=\"col-md-2\"></div>");
+					output.append("</div>");
+					output.append("<div class=\"modal-footer\">");
+					output.append("<input type = \"submit\" class=\"btn btn-primary\"></input>");
+					output.append("<button type=\"button\" class=\"btn btn-primary\" data-dismiss = \"modal\">Close</button>");
+					output.append("</div>");
+					output.append("</div>");
+					output.append("</div>");
+					output.append("</form>");
+					output.append("</div>");
+					output.append("</div>");
 					
-					output.append(
-					"<div class=\"row\">"+
-						"<div class=\"panel panel-default question\">"+
-							"<div class=\"panel-body\">"+
-								"<table>"+
-									"<tr>"+
-										"<td class=\"col-md-1\">"+
-											"<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">"
-					);
-					
-					output.append("<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">");
-					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"que_id\" VALUE=\""+item.get("id")+"\">");
-					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"sorted\" VALUE=\"upvote\">");
-					output.append("<input type=\"image\" src=\"images/upvote-small.png\" value=\"Upvote\" style=\"width: 40px;\" />");
-					output.append("</FORM></td>");
-					output.append("<td class=\"col-md-9\">[ID"+item.get("id")+"] "+item.get("description")+"</td>");
-					output.append("<td class=\"col-md-2\" style=\"text-align: center;\">"+item.get("num_votes")+"</td>");
-					
-					output.append(	
-										"</tr>"+
-									"</table>"+
-								"</div>"+
-							"</div>"+
-						"</div>"
-					);
-					
+
+				} else {
+
+					ArrayList<HashMap<String, String>> questionList = questionManager
+							.getQuestions(sort, sittingId);
+
+					for (HashMap<String, String> item : questionList) {
+
+						output.append("<div class=\"row\">"
+								+ "<div class=\"panel panel-default question\">"
+								+ "<div class=\"panel-body\">"
+								+ "<table>"
+								+ "<tr>"
+								+ "<td class=\"col-md-1\">"
+								+ "<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">");
+
+						output.append("<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">");
+						output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"que_id\" VALUE=\""
+								+ item.get("id") + "\">");
+						output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"sorted\" VALUE=\"upvote\">");
+						output.append("<input type=\"image\" src=\"images/upvote-small.png\" value=\"Upvote\" style=\"width: 40px;\" />");
+						output.append("</FORM></td>");
+						output.append("<td class=\"col-md-9\">[ID"
+								+ item.get("id") + "] "
+								+ item.get("description") + "</td>");
+						output.append("<td class=\"col-md-2\" style=\"text-align: center;\">"
+								+ item.get("num_votes") + "</td>");
+
+						output.append("</tr>" + "</table>" + "</div>"
+								+ "</div>" + "</div>");
+
+					}
 				}
-				
-			    response.setContentType("text/html");  // Set content type of the response so that jQuery knows what it can expect.
-			    response.setCharacterEncoding("UTF-8"); 
-			    response.getWriter().write(output.toString());  // Write response body.
-			    
-			    return;
+				output.append("<input type=\"hidden\"  id = \"refreshtime\" value = \"10000\" />");
+				response.setContentType("text/html"); // Set content type of the
+														// response so that
+														// jQuery knows what it
+														// can expect.
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(output.toString()); // Write response
+																// body.
+
+				return;
 			}
-			
-		} 
+
+		}
 
 		// Dispatch Control.
-		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
+		RequestDispatcher myRequestDispatcher = request
+				.getRequestDispatcher("/" + nextPage);
 		myRequestDispatcher.forward(request, response);
 
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
 		/*
-		 * TODO: 
-		 * 1. Database queries need to be done like in facilitator section with 'preparedstatements'.
-		 * 2. Need to validate form data.
-		 * 3. Need to protect against multiple posts on refresh and back actions.		 
+		 * TODO: 1. Database queries need to be done like in facilitator section
+		 * with 'preparedstatements'. 2. Need to validate form data. 3. Need to
+		 * protect against multiple posts on refresh and back actions.
 		 */
 
 		String aAction = request.getParameter("aAction");
 
-		String nextPage = "sittingAccess.jsp";  
+		String nextPage = "sittingAccess.jsp";
 		String sort = request.getParameter("sorted");
-		request.setAttribute("sorted", sort); 
+		request.setAttribute("sorted", sort);
 
 		System.out.println(aAction);
 
@@ -172,47 +226,51 @@ public class Controller extends HttpServlet {
 		HttpSession mySession = request.getSession();
 		Object sittingIdString = mySession.getAttribute("sittingId");
 		int sittingId = 0;
-		
+
 		if (sittingIdString != null) {
 			sittingId = (Integer) sittingIdString;
 			System.out.println("SITTING ID: " + sittingId);
 		}
-		
-		if(aAction != null)
-		{
-			String session_id= request.getSession().getId();
-			if(aAction.equals("postque")){
+
+		if (aAction != null) {
+			String session_id = request.getSession().getId();
+			if (aAction.equals("postque")) {
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
-				
-				if(question.isEmpty()) {
-					request.setAttribute("questionError", "Question cannot be empty!");
+
+				if (question.isEmpty()) {
+					request.setAttribute("questionError",
+							"Question cannot be empty!");
 				} else {
-					questionManager.submitQuestion(question, sittingId,session_id);
+					questionManager.submitQuestion(question, sittingId,
+							session_id);
 				}
-				
-				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
-				
+
+				request.setAttribute("questions",
+						questionManager.getQuestions(sort, sittingId));
+
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("upvote")) {
 
 				String que_id = request.getParameter("que_id");
-				questionManager.upvoteQuestion(que_id,session_id);
-				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+				questionManager.upvoteQuestion(que_id, session_id);
+				request.setAttribute("questions",
+						questionManager.getQuestions(sort, sittingId));
 
 				nextPage = "studentSittingInterface.jsp";
 
-			} else if(aAction.equals("submitSurvey")) {
-				for (Integer i=1;i<=3;i++) {
+			} else if (aAction.equals("submitSurvey")) {
+				for (Integer i = 1; i <= 3; i++) {
 					String in = request.getParameter(i.toString());
-					System.out.println(i.toString()+ " : " + in);
-					//surveyManager.respondToQuestion(i.toString(), in);
+					System.out.println(i.toString() + " : " + in);
+					// surveyManager.respondToQuestion(i.toString(), in);
 				}
 				System.out.println("hello there");
 				request.setAttribute("responses", surveyManager.getStats());
 				request.setAttribute("questions", surveyManager.getQuestions());
-				request.setAttribute("choices", new String[] {"1","2","3","4","5"});
+				request.setAttribute("choices", new String[] { "1", "2", "3",
+						"4", "5" });
 				nextPage = "surveyResults.jsp";
 			} else if (aAction.equals("sittingAccessRequest")) {
 
@@ -220,7 +278,7 @@ public class Controller extends HttpServlet {
 				sittingId = 0;
 				boolean exists = false;
 				String error = "Login failed!";
-				
+
 				try {
 					sittingId = Integer.parseInt(input);
 					String pwd = request.getParameter("aPWD");
@@ -231,11 +289,13 @@ public class Controller extends HttpServlet {
 				}
 
 				if (exists) {
-					System.out.println("Sort: " + sort + " sittingId: " + sittingId);
-					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
-					
+					System.out.println("Sort: " + sort + " sittingId: "
+							+ sittingId);
+					request.setAttribute("questions",
+							questionManager.getQuestions(sort, sittingId));
+
 					mySession.setAttribute("sittingId", sittingId);
-					
+
 					nextPage = "studentSittingInterface.jsp";
 
 				} else {
@@ -249,25 +309,27 @@ public class Controller extends HttpServlet {
 
 				String pwd = request.getParameter("aPWD");
 
-				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+				request.setAttribute("questions",
+						questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 
 				nextPage = "studentSittingInterface.jsp";
-				
+
 			} else if (aAction.equals("sort")) {
-				
+
 				sort = request.getParameter("sortby");
 				request.setAttribute("sorted", sort);
-				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+				request.setAttribute("questions",
+						questionManager.getQuestions(sort, sittingId));
 				nextPage = "studentSittingInterface.jsp";
-				
+
 			}
 		}
 
-		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
+		RequestDispatcher myRequestDispatcher = request
+				.getRequestDispatcher("/" + nextPage);
 		myRequestDispatcher.forward(request, response);
 	}
 
 }
-

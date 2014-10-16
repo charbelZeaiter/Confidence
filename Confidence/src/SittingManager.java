@@ -78,6 +78,57 @@ public class SittingManager {
 		return result;
 	}
 	
+	public void closeSitting(int sittingID) {
+		
+		try {
+			// Create sql statement and pass values in.
+			String sqlQuery = "UPDATE sittings SET status = \'C\' WHERE sitting_id = ?";
+
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
+
+			// Set values in query.
+			ps.setInt(1, sittingID);
+
+			// Execute query and loop through saving results.
+			int result = ps.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public boolean checkSittingStatus(int aSittingID) {
+		boolean result = false;
+		try {
+			// Create sql statement and pass values in.
+			String sqlQuery = "SELECT status FROM sittings WHERE sitting_id = ?";
+
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
+
+			// Set values in query.
+			ps.setInt(1, aSittingID);
+
+			// Execute query and loop through saving results.
+			ResultSet rset = ps.executeQuery();
+
+			// If next returns true it means there are records.
+			if(rset.next()) {
+				// Check that passwords match.
+				String status = rset.getString("status");
+				if(status.equals("O")) {
+					result = true;
+				}
+			}  
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	
 	public List<SittingBean> getFacilitatorSittingsDB(int aFacilitatorId) {
 		
 		// Create result list.

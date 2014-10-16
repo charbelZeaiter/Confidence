@@ -1,15 +1,17 @@
+DROP TABLE `survey_results`;
+DROP TABLE `survey_responses`;
+DROP TABLE `survey_questions`;
 DROP TABLE `facilitators`;
 DROP TABLE `sittings`;
 DROP TABLE `questions`;
 DROP TABLE `votes_audit`;
-DROP TABLE `survey_questions`;
-DROP TABLE `survey_responses`;
-DROP TABLE `survey_results`;
 
 CREATE TABLE `facilitators` (
   `facilitator_id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(100) NOT NULL UNIQUE,
   `password` VARCHAR(100) NOT NULL,
+  `firstname` VARCHAR(100) NOT NULL,
+  `lastname` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`facilitator_id`)
   )
   ;
@@ -21,6 +23,8 @@ CREATE TABLE `sittings` (
   `name` VARCHAR(100) NOT NULL,
   `facilitator_id` VARCHAR(45) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
+  `post_allowance` VARCHAR(1) NOT NULL DEFAULT 'T',
+  `status` VARCHAR(1) NOT NULL DEFAULT 'O',
   PRIMARY KEY (`sitting_id`)
   )
   ;

@@ -62,7 +62,7 @@ public class SurveyManager {
 	public ArrayList<HashMap<String, String>> getQuestions() {
 
 		ArrayList<HashMap<String, String>> questions = new ArrayList<HashMap<String, String>>();
-
+        
 		try {
 				String sql = "SELECT q_id, question FROM survey_questions";
 				ResultSet rs = mysql.select(sql);
@@ -75,7 +75,7 @@ public class SurveyManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+        
 		return questions;
 
 	}

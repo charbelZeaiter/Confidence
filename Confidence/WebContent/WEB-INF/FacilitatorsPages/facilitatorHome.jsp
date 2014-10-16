@@ -61,6 +61,15 @@
 				    		<td>${sitting.name}</td>
 				    		<td>${sitting.pwd}</td>
 				    		<td><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
+						    <td>
+                                <form method="post" action="FacilitatorController">
+                                    <input type="HIDDEN" name="aAction" value="closeSitting" />
+                                    <input type="HIDDEN" name="sittingId" value="${sitting.id}"> 
+                                    <button class="btn btn-primary" type="submit">Close Sitting</button>
+                                </form>
+						    
+						    
+						    </td>
 						   </tr>
 						</c:forEach>
 				    </table>

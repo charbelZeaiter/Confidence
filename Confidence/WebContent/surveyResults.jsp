@@ -89,8 +89,7 @@ function drawChart(qid) {
 	</div>
 
 	<!-- Modal Dialog -->
-	<div class="modal fade" id="feedbackForm" tabindex="-1" role="dialog"
-		aria-labelledby="feedbackFormLabel" aria-hidden="true">
+
 		<div class="modal-dialog">
 			<form action="Controller?aAction=submitSurvey&amp;page=survey" method="post">
 			<div class="input-group">
