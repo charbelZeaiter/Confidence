@@ -29,7 +29,7 @@ BEGIN
          IF item <> '' AND item IS NOT NULL and item not in (select distinct word from excluded_word) 
 					and length(item)>2 THEN           
 			SET counter = counter + 1;
-			insert into sentence_d(id,word_id,word_position,word) values (sid,counter,endpos,item) ;
+			insert into question_d(id,word_id,word_position,word) values (sid,counter,endpos,item) ;
          END IF;
 		 
         SET inipos = endpos + 1;
@@ -37,7 +37,7 @@ BEGIN
     UNTIL inipos >= maxlen 
 		
 	END REPEAT; 
-		insert into sentence_h (id,sentence,nbword) values (sid,fullstr,counter);
+		insert into question_h (id,sentence,nbword) values (sid,fullstr,counter);
 
 END //
 DELIMITER ;

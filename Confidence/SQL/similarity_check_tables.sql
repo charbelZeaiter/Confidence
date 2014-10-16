@@ -37,13 +37,13 @@ insert into word_suffix values (1 ,"s");
 insert into word_suffix values (1 ,"tion");
 
 
-  create table sentence_h (
+  create table question_h (
     id integer , 
     sentence varchar(100),
     nbword integer
     );
   
-  create table sentence_d (
+  create table question_d (
     id integer,
     word_id integer,
     word_position integer,
