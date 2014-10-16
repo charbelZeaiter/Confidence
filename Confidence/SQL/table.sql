@@ -1,8 +1,7 @@
 DROP TABLE `facilitators`;
 DROP TABLE `sittings`;
 DROP TABLE `questions`;
-DROP TABLE `sentence`;
-DROP TABLE `sentence_seq`;
+
 
 
 CREATE TABLE `facilitators` (
@@ -37,18 +36,6 @@ CREATE TABLE `questions` (
   )
   ;
 
-  create table sentence_seq (
-    id integer , 
-    sentence varchar(100),
-    nbword integer
-    );
-  
-  create table sentence (
-    id integer,
-    word_id integer,
-    word_position integer,
-    word varchar(100)
-    );
   
   
   
