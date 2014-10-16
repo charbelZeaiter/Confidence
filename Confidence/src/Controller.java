@@ -62,6 +62,10 @@ public class Controller extends HttpServlet {
 
 		if (aAction != null) {
 			if (aAction.equals("navigation")) {
+				request.setAttribute("question",
+						surveyManager.getQuestions());
+				request.setAttribute("choices", new String[] { "1", "2",
+						"3", "4", "5" });
 				// Get page to navigate to.
 				String toPage = request.getParameter("page");
 
@@ -72,13 +76,13 @@ public class Controller extends HttpServlet {
 					nextPage = "login.jsp";
 
 				} else if (toPage.equals("studentSittingInterface")) {
-
+					
 					request.setAttribute("questions",
 							questionManager.getQuestions("", sittingId));
 					nextPage = "studentSittingInterface.jsp";
 
 				} else if (toPage.equals("home")) {
-
+					
 					request.setAttribute("questions",
 							questionManager.getQuestions("", sittingId));
 					nextPage = "studentSittingInterface.jsp";
@@ -104,50 +108,16 @@ public class Controller extends HttpServlet {
 				StringBuilder output = new StringBuilder();
 				if (!sittingManager.checkSittingStatus(sittingId)) {
 					ArrayList<HashMap<String, String>> questionList = surveyManager.getQuestions();
-					//output.append("<div class=\"modal fade\" id=\"feedbackForm\" tabindex=\"-1\" role=\"dialog\"");
-					//output.append("aria-labelledby=\"feedbackFormLabel\" aria-hidden=\"false\">");
-					output.append("<div class=\"modal-dialog\">");
-					output.append("<form action=\"Controller?aAction=submitSurvey&amp;page=survey\" method=\"post\">");
-					output.append("<div class=\"input-group\">");
-					output.append("<div class=\"modal-content\">");
-					output.append("<div class=\"modal-header\">");
-					output.append("<h4 class=\"modal-title\" id=\"feedbackFormLabel\">LectureFeedback</h4>");
-
+					
+					output.append("<div class=\"row\">");
+					output.append("<div class=\"col-md-4\">");
+					output.append("	<button class=\"btn btn-primary\" data-toggle=\"modal\"");
+					output.append("		data-target=\"#feedbackForm\">Launch survey!</button>");
 					output.append("</div>");
-					output.append("<div class=\"modal-body col-md-12\">");
-					output.append("<div class=\"col-md-2\"></div>");
-					output.append("<div class=\"col-md-8\">");
-
-					// for loop here
-					for (HashMap<String, String> item : questionList) {
-						output.append("<label for = \"choices_"+item.get("id")+"\">"+item.get("question")+" </label>");
-						output.append("<ul class=\"list-inline\" id = \"choices_"+item.get("id")+"\">");
-						// for loop
-						for (int j = 1; j <= 5; j++) {
-							String value = Integer.toString(j);
-							output.append("<li><div class = \"radio\"><label>");
-							output.append("<input type = \"radio\" name=\""+item.get("id")+"\" value=\""+value+"\"/> "+value+"");
-							output.append("</label></div></li>");
-						}
-						// for loop end
-						output.append("</ul>");
-						// for loop end
-					}
-
-					output.append("</div>");
-					output.append("<div class=\"col-md-2\"></div>");
-					output.append("</div>");
-					output.append("<div class=\"modal-footer\">");
-					output.append("<input type = \"submit\" class=\"btn btn-primary\"></input>");
-					output.append("<button type=\"button\" class=\"btn btn-primary\" data-dismiss = \"modal\">Close</button>");
-					output.append("</div>");
-					output.append("</div>");
-					output.append("</div>");
-					output.append("</form>");
-					output.append("</div>");
+					output.append("<div class=\"col-md-4\"></div>");
+					output.append("<div class=\"col-md-4\"></div>");
 					output.append("</div>");
 					
-
 				} else {
 
 					ArrayList<HashMap<String, String>> questionList = questionManager
@@ -219,6 +189,7 @@ public class Controller extends HttpServlet {
 		String nextPage = "sittingAccess.jsp";
 		String sort = request.getParameter("sorted");
 		request.setAttribute("sorted", sort);
+		
 
 		System.out.println(aAction);
 
@@ -234,13 +205,21 @@ public class Controller extends HttpServlet {
 
 		if (aAction != null) {
 			String session_id = request.getSession().getId();
+			request.setAttribute("question",
+					surveyManager.getQuestions());
+			request.setAttribute("choices", new String[] { "1", "2",
+					"3", "4", "5" });
+			
 			if (aAction.equals("postque")) {
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
-
+				boolean canPost = sittingManager.checkSittingCanPost(sittingId);
 				if (question.isEmpty()) {
 					request.setAttribute("questionError",
 							"Question cannot be empty!");
+				} else if (!canPost)  {
+					request.setAttribute("questionError",
+							"Facilitator has closed question posting.");
 				} else {
 					questionManager.submitQuestion(question, sittingId,
 							session_id);
@@ -248,6 +227,7 @@ public class Controller extends HttpServlet {
 
 				request.setAttribute("questions",
 						questionManager.getQuestions(sort, sittingId));
+				
 
 				nextPage = "studentSittingInterface.jsp";
 
@@ -264,11 +244,11 @@ public class Controller extends HttpServlet {
 				for (Integer i = 1; i <= 3; i++) {
 					String in = request.getParameter(i.toString());
 					System.out.println(i.toString() + " : " + in);
-					// surveyManager.respondToQuestion(i.toString(), in);
+					surveyManager.respondToQuestion(i.toString(), in, sittingId);
 				}
 				System.out.println("hello there");
 				request.setAttribute("responses", surveyManager.getStats());
-				request.setAttribute("questions", surveyManager.getQuestions());
+				request.setAttribute("question", surveyManager.getQuestions());
 				request.setAttribute("choices", new String[] { "1", "2", "3",
 						"4", "5" });
 				nextPage = "surveyResults.jsp";
@@ -277,18 +257,27 @@ public class Controller extends HttpServlet {
 				String input = request.getParameter("aSittingId");
 				sittingId = 0;
 				boolean exists = false;
+				boolean isOpen = false;
 				String error = "Login failed!";
 
 				try {
 					sittingId = Integer.parseInt(input);
 					String pwd = request.getParameter("aPWD");
 					// Check details against database.
+					
 					exists = sittingManager.checkSittingDB(sittingId, pwd);
+					if (exists) {
+						isOpen = sittingManager.checkSittingStatus(sittingId);
+						if (!isOpen) {
+							error = "Sitting you are trying to access is closed.";
+						}
+					}
+					
 				} catch (NumberFormatException e) {
 					error = "ID should be a valid integer";
 				}
-
-				if (exists) {
+			
+				if (exists && isOpen) {
 					System.out.println("Sort: " + sort + " sittingId: "
 							+ sittingId);
 					request.setAttribute("questions",
@@ -313,6 +302,10 @@ public class Controller extends HttpServlet {
 						questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
+				request.setAttribute("question",
+						surveyManager.getQuestions());
+				request.setAttribute("choices", new String[] { "1", "2",
+						"3", "4", "5" });
 
 				nextPage = "studentSittingInterface.jsp";
 

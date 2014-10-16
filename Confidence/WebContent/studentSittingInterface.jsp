@@ -20,7 +20,7 @@
         $(document).ready(function() {
             setInterval(function() {
         		$.get("Controller?aAction=studentAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
-            }, 10000);
+            }, 2000);
         });
     </script>
     
@@ -86,6 +86,46 @@
 			</form>
 		</div>
 	</div>
+	<!-- Modal Dialog -->
+    <div class="modal fade" id="feedbackForm" tabindex="-1" role="dialog"
+        aria-labelledby="feedbackFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="Controller" method="post">
+            <input type="hidden" id="aAction" name="aAction" value="submitSurvey" />
+            <div class="input-group">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="feedbackFormLabel">Lecture
+                        Feedback</h4>
+                </div>
+                <div class="modal-body col-md-12">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    
+                    <c:forEach items="${question}" var="question">
+                                    <label for = "choices_${question.q_id}">${question.question} </label>
+                                    <ul class="list-inline" id = "choices_${question.q_id}">
+                                    <c:forEach items="${choices}" var="choice">
+                                        <li><div class = "radio"><label>
+                                                    <input type = "radio" name="${question.q_id}" value="${choice}"/> ${choice}
+                                        </label></div></li>
+                                    </c:forEach>
+                                    </ul>
+                    </c:forEach>
+                    
+                </div>
+                <div class="col-md-2"></div>
+                </div>
+                <div class="modal-footer">
+                    <input type = "submit" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" data-dismiss = "modal">Close</button>
+                </div>
+                </div>
+                </div>
+                </form>
+            </div>
+        </div>
+
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

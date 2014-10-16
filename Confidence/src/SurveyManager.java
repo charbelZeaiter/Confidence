@@ -1,3 +1,4 @@
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -48,16 +49,39 @@ public class SurveyManager {
 		return stats;
 	}
 
-//	public void respondToQuestion(String questionId,String response) {
-//
-//		try {
-//			String sql= "insert into survey_results(q_id,response) values (\""+questionId+"\",\""+response+"\")";
-//			mysql.insert(sql);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
+	public void respondToQuestion(String questionId,String response, Integer sittingId) {
+		String sqlQuery = "";
+		String optionID = "";
+		if (response.equals("1")) {
+			sqlQuery = "UPDATE survey_results SET o_1 = o_1 + 1 WHERE sitting_id = 1 AND q_id = ?";
+		} else if (response.equals("2")) {
+			sqlQuery = "UPDATE survey_results SET o_2 = o_2 + 1 WHERE sitting_id = 1 AND q_id = ?";
+		} else if (response.equals("3")) {
+			sqlQuery = "UPDATE survey_results SET o_3 = o_3 + 1 WHERE sitting_id = 1 AND q_id = ?";
+		} else if (response.equals("4")) {
+			sqlQuery = "UPDATE survey_results SET o_4 = o_4 + 1 WHERE sitting_id = 1 AND q_id = ?";
+		} else if (response.equals("5")) {
+			sqlQuery = "UPDATE survey_results SET o_5 = o_5 + 1 WHERE sitting_id = 1 AND q_id = ?";
+		}
+		
+		
+		try {
+			// Create sql statement and pass values in.
+			
+
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
+			ps.setString(1, questionId);
+			// Set values in query.
+
+			// Execute query and loop through saving results.
+			int result = ps.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
 	
 	public ArrayList<HashMap<String, String>> getQuestions() {
 
@@ -68,7 +92,7 @@ public class SurveyManager {
 				ResultSet rs = mysql.select(sql);
 				while (rs.next()){
 					HashMap<String, String> row = new HashMap<String, String>();
-					row.put("id", rs.getString("q_id"));
+					row.put("q_id", rs.getString("q_id"));
 					row.put("question", rs.getString("question"));
 					questions.add(row);
 				}

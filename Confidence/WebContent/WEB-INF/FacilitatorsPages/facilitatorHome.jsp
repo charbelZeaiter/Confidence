@@ -54,6 +54,9 @@
 				    		<th>Name</th>
 				    		<th>Password</th>
 				    		<th> </th>
+				    		<th>Status</th>
+				    		<th></th>
+				    		
 				    	</tr>
 				    	<c:forEach items="${sittingList}" var="sitting"> 
 						  <tr>
@@ -61,6 +64,7 @@
 				    		<td>${sitting.name}</td>
 				    		<td>${sitting.pwd}</td>
 				    		<td><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
+				    		<td>${sitting.status}</td>
 						    <td>
                                 <form method="post" action="FacilitatorController">
                                     <input type="HIDDEN" name="aAction" value="closeSitting" />

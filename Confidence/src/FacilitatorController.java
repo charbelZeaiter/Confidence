@@ -183,6 +183,8 @@ public class FacilitatorController extends HttpServlet {
 		String nextPage = "facilitatorLogin.jsp";
 		String sort = request.getParameter("sorted");
 		request.setAttribute("sorted", sort);
+		String canPost = request.getParameter("canPost");
+		request.setAttribute("canPost", canPost);
 
 		System.out.println(aAction);
 		
@@ -359,6 +361,26 @@ public class FacilitatorController extends HttpServlet {
 				
 				this.setUpToDisplayAllSittings(request, facilitatorRecordId);
 				nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
+
+			}  else if (aAction.equals("canPost")) {
+                String pwd = request.getParameter("aPWD");
+				
+				canPost = request.getParameter("canPost");
+				
+				if (canPost.equals("open")) {
+					sittingManager.setSittingCanPost(sittingId, "T");
+				} else if (canPost.equals("close")) {
+					sittingManager.setSittingCanPost(sittingId, "F");
+				}
+				
+				request.setAttribute("canPost", canPost);
+				request.getSession().setAttribute("canPost", canPost);
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+				request.setAttribute("sittingId", sittingId);
+				request.setAttribute("accessPWD", pwd);
+				
+				
+				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
 
 			} 
 
