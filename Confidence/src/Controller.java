@@ -61,9 +61,9 @@ public class Controller extends HttpServlet {
 				{
 					nextPage = "index.jsp";
 
-				} else if (toPage.equals("sittingAccess")) {
+				} else if (toPage.equals("studentLogin")) {
 					
-					nextPage = "sittingAccess.jsp";
+					nextPage = "studentLogin.jsp";
 					
 				} else if(toPage.equals("studentSittingInterface")) {
 
@@ -93,7 +93,7 @@ public class Controller extends HttpServlet {
 		 */
 
 		String aAction = request.getParameter("aAction");
-		String nextPage = "sittingAccess.jsp";  
+		String nextPage = "login.jsp";  
 
 		System.out.println(aAction);
 

@@ -69,6 +69,11 @@ public class FacilitatorContoller extends HttpServlet {
 				{
 					nextPage = this.PRIVATE_PATH+"facilitatorSignup.jsp";	
 
+				} else if (toPage.equals("facilitatorLogin")) {
+					
+					request.setAttribute("loginType", "facilitatorLogin");
+					nextPage = "login.jsp";
+					
 				} else if(toPage.equals("createSitting")) {
 
 					nextPage = this.PRIVATE_PATH+"createSitting.jsp";

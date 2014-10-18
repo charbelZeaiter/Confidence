@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -52,6 +53,10 @@
 			margin: 50px 0;
 		}
 		
+		.margin-base-vertical-mid {
+			margin: 35px 0;
+		}
+		
 		.margin-base-vertical-small {
 			margin: 20px 0;
 		}
@@ -60,17 +65,14 @@
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-md-6 col-md-offset-3 panel panel-default">				
-				<h1 class="margin-base-vertical">Confidence</h1>
-				<div class="margin-base-vertical">
-				<a class="btn btn-large btn-primary" href="Controller?aAction=navigation&amp;page=sittingAccess">I'm a Student</a>
-					&nbsp;&nbsp;&nbsp;
-				<a class="btn btn-large btn-primary" href="FacilitatorController">I'm a Lecturer</a>
-				</div>
-				<div class="margin-base-vertical-small">
-					<small class="text-muted">COMP4920 Project ~ Confidence ©</small>
-				</div>
-			</div>
+			<c:choose>
+	      		<c:when test="${ !empty loginType }">
+	      			<jsp:include page="${loginType}.jsp"/>
+	      		</c:when>
+	      		<c:otherwise>
+	      			<jsp:include page="portal.jsp"/>
+	      		</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 
