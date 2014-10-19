@@ -13,22 +13,8 @@
 	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 </head>
 <body>
-	<div id="wrap">
-		<div class="row">
-			<div class="col-md-12">
-				<h1>Home</h1>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<ul class="nav nav-tabs" role="tablist">
-					<li class="active"><a href="Controller?aAction=navigation&amp;page=home">Home</a></li>
-					<li><a href="Controller?aAction=navigation&amp;page=studentInterface">Student Interface</a></li>
-					<li><a href="Controller?aAction=navigation&amp;page=home">Etc...</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+
+	<jsp:include page="header.jsp" />
 
 	<jsp:include page="footer.jsp" />
 

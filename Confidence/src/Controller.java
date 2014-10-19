@@ -28,6 +28,7 @@ public class Controller extends HttpServlet {
 
 	private QuestionManager questionManager;
 	private SittingManager sittingManager;
+	private SurveyManager surveyManager;
 
 	/**
 	 * @throws ClassNotFoundException 
@@ -37,6 +38,8 @@ public class Controller extends HttpServlet {
 		super();
 		questionManager = new QuestionManager();
 		sittingManager = new SittingManager();
+		
+		surveyManager = new SurveyManager();
 	}
 
 	/**
@@ -60,13 +63,15 @@ public class Controller extends HttpServlet {
 				if(toPage.equals("home"))
 				{
 					nextPage = "index.jsp";
-
 				} else if(toPage.equals("studentInterface")) {
-
 					request.setAttribute("questions", questionManager.getQuestions());
 					nextPage = "studentInterface.jsp";
+				} else if(toPage.equals("survey")) {
+					request.setAttribute("responses", surveyManager.getStats());
+					request.setAttribute("questions", surveyManager.getQuestions());
+					nextPage = "surveyResults.jsp";
 
-				}
+				} 
 			}
 		}
 
@@ -99,8 +104,9 @@ public class Controller extends HttpServlet {
 
 				// Access server session.
 				HttpSession mySession = request.getSession();
-				int sittingId = (Integer) mySession.getAttribute("sittingId");
-
+				//int sittingId = (Integer) mySession.getAttribute("sittingId");
+				int sittingId = 1;
+				
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
 				questionManager.submitQuestion(question, sittingId);
@@ -108,12 +114,24 @@ public class Controller extends HttpServlet {
 
 				nextPage = "studentSittingInterface.jsp";
 
+			} else if(aAction.equals("surveyNew"))
+			{
+
+				request.setAttribute("questions", surveyManager.getQuestions());
+
+				nextPage = "surveyNew.jsp";
 			} else if (aAction.equals("upvote")) {
 
 				String que_id = request.getParameter("que_id");
 				questionManager.upvoteQuestion(que_id);
 				request.setAttribute("questions", questionManager.getQuestions());
 
+				nextPage = "studentSittingInterface.jsp";
+
+			} else if (aAction.equals("upvote")) {
+				String que_id = request.getParameter("que_id");
+				questionManager.upvoteQuestion(que_id);
+				request.setAttribute("questions", questionManager.getQuestions());
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("sittingAccessRequest")) {

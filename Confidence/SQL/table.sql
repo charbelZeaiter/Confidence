@@ -1,6 +1,5 @@
-DROP TABLE `facilitators`;
-DROP TABLE `sittings`;
-DROP TABLE `questions`;
+DROP TABLE `survey_rs`;
+DROP TABLE `survey_qs`;
 
 CREATE TABLE `facilitators` (
   `facilitator_id` INT NOT NULL AUTO_INCREMENT,
@@ -9,6 +8,7 @@ CREATE TABLE `facilitators` (
   PRIMARY KEY (`facilitator_id`)
   )
   ;
+
   
 -- A sitting is another word for a lecture/lab/tute 'session'. Didnt
 -- want to use 'session' as it maybe confused with server session.
