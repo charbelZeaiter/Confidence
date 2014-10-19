@@ -27,7 +27,7 @@
 				    </div>
 			    </div>
 			</div>
-			<div class="margin-bvertical-mid">
+			<div class="margin-vertical-mid">
 				<input type="hidden" id="aAction" name="aAction" value="loginRequest" />
 				<input class="btn btn-large btn-primary" type="submit" value="Login"></a>
 				&nbsp;&nbsp;&nbsp;
