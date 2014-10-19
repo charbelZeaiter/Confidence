@@ -63,7 +63,8 @@ public class Controller extends HttpServlet {
 
 				} else if (toPage.equals("studentLogin")) {
 					
-					nextPage = "studentLogin.jsp";
+					request.setAttribute("loginType", "studentLogin");
+					nextPage = "login.jsp";
 					
 				} else if(toPage.equals("studentSittingInterface")) {
 
@@ -128,7 +129,7 @@ public class Controller extends HttpServlet {
 				// Check details against database.
 				boolean exists = sittingManager.checkSittingDB(sittingId, pwd);
 
-				if(exists) {
+				if (exists) {
 					// Setup session.
 					HttpSession mySession = request.getSession();
 					mySession.setAttribute("sittingId", sittingId);
@@ -137,8 +138,10 @@ public class Controller extends HttpServlet {
 					nextPage = "studentSittingInterface.jsp";
 
 				} else {
-					// Turn 'invalid sitting' flag on.
-					request.setAttribute("invalidSitting", 1);
+					// Failed login
+					request.setAttribute("error", "Login failed!");
+					request.setAttribute("loginType", "studentLogin");
+					nextPage = "login.jsp";
 				}
 
 			}

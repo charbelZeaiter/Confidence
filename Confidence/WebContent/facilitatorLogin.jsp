@@ -4,8 +4,8 @@
 	<div>
 		<div>
 			<c:choose>
-	      		<c:when test="${ !empty loginFailed }">
-	      			<p style="color: red;">Login Failed!</p>
+	      		<c:when test="${ !empty error }">
+	      			<p style="color: red;">${error}</p>
 	      		</c:when>
 	      		<c:otherwise>
 	      			<br>
@@ -27,7 +27,7 @@
 				    </div>
 			    </div>
 			</div>
-			<div class="margin-vertical-mid">
+			<div class="margin-bvertical-mid">
 				<input type="hidden" id="aAction" name="aAction" value="loginRequest" />
 				<input class="btn btn-large btn-primary" type="submit" value="Login"></a>
 				&nbsp;&nbsp;&nbsp;

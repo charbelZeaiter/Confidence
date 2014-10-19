@@ -127,7 +127,7 @@ public class FacilitatorContoller extends HttpServlet {
 				// Check login details in database and return record Id.
 				int facilitatorRecId = loginManager.checkLoginDB(facilitatorId, pwd);
 
-				if(facilitatorRecId > -1) {
+				if (facilitatorRecId > -1) {
 
 					// Setup session.
 					HttpSession mySession = request.getSession();
@@ -140,7 +140,7 @@ public class FacilitatorContoller extends HttpServlet {
 				} else {
 
 					// Failed login.
-					request.setAttribute("loginFailed", 1);
+					request.setAttribute("error", "Login failed!");
 					request.setAttribute("loginType", "facilitatorLogin");
 					nextPage = "login.jsp";
 
