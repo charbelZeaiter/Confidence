@@ -19,6 +19,9 @@ insert into excluded_word values ("for");
 insert into excluded_word values ("the");
 insert into excluded_word values ("do");
 insert into excluded_word values ("you");
+insert into excluded_word values ("we");
+insert into excluded_word values ("does");
+insert into excluded_word values ("i");
 
 
 create table word_group ( category integer , word varchar(50));
@@ -34,12 +37,14 @@ insert into word_group values (2 ,"justify");
 insert into word_group values (2 ,"illustrate");
 insert into word_group values (2 ,"define");
 insert into word_group values (2 ,"definition");
+insert into word_group values (2 ,"definition?");
 insert into word_group values (2 ,"meaning");
-insert into word_group values (2 ,"explanaition");
+insert into word_group values (2 ,"explanation");
 insert into word_group values (3 ,"can");
 insert into word_group values (3 ,"could");
 insert into word_group values (3 ,"would");
-
+-- will adjust later to automatically remove any exclamation marks..
+insert into word_group values (2 ,"explanation?");
 
 
 
@@ -72,6 +77,6 @@ insert into word_suffix values (1 ,"tion");
     id integer,
     word_id integer,
     word_position integer,
-    word varchar(100)
+    word varchar(100),
+	category integer
     );
-alter table question_d add category integer;

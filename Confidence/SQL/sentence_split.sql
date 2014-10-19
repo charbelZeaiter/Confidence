@@ -1,7 +1,7 @@
 DELIMITER //
 DROP PROCEDURE IF EXISTS  sentence_split //
 CREATE PROCEDURE sentence_split
-(IN fullstr VARCHAR(100) ,IN q_id integer,IN sit_id integer)
+(IN fullstr varchar(100),IN q_id integer,IN sit_id integer)
 BEGIN
 
 	DECLARE inipos INTEGER;
@@ -21,7 +21,7 @@ BEGIN
 	set position =0;
 	
 	-- select ifnull(max(id),0)+1 into sid from sentence_seq ;
-	
+	-- insert into answer(a,b) values (fullstr,q_id);
     REPEAT
         SET endpos = LOCATE(delim, fullstr, inipos);
         SET item =  SUBSTR(fullstr, inipos, endpos - inipos);
@@ -38,6 +38,6 @@ BEGIN
 		
 	END REPEAT; 
 		insert into question_h (id,sentence,nbword,sitting_id) values (q_id,fullstr,counter,sit_id);
-
+	
 END //
 DELIMITER ;

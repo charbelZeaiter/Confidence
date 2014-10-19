@@ -1,7 +1,7 @@
 DELIMITER $$
 DROP TRIGGER IF EXISTS check_question_similarity $$
 CREATE TRIGGER check_question_similarity
-BEFORE INSERT ON questions 
+after INSERT ON questions 
 FOR EACH ROW  
 BEGIN
 	
@@ -14,10 +14,10 @@ BEGIN
 	declare sim_id integer default 0;
 	DECLARE c1 CURSOR FOR select distinct id from question_h where id <> new.que_id and sitting_id =new.sitting_id;
 	DECLARE CONTINUE handler FOR NOT FOUND SET done =1;
-	select ifnull(max(que_id),0)+1 into new_id from questions;
-	 call sentence_split(new.description,new.que_id,new.sitting_id);
-	-- 
 
+	call sentence_split(new.description,new.que_id,new.sitting_id);
+	-- 
+	
 		open c1;
 		get_questions : loop
 		fetch c1 into cur_seq;
@@ -28,6 +28,7 @@ BEGIN
 		
 		select similarity_check(new.que_id,cur_seq) 
 		into similarity;
+		if similarity = -1 then leave get_questions; end if;
 		if similarity>max_similarity then 
 		set max_similarity = similarity;
 		set sim_id =cur_seq;
@@ -35,11 +36,10 @@ BEGIN
 			
 		END LOOP get_questions;
 		CLOSE c1;
-
+		insert into votes_audit (session_id,que_id,sitting_id) values (new.session_id,new.que_id,new.sitting_id);
 		if max_similarity >0.8 then 
 		select concat('similar question already asked: ',sentence)  into msg from question_h where id = sim_id;
-		 -- insert into answer (b,a)values ( 1 , max_similarity); 
-		 SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
 		end if;
 END $$
 DELIMITER ;
