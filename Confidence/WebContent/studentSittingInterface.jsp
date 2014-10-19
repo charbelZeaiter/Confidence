@@ -23,85 +23,72 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<br />
-				<form method="post" action="Controller?aAction=postque&amp;page=studentSittingInterface">
-					<div class="row">
-						<div class="col-md-4"></div>
-						<div class="col-md-4">
-							<input type="hidden" id="aAction" value="post_text" />
-							<div class="input-group">
-								<input class="form-control" type="text" id="aText" name="questionText" /> <span class="input-group-btn">
-								    <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
-									<button class="btn btn-primary" type="submit">Post!</button>
-								</span>
-							</div>
-						</div>
-						<div class="col-md-4"></div>
-					</div>
-				</form>
+				<ul class="nav nav-tabs" role="tablist">
+					<li><a href="Controller?aAction=navigation&amp;page=home">Home</a></li>
+				</ul>	
 			</div>
 		</div>
-		<br />
-		
-		<div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div>
-                    <div class="panel-body">
-                        Sort By:
-                        <form method="post" action="Controller?aAction=sort">
-                            <select name="sortby" onchange='this.form.submit()'>
-                                <option value="upvote"
-                                    <c:if test="${sorted =='upvote'}"> selected </c:if>>Up
-                                    votes</option>
-                                <option value="date"
-                                    <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
-                            </select>
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-		
-		<c:forEach items="${questions}" var="question">
+		<br>
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
 			<div class="row">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="panel panel-default question">
-						<div class="panel-body">
-							<table>
-								<tr>
-									<td class="col-md-1">
-										<FORM NAME="form1" METHOD="POST" action="Controller?aAction=upvote">
-											<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}">
-                                            <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
-											<input type="image" src="images/upvote-small.png" value="Upvote" style="width: 40px;" />
-										</FORM>
-									</td>
-									<td class="col-md-9">[ID${question.id}] ${question.description}</td>
-									<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
-								</tr>
-							</table>
+
+				<form method="post" action="Controller?aAction=postque&amp;page=studentSittingInterface">
+					<input type="hidden" id="aAction" value="post_text" />
+					<div class="input-group">
+						<input class="form-control" type="text" id="aText" name="questionText" /> <span class="input-group-btn">
+						    <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
+							<button class="btn btn-primary" type="submit">Post!</button>
+						</span>
+					</div>
+				</form>
+				
+				<br>
+				
+				<p>Sort By:</p>
+				<form method="post" action="Controller?aAction=sort">
+					<div class="col-xs-3"></div>
+					<div class="col-xs-6">
+						<select class="form-control" name="sortby" onchange='this.form.submit()'">
+							<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
+							<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+						</select>
+					</div>						
+				</form>
+				
+				<br>
+			
+				<c:forEach items="${questions}" var="question">
+					<div class="row">
+						<div class="panel panel-default question">
+							<div class="panel-body">
+								<table>
+									<tr>
+										<td class="col-md-1">
+											<FORM NAME="form1" METHOD="POST" action="Controller?aAction=upvote">
+												<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}">
+	                                            <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
+												<input type="image" src="images/upvote-small.png" value="Upvote" style="width: 40px;" />
+											</FORM>
+										</td>
+										<td class="col-md-9">[ID${question.id}] ${question.description}</td>
+										<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
+									</tr>
+								</table>
+							</div>
 						</div>
 					</div>
-				</div>
+				</c:forEach>
 			</div>
-		</c:forEach>
+		</div>
+		<div class="col-md-4" style="text-align: right;">
+			<form method="post" action="Controller?aAction=refresh">
+				<input type="hidden" id="aAction" value="refresh" />
+				<input type="HIDDEN" name="sorted" value="${sorted}"> 
+				<button class="btn btn-primary" type="submit">Refresh!</button>
+			</form>
+		</div>
 	</div>
-    <form method="post" action="Controller?aAction=refresh">
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <input type="hidden" id="aAction" value="refresh" />
-                <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}"> 
-                <div class="input-group">
-                    <button class="btn btn-primary" type="submit">Refresh!</button>
-                </div>
-            </div>
-            <div class="col-md-4"></div>
-        </div>
-    </form>
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

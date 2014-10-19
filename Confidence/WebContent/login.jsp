@@ -30,12 +30,6 @@
 			background: transparent;
 		}
 
-		h1 {
-			font-family: "Open Sans",serif;
-			font-weight: 400;
-			font-size: 40px;
-		}
-
 		/* Override B3 .panel adding a subtly transparent background */
 		.panel {
 			background-color: rgba(255, 255, 255, 0.9);

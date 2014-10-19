@@ -57,11 +57,7 @@ public class Controller extends HttpServlet {
 				String toPage = request.getParameter("page");
 
 				// Set page to dispatch to.
-				if(toPage.equals("home"))
-				{
-					nextPage = "index.jsp";
-
-				} else if (toPage.equals("studentLogin")) {
+				if(toPage.equals("home") || toPage.equals("studentLogin")) {
 					
 					request.setAttribute("loginType", "studentLogin");
 					nextPage = "login.jsp";

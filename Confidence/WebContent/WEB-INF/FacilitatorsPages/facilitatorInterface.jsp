@@ -8,7 +8,7 @@
 	<title>Facilitator Interface</title>
 	
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
+	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"	type="text/javascript"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="bootstrap-3.2.0-dist/js/bootstrap.min.js" type="text/javascript"></script>
 	
@@ -19,7 +19,7 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 	
-	<script>
+	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".tick").click(function() {
 				$(this).parentsUntil(".questionPanel").fadeOut();
@@ -38,80 +38,71 @@
 			<div class="col-md-12">
 				<ul class="nav nav-tabs" role="tablist">
 					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Home</a></li>
-					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Etc...</a></li>
-				</ul>
+				</ul>	
 			</div>
 		</div>
 		<br>
-		<div class="row">
-			<div class="col-md-4">
-				<a href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A Sitting</a>
-			</div>
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
-				<c:if test="${ !empty sittingId }">
-					<p style="color: green;">Sitting ID: ${sittingId}<p>
-					<p style="color: green;">Access password: ${accessPWD}<p>
-				</c:if>
-			</div>
-		</div>
-		<div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div>
-                    <div class="panel-body">
-                        Sort By:
-                        <form method="post" action="FacilitatorController?aAction=sort">
-                            <select name="sortby" onchange='this.form.submit()'>
-                                <option value="upvote"
-                                    <c:if test="${sorted =='upvote'}"> selected </c:if>>Up
-                                    votes</option>
-                                <option value="date"
-                                    <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
-                            </select>
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<div class="row">
+			
+				<a class="btn btn-large btn-primary" href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A New Sitting</a>
 
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-		<c:forEach items="${questions}" var="question">
-			<div class="row questionPanel">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="panel panel-default question">
-						<div class="panel-body">
-							<table>
-								<tr>
-									<td class="col-md-1">
-									<FORM NAME="form1" METHOD="POST" action="FacilitatorController?aAction=remove">
-                                        <INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}">
-                                        <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}"> 
-                                        <input type="image" src="images/tick.png" value="Remove" style="width: 40px;"/>
-                                    </FORM></td>
-									<td class="col-md-9">[ID${question.id}] ${question.description}</td>
-									<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
-								</tr>
-							</table>
+				<br><br>
+
+				<c:if test="${ !empty sittingId }">
+					<p style="color: green;">Sitting ID: ${sittingId}</p>
+					<p></p>
+					<p style="color: green;">Access password: ${accessPWD}</p>
+					<p></p>
+				</c:if>
+				
+				<br>
+
+				<p>Sort By:</p>
+				<form method="post" action="FacilitatorController?aAction=sort">
+					<div class="col-xs-3"></div>
+					<div class="col-xs-6">	
+						<select class="form-control" name="sortby" onchange='this.form.submit()'>
+							<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
+							<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+						</select>
+					</div>
+				</form>
+				
+				<br>
+				
+				<c:forEach items="${questions}" var="question">
+					<div class="row questionPanel">
+						<div class="panel panel-default question">
+							<div class="panel-body">
+								<table>
+									<tr>
+										<td class="col-md-1">
+											<FORM NAME="form1" METHOD="POST" action="FacilitatorController?aAction=remove">
+												<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}">
+												<INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
+												<input type="image" src="images/tick.png" value="Remove" style="width: 40px;" />
+											</FORM>
+										</td>
+										<td class="col-md-9">[ID${question.id}]	${question.description}</td>
+										<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
+									</tr>
+								</table>
+							</div>
 						</div>
 					</div>
-				</div>
+				</c:forEach>
 			</div>
-		</c:forEach>
+		</div>
+		<div class="col-md-4" style="text-align: right;">
+			<form method="post" action="FacilitatorController?aAction=refresh">
+				<input type="hidden" id="aAction" value="refresh" />
+				<input type="HIDDEN" name="sorted" value="${sorted}">
+				<button class="btn btn-primary" type="submit">Refresh!</button>
+			</form>		
+		</div>
 	</div>
-    <form method="post" action="FacilitatorController?aAction=refresh">
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <input type="hidden" id="aAction" value="refresh" />
-                <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}"> 
-                <div class="input-group">
-                    <button class="btn btn-primary" type="submit">Refresh!</button>
-                </div>
-            </div>
-            <div class="col-md-4"></div>
-        </div>
-    </form>
 	<jsp:include page="footer.jsp" />
 
 </body>
