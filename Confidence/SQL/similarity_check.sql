@@ -7,7 +7,8 @@ BEGIN
 	declare q1_cur_word varchar(50);
 	declare q2_cur_word varchar(50);
 	declare totnbword integer default 0;
-	
+	declare q1_len integer;
+	declare q2_len integer;
 	DECLARE matching integer default 0;
 	DECLARE tot_matching integer default 0;
 	DECLARE matching2 integer default 0;
@@ -29,25 +30,33 @@ BEGIN
 	end if;	
 	select count(*)
 	into matching
-	from sentence_d a, sentence_d b 
-	where a.id = 1 and b.id=2 
-	and  ( soundex(a.word)=soundex(b.word)
+	from question_d a, question_d b 
+	where a.id = q1 and b.id=q2 
+	and  ( 
+	(a.category =b.category and a.category!=0)
+	or soundex(a.word)=soundex(b.word)
 	or soundex(concat(a.word,suf))=soundex(b.word)
 	or soundex(a.word)=soundex(concat(b.word,suf)) );
-	
+
 	set tot_matching =tot_matching + matching;
 	-- insert into answer values (suf,matching);
 	end loop;
 	close c_suffix;
 	
-	select count(*) into totnbword from sentence_d where id in (q1,q2);
+	select count(*) into totnbword from question_d where id in (q1,q2);
 	
 	IF q1=q2 then
 	set totnbword=totnbword*2;
 	end if;
+	select length(q1) into q1_len from question_h where id =q1;
+	select length(q2) into q2_len from question_h where id =q2;
+	if q1_len < tot_matching or q2_len < tot_matching then 
+		return 1;
+	end if;
 	
 	
-	return  tot_matching*2/totnbword ;
+	
+	return  tot_matching/totnbword ;
 END //
 DELIMITER ;
 
