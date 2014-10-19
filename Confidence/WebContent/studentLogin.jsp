@@ -29,7 +29,7 @@
 			</div>
 			<div class="margin-vertical-mid">
 				<input type="hidden" id="aAction" name="aAction" value="sittingAccessRequest" />
-				<input class="btn btn-large btn-primary" type="submit" value="Access"></a>
+				<input class="btn btn-large btn-primary" type="submit" value="Login">
 			</div>
 		</form>
 	</div>
