@@ -49,17 +49,22 @@
 			left:50%;
 		}
 
-		.margin-base-vertical {
+		.margin-vertical-large {
 			margin: 50px 0;
 		}
 		
-		.margin-base-vertical-mid {
+		.margin-vertical-mid {
 			margin: 35px 0;
 		}
 		
-		.margin-base-vertical-small {
+		.margin-vertical-small {
 			margin: 20px 0;
 		}
+		
+		.margin-top-vertical-mid {
+			margin-top: 35px;
+		}
+		
 	</style>
 </head>
 <body>

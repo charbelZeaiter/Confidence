@@ -100,7 +100,7 @@ public class FacilitatorContoller extends HttpServlet {
 		 */
 
 		String aAction = request.getParameter("aAction");
-		String nextPage = "facilitatorLogin.jsp";
+		String nextPage = "index.jsp";
 
 		System.out.println(aAction);
 
@@ -141,6 +141,9 @@ public class FacilitatorContoller extends HttpServlet {
 
 					// Failed login.
 					request.setAttribute("loginFailed", 1);
+					request.setAttribute("loginType", "facilitatorLogin");
+					nextPage = "login.jsp";
+
 				} 
 
 			} else if (aAction.equals("createSittingRequest")) {
