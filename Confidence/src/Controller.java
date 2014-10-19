@@ -68,7 +68,7 @@ public class Controller extends HttpServlet {
 					
 				} else if(toPage.equals("studentSittingInterface")) {
 
-					request.setAttribute("questions", questionManager.getQuestions());
+					request.setAttribute("questions", questionManager.getQuestions(""));
 					nextPage = "studentSittingInterface.jsp";
 
 				}
@@ -94,12 +94,16 @@ public class Controller extends HttpServlet {
 		 */
 
 		String aAction = request.getParameter("aAction");
-		String nextPage = "login.jsp";  
+
+		String nextPage = "sittingAccess.jsp";  
+		String sort = request.getParameter("sorted");
+		request.setAttribute("sorted", sort); 
 
 		System.out.println(aAction);
 
 		if(aAction != null)
 		{
+			String session_id= request.getSession().getId();
 			if(aAction.equals("postque")){
 
 				// Access server session.
@@ -108,41 +112,68 @@ public class Controller extends HttpServlet {
 
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
-				questionManager.submitQuestion(question, sittingId);
-				request.setAttribute("questions", questionManager.getQuestions());
+				
+				questionManager.submitQuestion(question, sittingId,session_id);
+				request.setAttribute("questions", questionManager.getQuestions(sort));
 
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("upvote")) {
 
 				String que_id = request.getParameter("que_id");
-				questionManager.upvoteQuestion(que_id);
-				request.setAttribute("questions", questionManager.getQuestions());
+				questionManager.upvoteQuestion(que_id,session_id);
+				request.setAttribute("questions", questionManager.getQuestions(sort));
 
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("sittingAccessRequest")) {
 
-				int sittingId = Integer.parseInt(request.getParameter("aSittingId"));
-				String pwd = request.getParameter("aPWD");
-
-				// Check details against database.
-				boolean exists = sittingManager.checkSittingDB(sittingId, pwd);
+				String input = request.getParameter("aSittingId");
+				int sittingId = 0;
+				boolean exists = false;
+				String error = "Login failed!";
+				
+				try {
+					sittingId = Integer.parseInt(input);
+					String pwd = request.getParameter("aPWD");
+					// Check details against database.
+					exists = sittingManager.checkSittingDB(sittingId, pwd);
+				} catch (NumberFormatException e) {
+					error = "ID should be a valid integer";
+				}
 
 				if (exists) {
 					// Setup session.
 					HttpSession mySession = request.getSession();
 					mySession.setAttribute("sittingId", sittingId);
-					request.setAttribute("questions", questionManager.getQuestions());
+					request.setAttribute("questions", questionManager.getQuestions(sort));
 
 					nextPage = "studentSittingInterface.jsp";
 
 				} else {
 					// Failed login
-					request.setAttribute("error", "Login failed!");
+					request.setAttribute("error", error);
 					request.setAttribute("loginType", "studentLogin");
 					nextPage = "login.jsp";
 				}
+
+			} else if (aAction.equals("refresh")) {
+				String sittingId = request.getParameter("sittingId");
+				String pwd = request.getParameter("aPWD");
+
+				// Insert sitting into database.
+
+				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("sittingId", sittingId);
+				request.setAttribute("accessPWD", pwd);
+
+				nextPage = "studentSittingInterface.jsp";
+			} else if (aAction.equals("sort")) {
+				String sittingId = request.getParameter("sittingId");
+				sort = request.getParameter("sortby");
+				request.setAttribute("sorted", sort);
+				request.setAttribute("questions", questionManager.getQuestions(sort));
+				nextPage = "studentSittingInterface.jsp";
 
 			}
 		}
