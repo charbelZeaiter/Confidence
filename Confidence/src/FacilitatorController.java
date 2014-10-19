@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -165,17 +163,18 @@ public class FacilitatorController extends HttpServlet {
 				request.setAttribute("accessPWD", pwd);
 
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+
 			}  else if (aAction.equals("refresh")) {
+
 				String sittingId = request.getParameter("sittingId");
 				String pwd = request.getParameter("aPWD");
-
-				// Insert sitting into database.
 
 				request.setAttribute("questions", questionManager.getQuestions(sort));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+
 			} else if (aAction.equals("remove")) {
 				
 				String sittingId = request.getParameter("sittingId");
@@ -190,6 +189,7 @@ public class FacilitatorController extends HttpServlet {
 				request.setAttribute("accessPWD", pwd);
 				
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+
 			} else if (aAction.equals("sort")) {
 				
 				String sittingId = request.getParameter("sittingId");
