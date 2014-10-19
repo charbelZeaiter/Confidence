@@ -12,14 +12,12 @@ BEGIN
 	DECLARE new_id integer;
 	Declare msg varchar(100);
 	declare sim_id integer default 0;
-	DECLARE c1 CURSOR FOR select distinct id from question_h where id <> new.que_id;
+	DECLARE c1 CURSOR FOR select distinct id from question_h where id <> new.que_id and sitting_id =new.sitting_id;
 	DECLARE CONTINUE handler FOR NOT FOUND SET done =1;
 	select ifnull(max(que_id),0)+1 into new_id from questions;
-	call sentence_split(new.description,new.que_id);
+	 call sentence_split(new.description,new.que_id,new.sitting_id);
 	-- 
 
-
-		-- need to link it to sitting id as well
 		open c1;
 		get_questions : loop
 		fetch c1 into cur_seq;
@@ -38,10 +36,10 @@ BEGIN
 		END LOOP get_questions;
 		CLOSE c1;
 
-		if max_similarity >0.65 then 
+		if max_similarity >0.8 then 
 		select concat('similar question already asked: ',sentence)  into msg from question_h where id = sim_id;
-		-- insert into answer (b,a)values ( 1 , msg);
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+		 -- insert into answer (b,a)values ( 1 , max_similarity); 
+		 SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
 		end if;
 END $$
 DELIMITER ;

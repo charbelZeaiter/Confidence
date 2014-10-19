@@ -11,8 +11,7 @@ BEGIN
 	declare q2_len integer;
 	DECLARE matching integer default 0;
 	DECLARE tot_matching integer default 0;
-	DECLARE matching2 integer default 0;
-	DECLARE matching3 integer default 0;
+
 	DECLARE word varchar(50); 
 	DECLARE suf varchar(20); 
 

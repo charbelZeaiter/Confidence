@@ -1,7 +1,7 @@
 DELIMITER //
 DROP PROCEDURE IF EXISTS  sentence_split //
 CREATE PROCEDURE sentence_split
-(IN fullstr VARCHAR(100) ,IN sid integer)
+(IN fullstr VARCHAR(100) ,IN q_id integer,IN sit_id integer)
 BEGIN
 
 	DECLARE inipos INTEGER;
@@ -29,7 +29,7 @@ BEGIN
          IF item <> '' AND item IS NOT NULL and item not in (select distinct word from excluded_word) 
 					and length(item)>2 THEN           
 			SET counter = counter + 1;
-			insert into question_d(id,word_id,word_position,word) values (sid,counter,endpos,item) ;
+			insert into question_d(id,word_id,word_position,word) values (q_id,counter,endpos,item) ;
          END IF;
 		 
         SET inipos = endpos + 1;
@@ -37,7 +37,7 @@ BEGIN
     UNTIL inipos >= maxlen 
 		
 	END REPEAT; 
-		insert into question_h (id,sentence,nbword) values (sid,fullstr,counter);
+		insert into question_h (id,sentence,nbword,sitting_id) values (q_id,fullstr,counter,sit_id);
 
 END //
 DELIMITER ;

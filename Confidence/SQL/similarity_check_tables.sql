@@ -64,7 +64,8 @@ insert into word_suffix values (1 ,"tion");
   create table question_h (
     id integer , 
     sentence varchar(100),
-    nbword integer
+    nbword integer,
+	sitting_id integer
     );
   
   create table question_d (
