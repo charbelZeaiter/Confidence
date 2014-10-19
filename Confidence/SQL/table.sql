@@ -4,12 +4,12 @@ DROP TABLE `questions`;
 
 CREATE TABLE `facilitators` (
   `facilitator_id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(100) NOT NULL,
+  `username` VARCHAR(100) NOT NULL UNIQUE,
   `password` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`facilitator_id`)
   )
   ;
-  
+
 -- A sitting is another word for a lecture/lab/tute 'session'. Didnt
 -- want to use 'session' as it maybe confused with server session.
 CREATE TABLE `sittings` (

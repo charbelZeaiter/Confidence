@@ -23,7 +23,7 @@ import jdbc.MysqlJDBC;
  * Servlet implementation class Contoller
  */
 @WebServlet("/FacilitatorController")
-public class FacilitatorContoller extends HttpServlet {
+public class FacilitatorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final String PRIVATE_PATH = "WEB-INF/FacilitatorsPages/";
 
@@ -35,7 +35,7 @@ public class FacilitatorContoller extends HttpServlet {
 	 * @throws ClassNotFoundException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public FacilitatorContoller() throws ClassNotFoundException {
+	public FacilitatorController() throws ClassNotFoundException {
 		super();
 		questionManager = new QuestionManager();
 		sittingManager = new SittingManager();
@@ -56,7 +56,7 @@ public class FacilitatorContoller extends HttpServlet {
 		String aAction = request.getParameter("aAction");
 
 		// Set default landing page.
-		String nextPage = "facilitatorLogin.jsp";  
+		String nextPage = "login.jsp";  
 
 		if(aAction != null){
 			if(aAction.equals("navigation"))
@@ -65,14 +65,13 @@ public class FacilitatorContoller extends HttpServlet {
 				String toPage = request.getParameter("page");
 
 				// Set page to dispatch to.
-				if(toPage.equals("signup"))
-				{
-					nextPage = this.PRIVATE_PATH+"facilitatorSignup.jsp";	
+				if(toPage.equals("signup")) {
+					
+					request.setAttribute("loginType", "facilitatorSignup");
 
 				} else if (toPage.equals("facilitatorLogin")) {
 					
 					request.setAttribute("loginType", "facilitatorLogin");
-					nextPage = "login.jsp";
 					
 				} else if(toPage.equals("createSitting")) {
 
@@ -113,10 +112,15 @@ public class FacilitatorContoller extends HttpServlet {
 				String pwd = request.getParameter("aPWD");
 
 				// Insert entry into database.
-				this.signupDBInsert(facilitatorId, pwd);
-
-				// Proceed to facilitator login.
-				nextPage = "facilitatorLogin.jsp";
+				if (loginManager.signupDBInsert(facilitatorId, pwd)) {
+					// Proceed to facilitator login.
+					request.setAttribute("loginType", "facilitatorLogin");
+					nextPage = "login.jsp";
+				} else {
+					request.setAttribute("error", "Sign up failed!");
+					request.setAttribute("loginType", "facilitatorSignup");
+					nextPage = "login.jsp";
+				}
 
 			} else if(aAction.equals("loginRequest")) {
 
@@ -165,37 +169,5 @@ public class FacilitatorContoller extends HttpServlet {
 		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
 		myRequestDispatcher.forward(request, response);
 	}
-
-
-	private void signupDBInsert(String aFacilitatorId, String aPWD) {
-
-		try {
-
-			MysqlJDBC m = new MysqlJDBC();
-
-			// Create sql statement and pass values in.
-			String sqlQuery = "INSERT INTO facilitators (username, password) VALUES (?, ?)";
-			PreparedStatement ps = m.getConnection().prepareStatement(sqlQuery);
-
-			// Set values in query.
-			ps.setString(1, aFacilitatorId);
-			ps.setString(2, aPWD);
-
-			// Execute query;
-			int result = ps.executeUpdate();
-
-			// Check that insert occurred.
-			assert(result == 1);
-
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-
 }
 
