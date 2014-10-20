@@ -13,7 +13,7 @@ public class QuestionManager {
 		mysql = new MysqlJDBC();
 	}
 
-	public ArrayList<HashMap<String, String>> getQuestions(String sort) {
+	public ArrayList<HashMap<String, String>> getQuestions(String sort,int sittingId) {
 		ArrayList<HashMap<String, String>> questions = new ArrayList<HashMap<String, String>>();
 		
 		String order = "";
@@ -29,7 +29,7 @@ public class QuestionManager {
 
 		try {
 			String sql = "SELECT que_id,description,num_votes, creation_time FROM questions " +
-					"WHERE hidden = 'F' ORDER BY "+ order +" DESC";
+					"WHERE hidden = 'F' AND sitting_id= "+sittingId+" ORDER BY "+ order +" DESC";
 			ResultSet rs = mysql.select(sql);
 			while (rs.next()){
 				HashMap<String, String> row = new HashMap<String, String>();

@@ -50,6 +50,14 @@ public class Controller extends HttpServlet {
 		// Set default landing page.
 		String nextPage = "index.jsp";  
 
+		HttpSession mySession = request.getSession();
+		Object sittingIdString = mySession.getAttribute("sittingId");
+		int sittingId = 0;
+		
+		if (sittingIdString != null) {
+			sittingId = (Integer) mySession.getAttribute("sittingId");	
+		}
+		
 		if(aAction != null){
 			if(aAction.equals("navigation"))
 			{
@@ -64,7 +72,7 @@ public class Controller extends HttpServlet {
 					
 				} else if(toPage.equals("studentSittingInterface")) {
 
-					request.setAttribute("questions", questionManager.getQuestions(""));
+					request.setAttribute("questions", questionManager.getQuestions("", sittingId));
 					nextPage = "studentSittingInterface.jsp";
 
 				}
@@ -97,20 +105,25 @@ public class Controller extends HttpServlet {
 
 		System.out.println(aAction);
 
+		// Access server session.
+		HttpSession mySession = request.getSession();
+		Object sittingIdString = mySession.getAttribute("sittingId");
+		int sittingId = 0;
+		
+		if (sittingIdString != null) {
+			sittingId = (Integer) sittingIdString;
+			System.out.println("SITTING ID: " + sittingId);
+		}
+		
 		if(aAction != null)
 		{
 			String session_id= request.getSession().getId();
 			if(aAction.equals("postque")){
-
-				// Access server session.
-				HttpSession mySession = request.getSession();
-				int sittingId = (Integer) mySession.getAttribute("sittingId");
-
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
 				
 				questionManager.submitQuestion(question, sittingId,session_id);
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 
 				nextPage = "studentSittingInterface.jsp";
 
@@ -118,14 +131,14 @@ public class Controller extends HttpServlet {
 
 				String que_id = request.getParameter("que_id");
 				questionManager.upvoteQuestion(que_id,session_id);
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("sittingAccessRequest")) {
 
 				String input = request.getParameter("aSittingId");
-				int sittingId = 0;
+				sittingId = 0;
 				boolean exists = false;
 				String error = "Login failed!";
 				
@@ -139,11 +152,11 @@ public class Controller extends HttpServlet {
 				}
 
 				if (exists) {
-					// Setup session.
-					HttpSession mySession = request.getSession();
+					System.out.println("Sort: " + sort + " sittingId: " + sittingId);
+					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+					
 					mySession.setAttribute("sittingId", sittingId);
-					request.setAttribute("questions", questionManager.getQuestions(sort));
-
+					
 					nextPage = "studentSittingInterface.jsp";
 
 				} else {
@@ -154,23 +167,22 @@ public class Controller extends HttpServlet {
 				}
 
 			} else if (aAction.equals("refresh")) {
-				String sittingId = request.getParameter("sittingId");
+
 				String pwd = request.getParameter("aPWD");
 
-				// Insert sitting into database.
-
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 
 				nextPage = "studentSittingInterface.jsp";
+				
 			} else if (aAction.equals("sort")) {
-				String sittingId = request.getParameter("sittingId");
+				
 				sort = request.getParameter("sortby");
 				request.setAttribute("sorted", sort);
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				nextPage = "studentSittingInterface.jsp";
-
+				
 			}
 		}
 

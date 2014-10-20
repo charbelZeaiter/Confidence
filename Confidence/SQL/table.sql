@@ -23,9 +23,10 @@ CREATE TABLE `sittings` (
   
 CREATE TABLE `questions` (
   `que_id` INT NOT NULL AUTO_INCREMENT,
-  `stu_id` VARCHAR(45) NOT NULL,
+  `stu_id` INT NOT NULL,
   `forum_id` VARCHAR(45) NOT NULL,
   `sitting_id` VARCHAR(45) NOT NULL,
+  `hidden` VARCHAR(1) NOT NULL,
   `description` VARCHAR(100) NOT NULL,
   `num_votes` INT NULL DEFAULT 0,
   `creation_time` DATETIME NULL,
@@ -36,7 +37,7 @@ CREATE TABLE `questions` (
   ;
 alter table questions add session_id varchar(100);
 create table  `votes_audit` (
-	`sitting_id` VARCHAR(45) NOT NULL,
+	`sitting_id` INT NOT NULL,
 	`session_id` VARCHAR(45) NOT NULL,
 	`que_id` INT ,
 	`vote_date` DATETIME,

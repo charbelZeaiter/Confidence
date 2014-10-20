@@ -45,19 +45,21 @@
 				
 				<br>
 				
-				<p>Sort By:</p>
-				<form method="post" action="Controller?aAction=sort">
-					<div class="col-xs-3"></div>
-					<div class="col-xs-6">
-						<select class="form-control" name="sortby" onchange='this.form.submit()'">
-							<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
-							<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
-						</select>
-					</div>						
-				</form>
+				<c:if test="${ !empty questions }">
+					<p>Sort By:</p>
+					<form method="post" action="Controller?aAction=sort">
+						<div class="col-xs-3"></div>
+						<div class="col-xs-6">
+							<select class="form-control" name="sortby" onchange='this.form.submit()'">
+								<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
+								<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+							</select>
+						</div>						
+					</form>
+				</c:if>
 				
 				<br><br><br>
-				
+
 				<c:forEach items="${questions}" var="question">
 					<div class="row">
 						<div class="panel panel-default question">

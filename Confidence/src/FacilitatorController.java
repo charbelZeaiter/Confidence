@@ -103,7 +103,16 @@ public class FacilitatorController extends HttpServlet {
 		request.setAttribute("sorted", sort);
 
 		System.out.println(aAction);
-
+		
+		HttpSession mySession = request.getSession();
+		
+		Object sittingIdString = mySession.getAttribute("sittingId");
+		int sittingId = 0;
+		
+		if (sittingIdString != null) {
+			sittingId = (Integer) mySession.getAttribute("sittingId");	
+		}
+		
 		if(aAction != null)
 		{
 			if(aAction.equals("signupRequest")){
@@ -135,9 +144,8 @@ public class FacilitatorController extends HttpServlet {
 				if (facilitatorRecId > -1) {
 
 					// Setup session.
-					HttpSession mySession = request.getSession();
 					mySession.setAttribute("facilitatorRecId", facilitatorRecId);
-					request.setAttribute("questions", questionManager.getQuestions(sort));
+					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 
 					// Proceed to facilitator login.
 					nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
@@ -157,7 +165,7 @@ public class FacilitatorController extends HttpServlet {
 				int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
 
 				// Insert sitting into database.
-				int sittingId = sittingManager.insertNewSitting(facilitatorRecordId, pwd);
+				sittingId = sittingManager.insertNewSitting(facilitatorRecordId, pwd);
 
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
@@ -166,10 +174,11 @@ public class FacilitatorController extends HttpServlet {
 
 			}  else if (aAction.equals("refresh")) {
 
-				String sittingId = request.getParameter("sittingId");
+				// TODO: CHECK IF THESE PARAMETERS EXIST FIRST, OTHERWISE THIS FAILS WHEN NO SITTING HAS BEEN CREATED YET				
+				
 				String pwd = request.getParameter("aPWD");
 
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 
@@ -177,14 +186,13 @@ public class FacilitatorController extends HttpServlet {
 
 			} else if (aAction.equals("remove")) {
 				
-				String sittingId = request.getParameter("sittingId");
 				String pwd = request.getParameter("aPWD");
 				
 				String que_id = request.getParameter("que_id");
 				questionManager.removeQuestion(que_id);
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 				
@@ -192,12 +200,11 @@ public class FacilitatorController extends HttpServlet {
 
 			} else if (aAction.equals("sort")) {
 				
-				String sittingId = request.getParameter("sittingId");
 				String pwd = request.getParameter("aPWD");
 				
 				sort = request.getParameter("sortby");
 				request.setAttribute("sorted", sort);
-				request.setAttribute("questions", questionManager.getQuestions(sort));
+				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 				
