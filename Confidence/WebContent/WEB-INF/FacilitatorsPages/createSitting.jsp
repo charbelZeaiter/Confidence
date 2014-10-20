@@ -21,19 +21,30 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<br />
+				<ul class="nav nav-tabs" role="tablist">
+					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Home</a></li>
+				</ul>	
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<br>
 				<div class="row">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
 						<form method="post" action="FacilitatorController">
-							<input type="hidden" id="aAction" name="aAction" value="createSittingRequest" /> Please Enter a Password:
+							<p>Please enter a password:</p>
+							<br>
 							<div class="input-group">
+								<input type="hidden" id="aAction" name="aAction" value="createSittingRequest"/>
 								<input class="form-control" type="text" id="aPWD" name="aPWD" />
 								<span class="input-group-btn">
 									<button class="btn btn-primary" type="submit">Create</button>
 								</span>
 							</div>
 						</form>
+						<br><br>
+						<p>(Your sitting ID will be auto generated)</p>
 					</div>
 					<div class="col-md-4"></div>
 				</div>

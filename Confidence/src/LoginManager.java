@@ -41,4 +41,29 @@ public class LoginManager {
 
 		return result;
 	}
+	
+	public boolean signupDBInsert(String aFacilitatorId, String aPWD) {
+		boolean success = false;
+		try {
+			// Create sql statement and pass values in.
+			String sqlQuery = "INSERT INTO facilitators (username, password) VALUES (?, ?)";
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
+
+			// Set values in query.
+			ps.setString(1, aFacilitatorId);
+			ps.setString(2, aPWD);
+
+			// Execute query;
+			int result = ps.executeUpdate();
+
+			// Check that insert occurred.
+			assert(result == 1);
+			success = true;
+		}
+		catch (SQLException e) {
+			success = false;
+			e.printStackTrace();
+		}
+		return success;
+	}
 }

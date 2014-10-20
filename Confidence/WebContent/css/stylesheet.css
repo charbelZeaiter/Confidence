@@ -10,6 +10,8 @@ html,body {
 	height: 100%;
 	/* Negative indent footer by it's height */
 	margin: 0 auto -60px;
+	
+	text-align: center;
 }
 
 /* Set the fixed height of the footer here */
@@ -39,6 +41,12 @@ html,body {
 .container .credit {
 	margin: 20px 0;
 	text-align: center;
+}
+
+h1 {
+	font-family: "Open Sans",serif;
+	font-weight: 400;
+	font-size: 40px;
 }
 
 .question {
