@@ -56,8 +56,8 @@
 					</div>						
 				</form>
 				
-				<br>
-			
+				<br><br><br>
+				
 				<c:forEach items="${questions}" var="question">
 					<div class="row">
 						<div class="panel panel-default question">

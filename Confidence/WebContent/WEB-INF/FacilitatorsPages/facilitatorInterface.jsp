@@ -70,7 +70,7 @@
 					</div>
 				</form>
 				
-				<br>
+				<br><br><br>
 				
 				<c:forEach items="${questions}" var="question">
 					<div class="row questionPanel">
