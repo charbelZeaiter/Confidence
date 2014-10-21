@@ -48,7 +48,7 @@ public class Controller extends HttpServlet {
 		String aAction = request.getParameter("aAction");
 
 		// Set default landing page.
-		String nextPage = "index.jsp";  
+		String nextPage = "login.jsp";  
 
 		HttpSession mySession = request.getSession();
 		Object sittingIdString = mySession.getAttribute("sittingId");
@@ -65,17 +65,27 @@ public class Controller extends HttpServlet {
 				String toPage = request.getParameter("page");
 
 				// Set page to dispatch to.
-				if(toPage.equals("home") || toPage.equals("studentLogin")) {
+				if(toPage.equals("studentLogin")) {
 					
 					request.setAttribute("loginType", "studentLogin");
 					nextPage = "login.jsp";
 					
 				} else if(toPage.equals("studentSittingInterface")) {
+					
+					request.setAttribute("questions", questionManager.getQuestions("", sittingId));
+					nextPage = "studentSittingInterface.jsp";
+
+				} else if(toPage.equals("home")) {
 
 					request.setAttribute("questions", questionManager.getQuestions("", sittingId));
 					nextPage = "studentSittingInterface.jsp";
 
 				}
+				
+			} else if(aAction.equals("logOut")){
+				
+				// Clear session.
+				request.getSession().invalidate();
 			}
 		}
 
@@ -122,9 +132,14 @@ public class Controller extends HttpServlet {
 				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
 				
-				questionManager.submitQuestion(question, sittingId,session_id);
+				if(question.isEmpty()) {
+					request.setAttribute("questionError", "Question cannot be empty!");
+				} else {
+					questionManager.submitQuestion(question, sittingId,session_id);
+				}
+				
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
-
+				
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("upvote")) {

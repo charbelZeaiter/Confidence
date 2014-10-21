@@ -35,30 +35,23 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<ul class="nav nav-tabs" role="tablist">
-					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Home</a></li>
-				</ul>	
-			</div>
+			<!-- Nav include -->
+			<jsp:include page="nav.jsp" />
 		</div>
-		<br>
+		<br />
+		<div class="row">
+			<div class="col-md-4">
+				Sitting ID: ${sittingId}<br />
+				Sitting Name: ${sittingName}<br />
+				Sitting Password: ${sittingPwd}<br />
+			</div>
+			<div class="col-md-4"></div>
+			<div class="col-md-4"></div>
+		</div>
+		<br />
 		<div class="col-md-4"></div>
 		<div class="col-md-4">
 			<div class="row">
-			
-				<a class="btn btn-large btn-primary" href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A New Sitting</a>
-
-				<br><br>
-
-				<c:if test="${ !empty sittingId }">
-					<p style="color: green;">Sitting ID: ${sittingId}</p>
-					<p></p>
-					<p style="color: green;">Access password: ${accessPWD}</p>
-					<p></p>
-				</c:if>
-				
-				<br>
-
 				<c:if test="${ !empty questions }">
 					<p>Sort By:</p>
 					<form method="post" action="FacilitatorController?aAction=sort">

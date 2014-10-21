@@ -22,14 +22,15 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<ul class="nav nav-tabs" role="tablist">
-					<li><a href="Controller?aAction=navigation&amp;page=home">Home</a></li>
-				</ul>	
-			</div>
+			<!-- Nav include -->
+			<jsp:include page="nav.jsp" />
 		</div>
 		<br>
-		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<c:if test="${ !empty questionError }">
+				<p style="color:red;"> ${questionError} </p>
+			</c:if>
+		</div>
 		<div class="col-md-4">
 			<div class="row">
 
