@@ -69,6 +69,7 @@ public class Controller extends HttpServlet {
 				} else if(toPage.equals("survey")) {
 					request.setAttribute("responses", surveyManager.getStats());
 					request.setAttribute("questions", surveyManager.getQuestions());
+					request.setAttribute("choices", new String[] {"1","2","3","4","5"});
 					nextPage = "surveyResults.jsp";
 
 				} 
@@ -114,12 +115,18 @@ public class Controller extends HttpServlet {
 
 				nextPage = "studentSittingInterface.jsp";
 
-			} else if(aAction.equals("surveyNew"))
+			} else if(aAction.equals("submitSurvey"))
 			{
-
+				for (Integer i=1;i<=3;i++) {
+					String in = request.getParameter(i.toString());
+					System.out.println(i.toString()+ " : " + in);
+					surveyManager.respondToQuestion(i.toString(), in);
+				}
+				System.out.println("hello there");
+				request.setAttribute("responses", surveyManager.getStats());
 				request.setAttribute("questions", surveyManager.getQuestions());
-
-				nextPage = "surveyNew.jsp";
+				request.setAttribute("choices", new String[] {"1","2","3","4","5"});
+				nextPage = "surveyResults.jsp";
 			} else if (aAction.equals("upvote")) {
 
 				String que_id = request.getParameter("que_id");

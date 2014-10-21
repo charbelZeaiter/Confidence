@@ -26,7 +26,6 @@ public class SurveyManager {
 					row.put("response_count", rs.getString("response_count"));
 					stats.add(row);
 				}
-			//}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

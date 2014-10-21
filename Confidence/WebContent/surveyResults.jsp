@@ -14,6 +14,64 @@
 <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+//Load the Visualization API and the piechart package.
+google.load('visualization', '1.0', {'packages':['corechart']});
+
+// Set a callback to run when the Google Visualization API is loaded.
+google.setOnLoadCallback(drawChartExt);
+
+function drawChartExt() {
+	drawChart(1);
+	drawChart(2);
+	drawChart(3);
+}
+// Callback that creates and populates a data table,
+// instantiates the pie chart, passes in the data and
+// draws it.
+function drawChart(qid) {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rating');
+        data.addColumn('number', 'Votes');
+        var index;
+        var sel = ["1","2","3","4","5"];
+        var chartrows = new Array();
+        var divname;
+        var count = 0;
+        var sum = 0;
+        var average;
+        for	(index = 0; index < 5; index++) {
+             divname = "div_"+qid+"_"+sel[index];
+            if (document.getElementById(divname) != null) {
+            	chartrows[index] =  parseInt(document.getElementById(divname).value);
+            	count += chartrows[index];
+            	sum += chartrows[index] * (index+1);
+            }
+            data.addRow([sel[index],chartrows[index]]);
+        }
+        
+
+        // Set chart options
+        var options = {'title':"Question "+qid+"!",
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_div_"+qid));
+        chart.draw(data, options);
+        
+        
+        document.getElementById("chart_count_"+qid).innerHTML = count + " responses";
+        if (count > 0) {
+	        average = sum/count;
+	        document.getElementById("chart_avg_"+qid).innerHTML = average + " average";
+        }
+        
+      }
+</script>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
@@ -34,73 +92,63 @@
 	<div class="modal fade" id="feedbackForm" tabindex="-1" role="dialog"
 		aria-labelledby="feedbackFormLabel" aria-hidden="true">
 		<div class="modal-dialog">
+			<form action="Controller?aAction=submitSurvey&amp;page=survey" method="post">
+			<div class="input-group">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title" id="feedbackFormLabel">Lecture
 						Feedback</h4>
 				</div>
-				<div id="wrap">
-					<br />
+				<div class="modal-body col-md-12">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					
 					<c:forEach items="${questions}" var="question">
-						<div class="row">
-							<div class="col-md-4"></div>
-							<div class="col-md-4">
-								<div class="panel panel-default">
-									<div class="panel-body">
-										<table>
-											<tr>
-												<td class="col-md-9">${question.question}</td>
-											</tr>
-										</table>
-									</div>
-									
-									<table>
-									
-										<tr><td><input type="radio" name="${question.id}" value="1">1</td>
-										<td><input type="radio" name="${question.id}" value="2">2</td>
-										<td><input type="radio" name="${question.id}" value="3">3</td>
-										<td><input type="radio" name="${question.id}" value="4">4</td>
-										<td><input type="radio" name="${question.id}" value="5">5</td> </tr>
-										
-									</table>
-								</div>
-							</div>
-						</div>
+									<label for = "choices_${question.id}">${question.question} </label>
+									<ul class="list-inline" id = "choices_${question.id}">
+									<c:forEach items="${choices}" var="choice">
+										<li><div class = "radio"><label>
+													<input type = "radio" name="${question.id}" value="${choice}"/> ${choice}
+										</label></div></li>
+									</c:forEach>
+									</ul>
 					</c:forEach>
+					
+				</div>
+				<div class="col-md-2"></div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary">Save</button>
-					<input type="hidden" id="aAction" value="post_response" /> 
+					<input type = "submit" class="btn btn-primary">Save</input>
 					<button type="button" class="btn btn-primary" data-dismiss = "modal">Close</button>
 				</div>
+				</div>
+				</div>
+				</form>
 			</div>
 		</div>
-	</div>
-
 	
-	<div id="wrap">
-		<br />
+	
 		<c:forEach items="${responses}" var="response">
-			<div class="row">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="panel panel-default question">
-						<div class="panel-body">
-							<table>
-								<tr>
-									<td class="col-md-9">${response.question}</td>
-									<td class="col-md-9">${response.response}</td>
-									<td class="col-md-9">${response.response_count}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
+		<input type="hidden"  id = "div_${response.question}_${response.response}" value = "${response.response_count}" />
 		</c:forEach>
-
-	</div>
-
+		
+		<div class="col-md-12">
+		<div class="col-md-2"></div>
+		<div class="col-md-4">
+		<c:forEach items="${questions}" var="question">
+			<div class="container">
+		 <label>${question.question} </label>
+		 <ul>
+		 	<li><div id = "chart_count_${question.id}"></div></li>
+		 	<li><div id = "chart_avg_${question.id}"></div></li>
+		 </ul>
+		 <div id="chart_div_${question.id}"></div>
+		 </div>
+		</c:forEach>
+		</div>
+		<div class="col-md-6"></div>
+		</div>
+       
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
