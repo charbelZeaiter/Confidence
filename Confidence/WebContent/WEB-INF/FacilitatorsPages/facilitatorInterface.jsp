@@ -19,6 +19,16 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 	
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+    
+        $(document).ready(function() {
+        		setInterval(function() {
+        			$.get("FacilitatorController?aAction=facilitatorAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
+            }, 2000);
+        });
+    </script>
+        
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".tick").click(function() {
@@ -67,27 +77,10 @@
 				
 				<br><br><br>
 				
-				<c:forEach items="${questions}" var="question">
-					<div class="row questionPanel">
-						<div class="panel panel-default question">
-							<div class="panel-body">
-								<table>
-									<tr>
-										<td class="col-md-1">
-											<FORM NAME="form1" METHOD="POST" action="FacilitatorController?aAction=remove">
-												<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}">
-												<INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
-												<input type="image" src="images/tick.png" value="Remove" style="width: 40px;" />
-											</FORM>
-										</td>
-										<td class="col-md-9">[ID${question.id}]	${question.description}</td>
-										<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-					</div>
-				</c:forEach>
+				<div id="dynamicBox" name="dynamicBox">
+					<!-- AJAX Content here -->
+				</div>
+				
 			</div>
 		</div>
 		<div class="col-md-4" style="text-align: right;">

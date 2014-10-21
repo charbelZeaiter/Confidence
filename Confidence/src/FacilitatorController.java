@@ -88,9 +88,7 @@ public class FacilitatorController extends HttpServlet {
 					nextPage = this.PRIVATE_PATH+"facilitatorHome.jsp";
 					
 				} else if(toPage.equals("facilitatorInterface")) {
-					
-					int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
-					
+										
 					String sort = request.getParameter("sorted");
 					request.setAttribute("sorted", sort);
 					
@@ -101,10 +99,12 @@ public class FacilitatorController extends HttpServlet {
 					request.setAttribute("sittingId", sittingId);
 					request.setAttribute("sittingName", sittingName);
 					request.setAttribute("sittingPwd", sittingPwd);
-					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+					request.getSession().setAttribute("sittingId", sittingId);
+					request.getSession().setAttribute("sittingName", sittingName);
+					request.getSession().setAttribute("sittingPwd", sittingPwd);
+					request.getSession().setAttribute("sorted", sort);
 					
-					// Sut up to display all facilitators sittings for next page.
-					this.setUpToDisplayAllSittings(request, facilitatorRecordId);
+					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 					
 					nextPage = this.PRIVATE_PATH+"facilitatorInterface.jsp";
 				}
@@ -114,6 +114,48 @@ public class FacilitatorController extends HttpServlet {
 				
 				// Clear session.
 				request.getSession().invalidate();
+				
+			} else if(aAction.equals("facilitatorAJAX")){
+				
+				int sittingId = (Integer) request.getSession().getAttribute("sittingId");
+				String sort = (String) request.getSession().getAttribute("sorted");
+				
+				ArrayList<HashMap<String, String>> questionList = questionManager.getQuestions(sort, sittingId);
+				
+				StringBuilder output = new StringBuilder();
+				
+				for(HashMap<String, String> item : questionList)
+				{
+					output.append(
+							"<div class=\"row questionPanel\">" +
+								"<div class=\"panel panel-default question\">" +
+									"<div class=\"panel-body\">" +
+									"<table>" +
+										"<tr>" +
+											"<td class=\"col-md-1\">" +
+												"<FORM NAME=\"form1\" METHOD=\"POST\" action=\"FacilitatorController?aAction=remove\">"
+							);
+					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"que_id\" VALUE=\""+item.get("id")+"\">");
+					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"sorted\" VALUE=\""+sort+"\">");
+					output.append("<input type=\"image\" src=\"images/tick.png\" value=\"Remove\" style=\"width: 40px;\" />");
+					output.append("</FORM></td>");
+					output.append("<td class=\"col-md-9\">[ID"+item.get("id")+"]	"+item.get("description")+"</td>");
+					output.append("<td class=\"col-md-2\" style=\"text-align: center;\">"+item.get("num_votes")+"</td>");
+					output.append(			"</tr>"+
+										"</table>"+
+									"</div>"+
+								"</div>"+
+							"</div>"
+					);
+					
+					
+				}
+				
+			    response.setContentType("text/html");  // Set content type of the response so that jQuery knows what it can expect.
+			    response.setCharacterEncoding("UTF-8"); 
+			    response.getWriter().write(output.toString());  // Write response body.
+			    
+			    return;
 			}
 		}
 
@@ -287,6 +329,7 @@ public class FacilitatorController extends HttpServlet {
 				
 				sort = request.getParameter("sortby");
 				request.setAttribute("sorted", sort);
+				request.getSession().setAttribute("sorted", sort);
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
