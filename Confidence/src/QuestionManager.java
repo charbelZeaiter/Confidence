@@ -40,7 +40,7 @@ public class QuestionManager {
 				questions.add(row);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());// e.printStackTrace();
 		}
 
 		return questions;
@@ -58,7 +58,7 @@ public class QuestionManager {
 					"values ('1','1',\""+question+"\",0,\""+aSittingId+"\",\""+sessionId+"\",\""+currentTime+""+"\",\"F"+"\")";
 			mysql.insert(sql);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());//e.printStackTrace();
 		}
 
 	}
