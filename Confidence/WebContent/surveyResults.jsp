@@ -74,7 +74,7 @@ function drawChart(qid) {
 </script>
 </head>
 <body>
-	<jsp:include page="header.jsp" />
+	
 	<div class = "jumbotron">
 		<h1> Survey Results </h1>
 	</div>
@@ -127,9 +127,12 @@ function drawChart(qid) {
 			</div>
 		</div>
 	
-	
 		<c:forEach items="${responses}" var="response">
-		<input type="hidden"  id = "div_${response.question}_${response.response}" value = "${response.response_count}" />
+		<input type="hidden"  id = "div_${response.q_id}_1" value = "${response.o_1}" />
+		<input type="hidden"  id = "div_${response.q_id}_2" value = "${response.o_2}" />
+		<input type="hidden"  id = "div_${response.q_id}_3" value = "${response.o_3}" />
+		<input type="hidden"  id = "div_${response.q_id}_4" value = "${response.o_4}" />
+		<input type="hidden"  id = "div_${response.q_id}_5" value = "${response.o_5}" />
 		</c:forEach>
 		
 		<div class="col-md-12">

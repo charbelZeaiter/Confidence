@@ -8,7 +8,7 @@
 	<title>Facilitator Interface</title>
 	
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
+	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"	type="text/javascript"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="bootstrap-3.2.0-dist/js/bootstrap.min.js" type="text/javascript"></script>
 	
@@ -19,7 +19,17 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 	
-	<script>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+    
+        $(document).ready(function() {
+        		setInterval(function() {
+        			$.get("FacilitatorController?aAction=facilitatorAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
+            }, 2000);
+        });
+    </script>
+        
+	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".tick").click(function() {
 				$(this).parentsUntil(".questionPanel").fadeOut();
@@ -35,46 +45,52 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<ul class="nav nav-tabs" role="tablist">
-					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Home</a></li>
-					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Etc...</a></li>
-				</ul>
-			</div>
+			<!-- Nav include -->
+			<jsp:include page="nav.jsp" />
 		</div>
-		<br>
+		<br />
 		<div class="row">
 			<div class="col-md-4">
-				<a href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A Sitting</a>
+				Sitting ID: ${sittingId}<br />
+				Sitting Name: ${sittingName}<br />
+				Sitting Password: ${sittingPwd}<br />
 			</div>
 			<div class="col-md-4"></div>
-			<div class="col-md-4">
-				<c:if test="${ !empty sittingId }">
-					<p style="color: green;">Sitting ID: ${sittingId}<p>
-					<p style="color: green;">Access password: ${accessPWD}<p>
+			<div class="col-md-4"></div>
+		</div>
+		<br />
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<div class="row">
+				<c:if test="${ !empty questions }">
+					<p>Sort By:</p>
+					<form method="post" action="FacilitatorController?aAction=sort">
+						<div class="col-xs-3"></div>
+						<div class="col-xs-6">	
+							<select class="form-control" name="sortby" onchange='this.form.submit()'>
+								<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
+								<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+							</select>
+						</div>
+					</form>
 				</c:if>
+				
+				<br><br><br>
+				
+				<div id="dynamicBox" name="dynamicBox">
+					<!-- AJAX Content here -->
+				</div>
+				
 			</div>
 		</div>
-		<c:forEach items="${questions}" var="question">
-			<div class="row questionPanel">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="panel panel-default question">
-						<div class="panel-body">
-							<table>
-								<tr>
-									<td class="col-md-1"><img class="tick" src="images/tick.png" value="Upvote" style="width: 40px;" /></td>
-									<td class="col-md-9">[ID${question.id}] ${question.description}</td>
-									<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</c:forEach>
+		<div class="col-md-4" style="text-align: right;">
+			<form method="post" action="FacilitatorController?aAction=refresh">
+				<input type="hidden" id="aAction" value="refresh" />
+				<input type="HIDDEN" name="sorted" value="${sorted}">
+				<button class="btn btn-primary" type="submit">Refresh!</button>
+			</form>		
+		</div>
 	</div>
-
 	<jsp:include page="footer.jsp" />
 
 </body>
