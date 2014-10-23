@@ -54,8 +54,8 @@ public class QuestionManager {
 
 		String currentTime = sdf.format(dt);
 		try {
-			String sql= "insert into questions(stu_id,forum_id,description,num_votes, sitting_id,session_id, creation_time, hidden )  " +
-					"values ('1','1',\""+question+"\",0,\""+aSittingId+"\",\""+sessionId+"\",\""+currentTime+""+"\",\"F"+"\")";
+			String sql= "insert into questions(description, sitting_id,session_id, creation_time) " +
+					"values (\""+question+"\",\""+aSittingId+"\",\""+sessionId+"\",\""+currentTime+""+"\")";
 			mysql.insert(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,17 +76,14 @@ public class QuestionManager {
 	
 	
 	public void removeQuestion(String questionId) {
+		
 		try {
-			MysqlJDBC m=new MysqlJDBC();
-			try {
-				String sql= "UPDATE questions SET hidden = 'T' WHERE que_id = " + questionId + ";";
-				mysql.insert(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (ClassNotFoundException e) {
+			String sql= "UPDATE questions SET hidden = 'T' WHERE que_id = " + questionId + ";";
+			mysql.insert(sql);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 }

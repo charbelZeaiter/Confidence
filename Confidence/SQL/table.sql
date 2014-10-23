@@ -1,6 +1,6 @@
-DROP TABLE `facilitators`;
 DROP TABLE `sittings`;
 DROP TABLE `questions`;
+DROP TABLE `facilitators`;
 DROP TABLE `votes_audit`;
 
 CREATE TABLE `facilitators` (
@@ -11,22 +11,22 @@ CREATE TABLE `facilitators` (
   )
   ;
 
--- A sitting is another word for a lecture/lab/tute 'session'. Didnt
+-- A sitting is another word for a lecture/lab/tute 'session'. Didn't
 -- want to use 'session' as it maybe confused with server session.
 CREATE TABLE `sittings` (
   `sitting_id` INT NOT NULL AUTO_INCREMENT,
-  `facilitator_id` VARCHAR(45) NOT NULL,
+  `facilitator_id` INT NOT NULL,
   `password` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`sitting_id`)
+  PRIMARY KEY (`sitting_id`),
+  FOREIGN KEY (`facilitator_id`) REFERENCES `facilitators`(`facilitator_id`)
   )
   ;
   
 CREATE TABLE `questions` (
   `que_id` INT NOT NULL AUTO_INCREMENT,
-  `stu_id` INT NOT NULL,
-  `forum_id` VARCHAR(45) NOT NULL,
   `sitting_id` VARCHAR(45) NOT NULL,
-  `hidden` VARCHAR(1) NOT NULL,
+  `session_id` VARCHAR(100) NOT NULL,
+  `hidden` VARCHAR(1) NOT NULL DEFAULT 'F',
   `description` VARCHAR(100) NOT NULL,
   `num_votes` INT NULL DEFAULT 0,
   `creation_time` DATETIME NULL,
@@ -35,21 +35,11 @@ CREATE TABLE `questions` (
   PRIMARY KEY (`que_id`)
   )
   ;
-alter table questions add session_id varchar(100);
-create table  `votes_audit` (
+
+create table `votes_audit` (
 	`sitting_id` INT NOT NULL,
 	`session_id` VARCHAR(45) NOT NULL,
-	`que_id` INT ,
+	`que_id` INT,
 	`vote_date` DATETIME,
 	PRIMARY KEY (`que_id`,`session_id`,`sitting_id`)
 )
-	
-	 
-  
-  
-  
-  
-  
-  
-  
-  
