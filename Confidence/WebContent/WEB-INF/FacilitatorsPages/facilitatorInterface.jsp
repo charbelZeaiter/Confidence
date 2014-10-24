@@ -19,6 +19,16 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 	
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+    
+        $(document).ready(function() {
+        		setInterval(function() {
+        			$.get("FacilitatorController?aAction=facilitatorAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
+            }, 2000);
+        });
+    </script>
+        
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".tick").click(function() {
@@ -35,30 +45,23 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<ul class="nav nav-tabs" role="tablist">
-					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Home</a></li>
-				</ul>	
-			</div>
+			<!-- Nav include -->
+			<jsp:include page="nav.jsp" />
 		</div>
-		<br>
+		<br />
+		<div class="row">
+			<div class="col-md-4">
+				Sitting ID: ${sittingId}<br />
+				Sitting Name: ${sittingName}<br />
+				Sitting Password: ${sittingPwd}<br />
+			</div>
+			<div class="col-md-4"></div>
+			<div class="col-md-4"></div>
+		</div>
+		<br />
 		<div class="col-md-4"></div>
 		<div class="col-md-4">
 			<div class="row">
-			
-				<a class="btn btn-large btn-primary" href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A New Sitting</a>
-
-				<br><br>
-
-				<c:if test="${ !empty sittingId }">
-					<p style="color: green;">Sitting ID: ${sittingId}</p>
-					<p></p>
-					<p style="color: green;">Access password: ${accessPWD}</p>
-					<p></p>
-				</c:if>
-				
-				<br>
-
 				<c:if test="${ !empty questions }">
 					<p>Sort By:</p>
 					<form method="post" action="FacilitatorController?aAction=sort">
@@ -74,27 +77,10 @@
 				
 				<br><br><br>
 				
-				<c:forEach items="${questions}" var="question">
-					<div class="row questionPanel">
-						<div class="panel panel-default question">
-							<div class="panel-body">
-								<table>
-									<tr>
-										<td class="col-md-1">
-											<FORM NAME="form1" METHOD="POST" action="FacilitatorController?aAction=remove">
-												<INPUT TYPE="HIDDEN" NAME="que_id" VALUE="${question.id}">
-												<INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
-												<input type="image" src="images/tick.png" value="Remove" style="width: 40px;" />
-											</FORM>
-										</td>
-										<td class="col-md-9">[ID${question.id}]	${question.description}</td>
-										<td class="col-md-2" style="text-align: center;">${question.num_votes}</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-					</div>
-				</c:forEach>
+				<div id="dynamicBox" name="dynamicBox">
+					<!-- AJAX Content here -->
+				</div>
+				
 			</div>
 		</div>
 		<div class="col-md-4" style="text-align: right;">

@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 	<meta charset="utf-8" content="">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,11 +21,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<ul class="nav nav-tabs" role="tablist">
-					<li><a href="FacilitatorController?aAction=navigation&amp;page=home">Home</a></li>
-				</ul>	
-			</div>
+			<!-- Nav include -->
+			<jsp:include page="nav.jsp" />
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -32,7 +30,12 @@
 				<div class="row">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
+						<c:if test="${ !empty formError }">
+							<p style="color: red;">${formError}</p>
+						</c:if>
+				
 						<form method="post" action="FacilitatorController">
+							Name: <input type="text" id="aName" name="aName" />
 							<p>Please enter a password:</p>
 							<br>
 							<div class="input-group">

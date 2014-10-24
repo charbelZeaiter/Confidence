@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import beans.SittingBean;
 
 import jdbc.MysqlJDBC;
 
@@ -74,8 +77,85 @@ public class FacilitatorController extends HttpServlet {
 				} else if(toPage.equals("createSitting")) {
 
 					nextPage = this.PRIVATE_PATH+"createSitting.jsp";
+					
+				} else if(toPage.equals("facilitatorHome")) {
+					
+					int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
+					
+					// Sut up to display all facilitators sittings for next page.
+					this.setUpToDisplayAllSittings(request, facilitatorRecordId);
+					
+					nextPage = this.PRIVATE_PATH+"facilitatorHome.jsp";
+					
+				} else if(toPage.equals("facilitatorInterface")) {
+										
+					String sort = request.getParameter("sorted");
+					request.setAttribute("sorted", sort);
+					
+					int sittingId = Integer.parseInt(request.getParameter("sittingId"));
+					String sittingName = request.getParameter("sittingName");
+					String sittingPwd = request.getParameter("qwerty");
+					
+					request.setAttribute("sittingId", sittingId);
+					request.setAttribute("sittingName", sittingName);
+					request.setAttribute("sittingPwd", sittingPwd);
+					request.getSession().setAttribute("sittingId", sittingId);
+					request.getSession().setAttribute("sittingName", sittingName);
+					request.getSession().setAttribute("sittingPwd", sittingPwd);
+					request.getSession().setAttribute("sorted", sort);
+					
+					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+					
+					nextPage = this.PRIVATE_PATH+"facilitatorInterface.jsp";
 				}
+				
 
+			} else if(aAction.equals("logOut")){
+				
+				// Clear session.
+				request.getSession().invalidate();
+				
+			} else if(aAction.equals("facilitatorAJAX")){
+				
+				int sittingId = (Integer) request.getSession().getAttribute("sittingId");
+				String sort = (String) request.getSession().getAttribute("sorted");
+				
+				ArrayList<HashMap<String, String>> questionList = questionManager.getQuestions(sort, sittingId);
+				
+				StringBuilder output = new StringBuilder();
+				
+				for(HashMap<String, String> item : questionList)
+				{
+					output.append(
+							"<div class=\"row questionPanel\">" +
+								"<div class=\"panel panel-default question\">" +
+									"<div class=\"panel-body\">" +
+									"<table>" +
+										"<tr>" +
+											"<td class=\"col-md-1\">" +
+												"<FORM NAME=\"form1\" METHOD=\"POST\" action=\"FacilitatorController?aAction=remove\">"
+							);
+					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"que_id\" VALUE=\""+item.get("id")+"\">");
+					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"sorted\" VALUE=\""+sort+"\">");
+					output.append("<input type=\"image\" src=\"images/tick.png\" value=\"Remove\" style=\"width: 40px;\" />");
+					output.append("</FORM></td>");
+					output.append("<td class=\"col-md-9\">[ID"+item.get("id")+"]	"+item.get("description")+"</td>");
+					output.append("<td class=\"col-md-2\" style=\"text-align: center;\">"+item.get("num_votes")+"</td>");
+					output.append(			"</tr>"+
+										"</table>"+
+									"</div>"+
+								"</div>"+
+							"</div>"
+					);
+					
+					
+				}
+				
+			    response.setContentType("text/html");  // Set content type of the response so that jQuery knows what it can expect.
+			    response.setCharacterEncoding("UTF-8"); 
+			    response.getWriter().write(output.toString());  // Write response body.
+			    
+			    return;
 			}
 		}
 
@@ -120,18 +200,39 @@ public class FacilitatorController extends HttpServlet {
 				// Get form fields.
 				String facilitatorId = request.getParameter("aFacilitatorId");
 				String pwd = request.getParameter("aPWD");
-
-				// Insert entry into database.
-				if (loginManager.signupDBInsert(facilitatorId, pwd)) {
-					// Proceed to facilitator login.
-					request.setAttribute("loginType", "facilitatorLogin");
-					nextPage = "login.jsp";
-				} else {
-					request.setAttribute("error", "Sign up failed!");
+				
+				// Validate that fields are not empty.
+				if(facilitatorId.isEmpty() && pwd.isEmpty())
+				{	
+					nextPage = "login.jsp"; 
 					request.setAttribute("loginType", "facilitatorSignup");
-					nextPage = "login.jsp";
+					request.setAttribute("error", "'id' & 'password' cannot be empty!");
+							
+				} else if(facilitatorId.isEmpty())
+				{
+					nextPage = "login.jsp"; 
+					request.setAttribute("loginType", "facilitatorSignup");
+					request.setAttribute("error", "'id' cannot be empty!");
+							
+				} else if(pwd.isEmpty()) {
+					
+					nextPage = "login.jsp"; 
+					request.setAttribute("loginType", "facilitatorSignup");
+					request.setAttribute("error", "'password' cannot be empty!");
+					
+				} else {
+				
+					// Insert entry into database.
+					if (loginManager.signupDBInsert(facilitatorId, pwd)) {
+						// Proceed to facilitator login.
+						request.setAttribute("loginType", "facilitatorLogin");
+						nextPage = "login.jsp";
+					} else {
+						request.setAttribute("error", "Sign up failed!");
+						request.setAttribute("loginType", "facilitatorSignup");
+						nextPage = "login.jsp";
+					}
 				}
-
 			} else if(aAction.equals("loginRequest")) {
 
 				// Get form fields.
@@ -146,9 +247,12 @@ public class FacilitatorController extends HttpServlet {
 					// Setup session.
 					mySession.setAttribute("facilitatorRecId", facilitatorRecId);
 					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
-
+					
+					// Set up to display all facilitators sittings for next page.
+					this.setUpToDisplayAllSittings(request, facilitatorRecId);
+					
 					// Proceed to facilitator login.
-					nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
+					nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
 
 				} else {
 
@@ -162,16 +266,37 @@ public class FacilitatorController extends HttpServlet {
 			} else if (aAction.equals("createSittingRequest")) {
 
 				String pwd = request.getParameter("aPWD");
-				int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
-
-				// Insert sitting into database.
-				sittingId = sittingManager.insertNewSitting(facilitatorRecordId, pwd);
-
-				request.setAttribute("sittingId", sittingId);
-				request.setAttribute("accessPWD", pwd);
-
-				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
-
+				String name = request.getParameter("aName");
+				
+				// Validate that fields are not empty.
+				if(name.isEmpty() && pwd.isEmpty())
+				{
+					nextPage = PRIVATE_PATH+"createSitting.jsp";
+					request.setAttribute("formError", "Sitting 'name' & 'password' cannot be empty!");
+							
+				} else if(name.isEmpty())
+				{
+					nextPage = PRIVATE_PATH+"createSitting.jsp";
+					request.setAttribute("formError", "Sitting 'name' cannot be empty!");
+							
+				} else if(pwd.isEmpty()) {
+					
+					nextPage = PRIVATE_PATH+"createSitting.jsp";
+					request.setAttribute("formError", "Sitting 'password' cannot be empty!");
+					
+				} else {
+					
+					int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
+	
+					// Insert sitting into database.
+					sittingId = sittingManager.insertNewSitting(facilitatorRecordId, pwd, name);
+					
+					// Set up to display all facilitators sittings for next page.
+					this.setUpToDisplayAllSittings(request, facilitatorRecordId);
+					
+					nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
+				}
+				
 			}  else if (aAction.equals("refresh")) {
 
 				// TODO: CHECK IF THESE PARAMETERS EXIST FIRST, OTHERWISE THIS FAILS WHEN NO SITTING HAS BEEN CREATED YET				
@@ -204,6 +329,7 @@ public class FacilitatorController extends HttpServlet {
 				
 				sort = request.getParameter("sortby");
 				request.setAttribute("sorted", sort);
+				request.getSession().setAttribute("sorted", sort);
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
@@ -216,6 +342,14 @@ public class FacilitatorController extends HttpServlet {
 
 		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
 		myRequestDispatcher.forward(request, response);
+	}
+	
+	private void setUpToDisplayAllSittings(HttpServletRequest request, int facilitatorRecId)
+	{
+		// Get any existing sittings from db.
+		List<SittingBean> sittingList = sittingManager.getFacilitatorSittingsDB(facilitatorRecId); 
+		request.setAttribute("sittingListSize", sittingList.size());
+		request.setAttribute("sittingList", sittingList);
 	}
 }
 
