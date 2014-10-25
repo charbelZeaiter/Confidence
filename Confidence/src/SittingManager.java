@@ -1,11 +1,11 @@
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import beans.SittingBean;
-
 import jdbc.MysqlJDBC;
 
 
@@ -17,12 +17,14 @@ public class SittingManager {
 		mysql = new MysqlJDBC();
 	}
 
-	public void insertNewSitting(int aFacilitatorRecordId, String aPWD, String aName) {
+	public int insertNewSitting(int aFacilitatorRecordId, String aPWD, String aName) {
 
+		int newId = -1;
+		
 		try {
 			// Create sql statement and pass values in.
 			String sqlQuery = "INSERT INTO sittings (facilitator_id, password, name) VALUES (?, ?, ?)";
-			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
 			// Set query values.
 			ps.setInt(1, aFacilitatorRecordId);
@@ -31,9 +33,16 @@ public class SittingManager {
 
 			// Execute query.
 			ps.executeUpdate();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs != null && rs.next()) {
+			    return rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		return newId;
 
 	}
 

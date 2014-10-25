@@ -33,7 +33,6 @@
 						<c:if test="${ !empty error }">
 							<p style="color: red;">${error}</p>
 						</c:if>
-
 						<form class="form-horizontal" method="post" action="FacilitatorController">
 							<div>
 								<div class="form-group">

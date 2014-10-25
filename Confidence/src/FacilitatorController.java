@@ -340,12 +340,22 @@ public class FacilitatorController extends HttpServlet {
 					int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
 
 					// Insert sitting into database.
-					sittingManager.insertNewSitting(facilitatorRecordId, pwd, name);
+					int newId = sittingManager.insertNewSitting(facilitatorRecordId, pwd, name);
+					
+					if (newId > -1) {
+						
+						// Set up to display all facilitators sittings for next page.
+						this.setUpToDisplayAllSittings(request, facilitatorRecordId);
 
-					// Set up to display all facilitators sittings for next page.
-					this.setUpToDisplayAllSittings(request, facilitatorRecordId);
-
-					nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
+						request.setAttribute("message", "New sitting successfully created! (ID = " + newId + ")");
+						
+						nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
+						
+					} else {
+						
+						request.setAttribute("error", "Error encountered when creating session. Please try again.");
+						
+					}
 
 				}
 
