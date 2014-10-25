@@ -212,18 +212,24 @@ public class FacilitatorController extends HttpServlet {
 					request.setAttribute("error", "'Password' should not be empty");
 					
 				} else {
-				
-					// Insert entry into database and get resultString.
-					String resultString = loginManager.signupDBInsert(facilitatorId, pwd);
-					if (resultString.equals("SUCCESS")) {
-						// Proceed to facilitator login.
-						request.setAttribute("message", "Sign up successful! Please log in.");
-						request.setAttribute("loginType", "facilitatorLogin");
-						nextPage = "login.jsp";
-					} else {
-						request.setAttribute("error", resultString);
+					
+					if (!facilitatorId.matches("[A-Za-z0-9]+") || !pwd.matches("[A-Za-z0-9]+")) {
+						request.setAttribute("error", "Only alphanumeric characters permitted.");
 						request.setAttribute("loginType", "facilitatorSignup");
 						nextPage = "login.jsp";
+					} else {
+						// Insert entry into database and get resultString.
+						String resultString = loginManager.signupDBInsert(facilitatorId, pwd);
+						if (resultString.equals("SUCCESS")) {
+							// Proceed to facilitator login.
+							request.setAttribute("message", "Sign up successful! Please log in.");
+							request.setAttribute("loginType", "facilitatorLogin");
+							nextPage = "login.jsp";
+						} else {
+							request.setAttribute("error", resultString);
+							request.setAttribute("loginType", "facilitatorSignup");
+							nextPage = "login.jsp";
+						}
 					}
 					
 				}
