@@ -21,6 +21,8 @@
 		'packages' : [ 'corechart' ]
 	});
 
+<<<<<<< .merge_file_HO2RWp
+<<<<<<< .merge_file_Uo31Bt
 //Load the Visualization API and the piechart package.
 google.load('visualization', '1.0', {'packages':['corechart']});
 
