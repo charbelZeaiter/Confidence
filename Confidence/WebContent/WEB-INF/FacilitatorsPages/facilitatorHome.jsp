@@ -38,8 +38,16 @@
 				<a class="btn btn-large btn-primary" href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A New Sitting</a>
 			</div>
 			<div class="col-md-4"></div>	
-		</div>	
-		<br>
+		</div>
+		<c:choose>
+			<c:when test="${ !empty message }">
+				<p></p>
+	   			<p style="color: green;">${message}</p>
+	   		</c:when>
+	   		<c:otherwise>
+	   			<br>
+	   		</c:otherwise>
+   		</c:choose>
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-4">

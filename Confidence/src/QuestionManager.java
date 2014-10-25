@@ -1,6 +1,9 @@
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import jdbc.MysqlJDBC;
@@ -16,22 +19,26 @@ public class QuestionManager {
 	public ArrayList<HashMap<String, String>> getQuestions(String sort,int sittingId) {
 		ArrayList<HashMap<String, String>> questions = new ArrayList<HashMap<String, String>>();
 		
-		String order = "";
-		if (sort == null || sort.equals("")) {
-
-			order = "num_votes";
-		} else if (sort.equals("upvote")) {
+		String order = "num_votes";
+		if (sort == null || sort.equals("") || sort.equals("upvote")) {
 			order = "num_votes";
 		} else if (sort.equals("date")) {
-			System.out.println("huh");
 			order = "creation_time";
 		}
 
 		try {
-			String sql = "SELECT que_id,description,num_votes, creation_time FROM questions " +
-					"WHERE hidden = 'F' AND sitting_id= "+sittingId+" ORDER BY "+ order +" DESC";
-			ResultSet rs = mysql.select(sql);
-			while (rs.next()){
+			// Create sql statement and pass values in.
+			String sqlQuery = "SELECT que_id, description, num_votes, creation_time FROM questions " +
+					"WHERE hidden = 'F' AND sitting_id = ? ORDER BY ? DESC";
+			PreparedStatement ps =  mysql.getConnection().prepareStatement(sqlQuery);
+
+			// Set values in query.
+			ps.setInt(1, sittingId);
+			ps.setString(2, order);
+			
+			// Execute query and loop through saving results.
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
 				HashMap<String, String> row = new HashMap<String, String>();
 				row.put("id", rs.getString("que_id"));
 				row.put("description", rs.getString("description"));
@@ -40,51 +47,65 @@ public class QuestionManager {
 				questions.add(row);
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());// e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return questions;
 	}
 
-	public void submitQuestion(String question, int aSittingId ,String sessionId) {
-		java.util.Date dt = new java.util.Date();
-
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss");
-
+	public void submitQuestion(String question, int sittingId ,String sessionId) {
+		Date dt = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String currentTime = sdf.format(dt);
+		
 		try {
-			String sql= "insert into questions(stu_id,forum_id,description,num_votes, sitting_id,session_id, creation_time, hidden )  " +
-					"values ('1','1',\""+question+"\",0,\""+aSittingId+"\",\""+sessionId+"\",\""+currentTime+""+"\",\"F"+"\")";
-			mysql.insert(sql);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());//e.printStackTrace();
-		}
+			// Create sql statement and pass values in.
+			String sqlQuery = "insert into questions(description, sitting_id,session_id, creation_time) values (?, ?, ?, ?)";
+			PreparedStatement ps =  mysql.getConnection().prepareStatement(sqlQuery);
 
+			// Set values in query.
+			ps.setString(1, question);
+			ps.setInt(2, sittingId);
+			ps.setString(3, sessionId);
+			ps.setString(4, currentTime);
+			
+			// Execute query.
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void upvoteQuestion(String questionId,String session_id) {
-
+	public void upvoteQuestion(String questionId, String sessionId) {
 		try {
-			String sql= "UPDATE questions SET num_votes = num_votes + 1 ,session_id = \""+session_id+"\""+"WHERE que_id = " + questionId + ";";
-			mysql.insert(sql);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+			// Create sql statement and pass values in.
+			String sqlQuery = "UPDATE questions SET num_votes = num_votes + 1 ,session_id = ? WHERE que_id = ?;";
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
 
+			// Set query values.
+			ps.setString(1, sessionId);
+			ps.setString(2, questionId);
+
+			// Execute query.
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}	
 	
 	
 	public void removeQuestion(String questionId) {
 		try {
-			MysqlJDBC m=new MysqlJDBC();
-			try {
-				String sql= "UPDATE questions SET hidden = 'T' WHERE que_id = " + questionId + ";";
-				mysql.insert(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (ClassNotFoundException e) {
+			// Create sql statement and pass values in.
+			String sqlQuery = "UPDATE questions SET hidden = 'T' WHERE que_id = ?;";
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
+
+			// Set query values.
+			ps.setString(1, questionId);
+
+			// Execute query.
+			ps.executeUpdate();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
