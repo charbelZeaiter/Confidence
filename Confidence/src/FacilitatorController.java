@@ -191,44 +191,56 @@ public class FacilitatorController extends HttpServlet {
 				// Get form fields.
 				String facilitatorId = request.getParameter("aFacilitatorId");
 				String pwd = request.getParameter("aPWD");
+				nextPage = "login.jsp";
 				
 				// Validate that fields are not empty.
 				if (facilitatorId.isEmpty() && pwd.isEmpty()) {	
-					
-					nextPage = "login.jsp"; 
+
 					request.setAttribute("loginType", "facilitatorSignup");
 					request.setAttribute("error", "'Username' and 'Password' should not be empty");
 							
 				} else if(facilitatorId.isEmpty()) {
 					
-					nextPage = "login.jsp";
 					request.setAttribute("loginType", "facilitatorSignup");
 					request.setAttribute("error", "'Username' should not be empty");
 							
 				} else if(pwd.isEmpty()) {
 					
-					nextPage = "login.jsp"; 
 					request.setAttribute("loginType", "facilitatorSignup");
 					request.setAttribute("error", "'Password' should not be empty");
 					
 				} else {
 					
 					if (!facilitatorId.matches("[A-Za-z0-9]+") || !pwd.matches("[A-Za-z0-9]+")) {
+						
 						request.setAttribute("error", "Only alphanumeric characters permitted.");
 						request.setAttribute("loginType", "facilitatorSignup");
-						nextPage = "login.jsp";
+						
 					} else {
-						// Insert entry into database and get resultString.
-						String resultString = loginManager.signupDBInsert(facilitatorId, pwd);
-						if (resultString.equals("SUCCESS")) {
-							// Proceed to facilitator login.
-							request.setAttribute("message", "Sign up successful! Please log in.");
-							request.setAttribute("loginType", "facilitatorLogin");
-							nextPage = "login.jsp";
-						} else {
-							request.setAttribute("error", resultString);
+						
+						if (pwd.length() < 8) {
+							
+							request.setAttribute("error", "Password should be at least 8 characters long.");
 							request.setAttribute("loginType", "facilitatorSignup");
-							nextPage = "login.jsp";
+							
+						} else {
+						
+							// Insert entry into database and get resultString.
+							String resultString = loginManager.signupDBInsert(facilitatorId, pwd);
+							
+							if (resultString.equals("SUCCESS")) {
+								
+								// Proceed to facilitator login.
+								request.setAttribute("message", "Sign up successful! Please log in.");
+								request.setAttribute("loginType", "facilitatorLogin");
+								
+							} else {
+								
+								request.setAttribute("error", resultString);
+								request.setAttribute("loginType", "facilitatorSignup");
+								
+							}
+
 						}
 					}
 					
@@ -299,35 +311,45 @@ public class FacilitatorController extends HttpServlet {
 
 				String pwd = request.getParameter("aPWD");
 				String name = request.getParameter("aName");
+				// Default (for errors)
+				nextPage = PRIVATE_PATH+"createSitting.jsp";
 				
 				// Validate that fields are not empty.
-				if(name.isEmpty() && pwd.isEmpty()) {
-					nextPage = PRIVATE_PATH+"createSitting.jsp";
-					request.setAttribute("formError", "Sitting 'name' & 'password' cannot be empty!");
+				if (name.isEmpty() && pwd.isEmpty()) {
+					
+					request.setAttribute("formError", "'Sitting Name' and 'Password' should not be empty");
 							
 				} else if(name.isEmpty()) {
-					nextPage = PRIVATE_PATH+"createSitting.jsp";
-					request.setAttribute("formError", "Sitting 'name' cannot be empty!");
+					
+					request.setAttribute("formError", "'Sitting Name' should not be empty");
 							
 				} else if(pwd.isEmpty()) {
 					
-					nextPage = PRIVATE_PATH+"createSitting.jsp";
-					request.setAttribute("formError", "Sitting 'password' cannot be empty!");
+					request.setAttribute("formError", "'Password' should not be empty");
 					
+				} else if (!pwd.matches("[A-Za-z0-9]+")) {
+						
+					request.setAttribute("error", "Only alphanumeric characters permitted for the password.");
+				
+				} else if (pwd.length() < 4) {
+						
+					request.setAttribute("error", "Password should be at least 4 characters long.");
+						
 				} else {
-					
+
 					int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
-	
+
 					// Insert sitting into database.
 					sittingManager.insertNewSitting(facilitatorRecordId, pwd, name);
-					
+
 					// Set up to display all facilitators sittings for next page.
 					this.setUpToDisplayAllSittings(request, facilitatorRecordId);
-					
+
 					nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
+
 				}
-				
-			}  else if (aAction.equals("refresh")) {
+
+			} else if (aAction.equals("refresh")) {
 
 				// TODO: CHECK IF THESE PARAMETERS EXIST FIRST, OTHERWISE THIS FAILS WHEN NO SITTING HAS BEEN CREATED YET				
 				

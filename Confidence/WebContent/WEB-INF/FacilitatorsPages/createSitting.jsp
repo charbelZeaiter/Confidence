@@ -30,24 +30,32 @@
 				<div class="row">
 					<div class="col-md-4"></div>
 					<div class="col-md-4">
-						<c:if test="${ !empty formError }">
-							<p style="color: red;">${formError}</p>
+						<c:if test="${ !empty error }">
+							<p style="color: red;">${error}</p>
 						</c:if>
-				
-						<form method="post" action="FacilitatorController">
-							Name: <input type="text" id="aName" name="aName" />
-							<p>Please enter a password:</p>
-							<br>
-							<div class="input-group">
+
+						<form class="form-horizontal" method="post" action="FacilitatorController">
+							<div>
+								<div class="form-group">
+									<label for="aFacilitatorId" class="col-md-4 control-label">Sitting Name:</label>
+								    <div class="col-md-8">
+								      <input type="text" class="form-control" id="aName" name="aName" maxLength="50" placeholder="e.g. COMP4920 Week 1" required>
+								    </div>
+							    </div>
+							    <div class="form-group">
+								    <label for="aPWD" class="col-md-4 control-label">Password:</label>
+								    <div class="col-md-8">
+								      <input type="password" class="form-control" id="aPWD" name="aPWD" maxLength="50" placeholder="Password to give students" required>
+								    </div>
+							    </div>
+							</div>
+							<div class="margin-vertical-mid">
 								<input type="hidden" id="aAction" name="aAction" value="createSittingRequest"/>
-								<input class="form-control" type="text" id="aPWD" name="aPWD" />
-								<span class="input-group-btn">
-									<button class="btn btn-primary" type="submit">Create</button>
-								</span>
+								<input class="btn btn-large btn-primary" type="submit" value="Create">
 							</div>
 						</form>
-						<br><br>
-						<p>(Your sitting ID will be auto generated)</p>
+						<br>
+						<p><i>The Sitting ID will be auto-generated.</i></p>
 					</div>
 					<div class="col-md-4"></div>
 				</div>
