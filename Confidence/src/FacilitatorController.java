@@ -165,8 +165,7 @@ public class FacilitatorController extends HttpServlet {
 
 		/*
 		 * TODO: 
-		 * 1. Need to protect against multiple posts on refresh and back actions.
-		 * 2. Need to validate form data.		 
+		 * Need to protect against multiple posts on refresh and back actions.
 		 */
 
 		String aAction = request.getParameter("aAction");
@@ -283,7 +282,7 @@ public class FacilitatorController extends HttpServlet {
 					} else {
 
 						// Failed login.
-						request.setAttribute("error", "Login failed. Check your username and password then try again.");
+						request.setAttribute("error", "Login failed - incorrect password.");
 						request.setAttribute("loginType", "facilitatorLogin");
 						nextPage = "login.jsp";
 						

@@ -137,9 +137,7 @@ public class Controller extends HttpServlet {
 
 		/*
 		 * TODO: 
-		 * 1. Database queries need to be done like in facilitator section with 'preparedstatements'.
-		 * 2. Need to validate form data.
-		 * 3. Need to protect against multiple posts on refresh and back actions.		 
+		 * Need to protect against multiple posts on refresh and back actions.		 
 		 */
 
 		String aAction = request.getParameter("aAction");
@@ -160,8 +158,7 @@ public class Controller extends HttpServlet {
 			System.out.println("SITTING ID: " + sittingId);
 		}
 		
-		if(aAction != null)
-		{
+		if(aAction != null) {
 			String session_id= request.getSession().getId();
 			if(aAction.equals("postque")){
 				String question = request.getParameter("questionText");
@@ -187,32 +184,55 @@ public class Controller extends HttpServlet {
 			} else if (aAction.equals("sittingAccessRequest")) {
 
 				String input = request.getParameter("aSittingId");
-				sittingId = 0;
-				boolean exists = false;
-				String error = "Login failed!";
+				String pwd = request.getParameter("aPWD");
 				
-				try {
-					sittingId = Integer.parseInt(input);
-					String pwd = request.getParameter("aPWD");
-					// Check details against database.
-					exists = sittingManager.checkSittingDB(sittingId, pwd);
-				} catch (NumberFormatException e) {
-					error = "ID should be a valid integer";
-				}
+				// Validate that fields are not empty.
+				if (input.isEmpty() && pwd.isEmpty()) {	
+					
+					nextPage = "login.jsp"; 
+					request.setAttribute("loginType", "studentLogin");
+					request.setAttribute("error", "'ID' and 'Password' should not be empty");
+							
+				} else if(input.isEmpty()) {
+					
+					nextPage = "login.jsp";
+					request.setAttribute("loginType", "studentLogin");
+					request.setAttribute("error", "'ID' should not be empty");
 
-				if (exists) {
-					System.out.println("Sort: " + sort + " sittingId: " + sittingId);
-					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
-					
-					mySession.setAttribute("sittingId", sittingId);
-					
-					nextPage = "studentSittingInterface.jsp";
+				} else if(pwd.isEmpty()) {
+
+					nextPage = "login.jsp"; 
+					request.setAttribute("loginType", "studentLogin");
+					request.setAttribute("error", "'Password' should not be empty");
 
 				} else {
-					// Failed login
-					request.setAttribute("error", error);
-					request.setAttribute("loginType", "studentLogin");
-					nextPage = "login.jsp";
+
+					sittingId = 0;
+					boolean exists = false;
+					String error = "Login failed - incorrect password.";
+					try {
+						sittingId = Integer.parseInt(input);
+						// Check details against database.
+						exists = sittingManager.checkSittingDB(sittingId, pwd);
+					} catch (NumberFormatException e) {
+						error = "ID should be a valid integer";
+					}
+
+					if (exists) {
+						System.out.println("Sort: " + sort + " sittingId: " + sittingId);
+						request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+
+						mySession.setAttribute("sittingId", sittingId);
+
+						nextPage = "studentSittingInterface.jsp";
+
+					} else {
+						// Failed login
+						request.setAttribute("error", error);
+						request.setAttribute("loginType", "studentLogin");
+						nextPage = "login.jsp";
+					}
+					
 				}
 
 			} else if (aAction.equals("refresh")) {
