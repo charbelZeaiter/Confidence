@@ -1,5 +1,9 @@
-<div id="footer">
+<footer>
 	<div class="container">
-		<p class="muted credit">COMP4920 Project ~ Confidence ©</p>
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<p>COMP4920 Project ~ Confidence ©</p>
+			</div>
+		</div>
 	</div>
-</div>
+</footer>

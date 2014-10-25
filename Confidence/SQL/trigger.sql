@@ -22,7 +22,8 @@ BEGIN
 	END IF;
 	END;
 END $$
-
+DELIMITER ;
+/*
 DELIMITER ;
 DELIMITER $$
 DROP TRIGGER IF EXISTS set_vote_when_post $$
@@ -35,3 +36,4 @@ BEGIN
 END $$
 
 DELIMITER ;
+*/

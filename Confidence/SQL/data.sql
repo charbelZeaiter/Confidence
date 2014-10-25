@@ -41,12 +41,20 @@ insert into word_group values (9 ,'bloody'); //
 insert into word_group values (9 ,'cunt'); //
 insert into word_group values (9 ,'bitch'); //
 
-
-
-
 insert into word_suffix values (1 ,'ing'); //
 insert into word_suffix values (1 ,'s'); //
 insert into word_suffix values (1 ,'tion'); //
 
+insert into punctuation values ('!');//
+insert into punctuation values ('@');//
+insert into punctuation values ('#');//
+insert into punctuation values ('$');//
+insert into punctuation values ('%');//
+insert into punctuation values ('^');//
+insert into punctuation values ('&');//
+insert into punctuation values ('*');//
+insert into punctuation values ('\'');//
+insert into punctuation values (';');//
+insert into punctuation values ('.');//
 
 DELIMITER ;

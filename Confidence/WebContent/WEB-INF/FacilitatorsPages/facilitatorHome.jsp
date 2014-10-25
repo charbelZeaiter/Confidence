@@ -17,82 +17,75 @@
 	<!-- Bootstrap -->
 	<link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Custom CSS -->
-	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
-	
+    <link rel="stylesheet" href="bootstrap-theme/css/business-casual.css">	
 </head>
 <body>
-	<div id="wrap">
+
+	<div class="brand">Facilitator Home</div>
+	
+	<!-- Nav include -->
+	<jsp:include page="nav.jsp" />
+	
+	<div class="container">
 		<div class="row">
-			<div class="col-md-12">
-				<h1>Facilitator Home</h1>
-			</div>
-		</div>
-		<div class="row">
-			<!-- Nav include -->
-			<jsp:include page="nav.jsp" />
-		</div>
-		<br>
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
-				<a class="btn btn-large btn-primary" href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A New Sitting</a>
-			</div>
-			<div class="col-md-4"></div>	
-		</div>
-		<c:choose>
-			<c:when test="${ !empty message }">
-				<p></p>
-				<p style="color: green;">${message}</p>
-			</c:when>
-			<c:otherwise>
-				<br>
-			</c:otherwise>
-		</c:choose>
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
+            <div class="box">
+                <div class="col-lg-12">
+                    <hr><h2 class="intro-text text-center"><strong>Sitting Manager</strong></h2><hr>
+                </div>
+               	<a class="btn btn-large btn-primary" href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A New Sitting</a>
 				<c:choose>
-					<c:when test="${sittingListSize > 0}">
-						<table width="100%" border="1">
-							<tr>
-								<th colspan="4">My Sittings</th>
-							</tr>
-							<tr>
-								<th>ID</th>
-								<th>Name</th>
-								<th>Password</th>
-								<th></th>
-								<th>Status</th>
-								<th></th>
-								<th>Status</th>
-								<th></th>
-							</tr>
-							<c:forEach items="${sittingList}" var="sitting"> 
-								<tr>
-								    <td>${sitting.id}</td>
-						    		<td>${sitting.name}</td>
-						    		<td>${sitting.pwd}</td>
-						    		<td><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
-						    		<td>${sitting.status}</td>
-								    <td>
-		                            	<form method="post" action="FacilitatorController">
-		                                    <input type="HIDDEN" name="aAction" value="closeSitting" />
-		                                    <input type="HIDDEN" name="sittingId" value="${sitting.id}"> 
-		                                    <button class="btn btn-primary" type="submit">Close Sitting</button>
-		                                </form>
-								    </td>
-							   </tr>
-							</c:forEach>
-						</table>
+					<c:when test="${ !empty message }">
+						<p></p>
+						<p style="color: green;">${message}</p>
 					</c:when>
 					<c:otherwise>
-						<p>No Sittings...</p>
+						<br><br>
 					</c:otherwise>
 				</c:choose>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-	</div>
+				<c:choose>
+					<c:when test="${sittingListSize > 0}">
+						<div class="col-md-1"></div>
+						<div class="col-md-10">
+							<table width="100%" border="1">
+								<tr>
+									<th colspan="4">My Sittings</th>
+								</tr>
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th>Password</th>
+									<th></th>
+									<th>Status</th>
+									<th></th>
+								</tr>
+								<c:forEach items="${sittingList}" var="sitting"> 
+									<tr>
+									    <td>${sitting.id}</td>
+							    		<td>${sitting.name}</td>
+							    		<td>${sitting.pwd}</td>
+							    		<td><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
+							    		<td>${sitting.status}</td>
+									    <td>
+			                            	<form method="post" action="FacilitatorController">
+			                                    <input type="HIDDEN" name="aAction" value="closeSitting" />
+			                                    <input type="HIDDEN" name="sittingId" value="${sitting.id}"> 
+			                                    <button class="btn btn-primary" type="submit">Close Sitting</button>
+			                                </form>
+									    </td>
+								   </tr>
+								</c:forEach>
+							</table>
+						</div>
+					</c:when>
+					<c:otherwise>
+						<p>You don't have any sittings yet. Why don't you <a href="FacilitatorController?aAction=navigation&amp;page=createSitting">create a new one</a>?</p>
+					</c:otherwise>
+				</c:choose>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+ 	</div>
+ 
 	<jsp:include page="footer.jsp" />
 
 </body>
