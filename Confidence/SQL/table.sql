@@ -1,6 +1,6 @@
-DROP TABLE if exists `facilitators`;
 DROP TABLE if exists `sittings`;
 DROP TABLE if exists `questions`;
+DROP TABLE if exists `facilitators`;
 DROP TABLE if exists `votes_audit`;
 drop table if exists excluded_word;
 drop table if exists word_group;

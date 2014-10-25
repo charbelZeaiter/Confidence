@@ -16,13 +16,14 @@ BEGIN
 	DECLARE exact_test  integer default 0;
 	DECLARE category_test  integer default 0;
 	DECLARE suffix_test  integer default 0;
-
+	declare v1 integer;
+	declare v2 integer;
 	DECLARE tot_matching integer default 0;
 	DECLARE word varchar(50); 
 	DECLARE suf varchar(20) ; 
 	DECLARE diff integer default 0;
 	DECLARE sameque integer default 0;
-
+	
 	
 	DECLARE c_suffix CURSOR FOR select suffix from word_suffix ;
 	
@@ -72,10 +73,13 @@ BEGIN
 	and b.word not in ( select b.word from question_d a, question_d b where a.id = q1 and b.id=q2 and a.word=b.word)
 	and a.category = b.category and a.category >1;
 
-
+	select count(*) into v1 from question_d where category =2 and id=q1;
+	select count(*) into v2 from question_d where category =2 and id=q2;
+	if category_test > v1 then set category_test=v1; end if;
+	if category_test > v2 then set category_test=v2; end if;
 	
 	set tot_matching = category_test + exact_test + suffix_test;
-  -- return category_test; 	
+   
 	select nbword into q1_len from question_h where id =q1;
  	select nbword into q2_len from question_h where id =q2;
 	select abs(q1_len - q2_len ) into abs ;-- from question_h where id =q2;
