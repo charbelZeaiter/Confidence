@@ -34,9 +34,7 @@ function drawChartExt() {
 function drawChart(qid) {
 
         // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Rating');
-        data.addColumn('number', 'Votes');
+        
         var index;
         var sel = ["1","2","3","4","5"];
         var chartrows = new Array();
@@ -44,22 +42,34 @@ function drawChart(qid) {
         var count = 0;
         var sum = 0;
         var average;
+        
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rating');
+        data.addColumn('number', 'Votes');
+        
         for	(index = 0; index < 5; index++) {
              divname = "div_"+qid+"_"+sel[index];
+             
             if (document.getElementById(divname) != null) {
             	chartrows[index] =  parseInt(document.getElementById(divname).value);
             	count += chartrows[index];
             	sum += chartrows[index] * (index+1);
             }
-            data.addRow([sel[index],chartrows[index]]);
         }
         
-
+        data.addRows([
+                [sel[0],chartrows[0]],
+        		[sel[1],chartrows[1]],
+        		[sel[2],chartrows[2]],
+        		[sel[3],chartrows[3]],
+        		[sel[4],chartrows[4]]
+        		]);
+        
         // Set chart options
         var options = {'title':"Question "+qid+"!",
                        'width':400,
                        'height':300};
-
+        alert("bye");
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.ColumnChart(document.getElementById("chart_div_"+qid));
         chart.draw(data, options);
@@ -70,7 +80,7 @@ function drawChart(qid) {
 	        average = sum/count;
 	        document.getElementById("chart_avg_"+qid).innerHTML = average + " average";
         }
-        
+       
       }
 </script>
 </head>
@@ -144,10 +154,10 @@ function drawChart(qid) {
 			<div class="container">
 		 <label>${question.question} </label>
 		 <ul>
-		 	<li><div id = "chart_count_${question.id}"></div></li>
-		 	<li><div id = "chart_avg_${question.id}"></div></li>
+		 	<li><div id = "chart_count_${question.q_id}"></div></li>
+		 	<li><div id = "chart_avg_${question.q_id}"></div></li>
 		 </ul>
-		 <div id="chart_div_${question.id}"></div>
+		 <div id="chart_div_${question.q_id}"></div>
 		 </div>
 		</c:forEach>
 		</div>
