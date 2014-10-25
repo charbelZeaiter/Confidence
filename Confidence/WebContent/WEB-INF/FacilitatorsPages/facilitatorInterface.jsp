@@ -87,6 +87,7 @@
 				<div id="dynamicBox" name="dynamicBox">
 					<!-- AJAX Content here -->
 				</div>
+				
 			</div>
 		</div>
 		<div class="col-md-4" style="text-align: right;">

@@ -410,6 +410,7 @@ public class FacilitatorController extends HttpServlet {
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
 
 			} else if (aAction.equals("closeSitting")) {
+				
 				int facilitatorRecordId =  (Integer) request.getSession().getAttribute("facilitatorRecId");
 				int sittingID = Integer.parseInt(request.getParameter("sittingId"));
 				sittingManager.closeSitting(sittingID);
@@ -418,6 +419,7 @@ public class FacilitatorController extends HttpServlet {
 				nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
 
 			}  else if (aAction.equals("canPost")) {
+				
                 String pwd = request.getParameter("aPWD");
 				
 				canPost = request.getParameter("canPost");
@@ -434,9 +436,8 @@ public class FacilitatorController extends HttpServlet {
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
 				
-				
 				nextPage = PRIVATE_PATH+"facilitatorInterface.jsp";
-
+				
 			} 
 
 		}

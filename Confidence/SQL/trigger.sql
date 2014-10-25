@@ -35,8 +35,3 @@ BEGIN
 END $$
 
 DELIMITER ;
-
-
-
-
-

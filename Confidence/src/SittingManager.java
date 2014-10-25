@@ -8,7 +8,6 @@ import java.util.List;
 import beans.SittingBean;
 import jdbc.MysqlJDBC;
 
-
 public class SittingManager {
 
 	MysqlJDBC mysql;
@@ -76,7 +75,7 @@ public class SittingManager {
 		return result;
 	}
 	
-public void closeSitting(int sittingID) {
+	public void closeSitting(int sittingID) {
 		
 		try {
 			// Create sql statement and pass values in.
@@ -202,6 +201,7 @@ public void closeSitting(int sittingID) {
 				
 				// Create new bean and add to list.
 				SittingBean newSittingBean = new SittingBean(idDB, nameDB, pwdDB, status);
+
 				myResultList.add(newSittingBean);
 			} 
 			

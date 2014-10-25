@@ -97,7 +97,6 @@ public class Controller extends HttpServlet {
 				StringBuilder output = new StringBuilder();
 				
 				if (!sittingManager.checkSittingStatus(sittingId)) {
-					ArrayList<HashMap<String, String>> questionList = surveyManager.getQuestions();
 					
 					output.append("<div class=\"row\">");
 					output.append("<div class=\"col-md-4\">");
@@ -142,6 +141,7 @@ public class Controller extends HttpServlet {
 				response.getWriter().write(output.toString()); // Write response body.
 
 				return;
+				
 			}
 			
 		} 
@@ -151,6 +151,7 @@ public class Controller extends HttpServlet {
 		myRequestDispatcher.forward(request, response);
 
 	}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -294,7 +295,6 @@ public class Controller extends HttpServlet {
 			} else if (aAction.equals("refresh")) {
 
 				String pwd = request.getParameter("aPWD");
-
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);

@@ -37,7 +37,7 @@ public class SittingBean {
 	public void setPwd(String aPwd) {
 		this.pwd = aPwd;
 	}
-
+	
 	public String getStatus() {
 		return this.status;
 	}
