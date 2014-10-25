@@ -1,7 +1,6 @@
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,34 +17,24 @@ public class SittingManager {
 		mysql = new MysqlJDBC();
 	}
 
-	public int insertNewSitting(int aFacilitatorRecordId, String aPWD, String aName) {
-		int result = -1;
+	public void insertNewSitting(int aFacilitatorRecordId, String aPWD, String aName) {
 
 		try {
 			// Create sql statement and pass values in.
 			String sqlQuery = "INSERT INTO sittings (facilitator_id, password, name) VALUES (?, ?, ?)";
-			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
 
 			// Set query values.
 			ps.setInt(1, aFacilitatorRecordId);
 			ps.setString(2, aPWD);
 			ps.setString(3, aName);
 
-			// Execute query;
-			result = ps.executeUpdate();
-			ResultSet rset = ps.getGeneratedKeys();
-
-			// Check if result set has rows.
-			if(rset.next())
-			{
-				return rset.getInt(1);
-			}
-		}
-		catch (SQLException e) {
+			// Execute query.
+			ps.executeUpdate();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return result;
 	}
 
 	public boolean checkSittingDB(int aSittingId, String aPWD) {
@@ -96,7 +85,6 @@ public class SittingManager {
 			ResultSet rset = ps.executeQuery();
 
 			while(rset.next()) {
-				
 				int idDB = Integer.parseInt(rset.getString("sitting_id"));
 				String nameDB = rset.getString("name");
 				String pwdDB = rset.getString("password");

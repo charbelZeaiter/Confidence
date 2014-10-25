@@ -37,7 +37,6 @@ CREATE TABLE `questions` (
   `creation_time` DATETIME NULL,
   `post_time` DATETIME NULL,
   `post_date` DATETIME NULL,
-  `session_id` varchar(100),
   PRIMARY KEY (`que_id`)
 );
 

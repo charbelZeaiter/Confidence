@@ -7,6 +7,9 @@
 	      		<c:when test="${ !empty error }">
 	      			<p style="color: red;">${error}</p>
 	      		</c:when>
+	      		<c:when test="${ !empty message }">
+	      			<p style="color: green;">${message}</p>
+	      		</c:when>
 	      		<c:otherwise>
 	      			<br>
 	      		</c:otherwise>

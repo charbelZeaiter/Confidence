@@ -1,12 +1,5 @@
-
-
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
@@ -16,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jdbc.MysqlJDBC;
 
 /**
  * Servlet implementation class Contoller
@@ -173,7 +164,6 @@ public class Controller extends HttpServlet {
 		{
 			String session_id= request.getSession().getId();
 			if(aAction.equals("postque")){
-				String toPage = request.getParameter("page");
 				String question = request.getParameter("questionText");
 				
 				if(question.isEmpty()) {
