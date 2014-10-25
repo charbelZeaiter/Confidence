@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import beans.SittingBean;
-
 import jdbc.MysqlJDBC;
 
 
@@ -19,8 +18,9 @@ public class SittingManager {
 	}
 
 	public int insertNewSitting(int aFacilitatorRecordId, String aPWD, String aName) {
-		int result = -1;
 
+		int newId = -1;
+		
 		try {
 			// Create sql statement and pass values in.
 			String sqlQuery = "INSERT INTO sittings (facilitator_id, password, name) VALUES (?, ?, ?)";
@@ -31,21 +31,19 @@ public class SittingManager {
 			ps.setString(2, aPWD);
 			ps.setString(3, aName);
 
-			// Execute query;
-			result = ps.executeUpdate();
-			ResultSet rset = ps.getGeneratedKeys();
-
-			// Check if result set has rows.
-			if(rset.next())
-			{
-				return rset.getInt(1);
+			// Execute query.
+			ps.executeUpdate();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs != null && rs.next()) {
+			    return rs.getInt(1);
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		return newId;
 
-		return result;
 	}
 
 	public boolean checkSittingDB(int aSittingId, String aPWD) {
@@ -78,7 +76,7 @@ public class SittingManager {
 		return result;
 	}
 	
-	public void closeSitting(int sittingID) {
+public void closeSitting(int sittingID) {
 		
 		try {
 			// Create sql statement and pass values in.
@@ -99,7 +97,7 @@ public class SittingManager {
 		
 	}
 	
-public void setSittingCanPost(int sittingID, String canPost) {
+	public void setSittingCanPost(int sittingID, String canPost) {
 		
 		try {
 			// Create sql statement and pass values in.
@@ -197,7 +195,6 @@ public void setSittingCanPost(int sittingID, String canPost) {
 			ResultSet rset = ps.executeQuery();
 
 			while(rset.next()) {
-				
 				int idDB = Integer.parseInt(rset.getString("sitting_id"));
 				String nameDB = rset.getString("name");
 				String pwdDB = rset.getString("password");

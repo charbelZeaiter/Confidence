@@ -14,43 +14,35 @@ public class SittingBean {
 		this.status = status;
 	}
 	
-	public int getId()
-	{
+	public int getId() {
 		return this.id;
 	}
 	
-	public void setId(int aId)
-	{
+	public void setId(int aId) {
 		this.id = aId;
 	}
 	
-	public String getName()
-	{
+	public String getName() {
 		return this.name;
 	}
 	
-	public void setName(String aName)
-	{
+	public void setName(String aName) {
 		this.name = aName;
 	}
 	
-	public String getPwd()
-	{
+	public String getPwd() {
 		return this.pwd;
 	}
 	
-	public void setPwd(String aPwd)
-	{
+	public void setPwd(String aPwd) {
 		this.pwd = aPwd;
 	}
-	
-	public String getStatus()
-	{
+
+	public String getStatus() {
 		return this.status;
 	}
 	
-	public void setStatus(String status)
-	{
+	public void setStatus(String status) {
 		this.status = status;
 	}
 }

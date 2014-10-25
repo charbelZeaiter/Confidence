@@ -10,20 +10,20 @@ public class MysqlJDBC {
 	//  Database credentials
 	static final String USER = "root";
 	static final String PASS = "root";
-	private Connection conn ;
+	private Connection conn;
 
-	public MysqlJDBC() throws ClassNotFoundException{
-		try{
+	public MysqlJDBC() throws ClassNotFoundException {
+		try {
 			// Register JDBC driver
 			Class.forName("com.mysql.jdbc.Driver");
 			// Open a connection
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-		}catch(SQLException se){
-			se.printStackTrace();
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 	} 
 
-	public void insert(String sql) throws SQLException{
+	public void insert(String sql) throws SQLException {
 		Statement stmt = conn.createStatement();
 		stmt.executeUpdate(sql);
 	}
@@ -33,9 +33,7 @@ public class MysqlJDBC {
 		return stmt.executeQuery(sql);
 	}
 
-	public Connection getConnection()
-	{
+	public Connection getConnection() {
 		return this.conn;
 	}
 }
-
