@@ -101,7 +101,6 @@ function drawChart(qid) {
 					</h2>
 					<hr>
 				</div>
-				<button class="btn btn-primary" data-toggle="modal" data-target="#feedbackForm">Launch survey!</button>
 				<!-- <a class="btn btn-large btn-primary" href="FacilitatorController?aAction=navigation&amp;page=createSitting">Create A New Sitting</a>  -->
 				
 				<c:forEach items="${responses}" var="response">
