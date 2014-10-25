@@ -69,7 +69,6 @@ function drawChart(qid) {
         var options = {'title':"Question "+qid+"!",
                        'width':400,
                        'height':300};
-        alert("bye");
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.ColumnChart(document.getElementById("chart_div_"+qid));
         chart.draw(data, options);
