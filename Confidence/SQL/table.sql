@@ -1,6 +1,6 @@
-DROP TABLE if exists `facilitators`;
 DROP TABLE if exists `sittings`;
 DROP TABLE if exists `questions`;
+DROP TABLE if exists `facilitators`;
 DROP TABLE if exists `votes_audit`;
 drop table if exists excluded_word;
 drop table if exists word_group;
@@ -21,7 +21,6 @@ CREATE TABLE `facilitators` (
 -- want to use 'session' as it maybe confused with server session.
 CREATE TABLE `sittings` (
   `sitting_id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(100) NOT NULL,
   `facilitator_id` VARCHAR(45) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`sitting_id`)
