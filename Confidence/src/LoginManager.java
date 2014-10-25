@@ -16,7 +16,26 @@ public class LoginManager {
 
 	public int checkLoginDB(String aFacilitatorId, String aPWD) {
 		int result = -1;
+		
+		// First check whether the username exists
+		try {
+			// Create sql statement and pass values in.
+			String sqlQuery = "SELECT facilitator_id FROM facilitators WHERE username = ?";
+			PreparedStatement ps = mysql.getConnection().prepareStatement(sqlQuery);
 
+			// Set values in query.
+			ps.setString(1, aFacilitatorId);
+
+			// Execute query and loop through saving results.
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				return 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		// Now check the username/password combination
 		try {
 			// Create sql statement and pass values in.
 			String sqlQuery = "SELECT facilitator_id FROM facilitators WHERE username = ? and password = ?";
@@ -57,7 +76,7 @@ public class LoginManager {
 			resultString = "SUCCESS";
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			if (e.getErrorCode() == 1062) {
-				resultString = "That ID has already been taken.";
+				resultString = "That username has already been taken.";
 			}
 		} catch (SQLException e) {
 			resultString = "Sign up failed. Please try again.";

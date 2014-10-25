@@ -198,13 +198,13 @@ public class FacilitatorController extends HttpServlet {
 					
 					nextPage = "login.jsp"; 
 					request.setAttribute("loginType", "facilitatorSignup");
-					request.setAttribute("error", "'ID' and 'Password' should not be empty");
+					request.setAttribute("error", "'Username' and 'Password' should not be empty");
 							
 				} else if(facilitatorId.isEmpty()) {
 					
 					nextPage = "login.jsp";
 					request.setAttribute("loginType", "facilitatorSignup");
-					request.setAttribute("error", "'ID' should not be empty");
+					request.setAttribute("error", "'Username' should not be empty");
 							
 				} else if(pwd.isEmpty()) {
 					
@@ -213,6 +213,7 @@ public class FacilitatorController extends HttpServlet {
 					request.setAttribute("error", "'Password' should not be empty");
 					
 				} else {
+				
 					// Insert entry into database and get resultString.
 					String resultString = loginManager.signupDBInsert(facilitatorId, pwd);
 					if (resultString.equals("SUCCESS")) {
@@ -225,34 +226,69 @@ public class FacilitatorController extends HttpServlet {
 						request.setAttribute("loginType", "facilitatorSignup");
 						nextPage = "login.jsp";
 					}
+					
 				}
+				
 			} else if(aAction.equals("loginRequest")) {
 
 				// Get form fields.
 				String facilitatorId = request.getParameter("aFacilitatorId");
 				String pwd = request.getParameter("aPWD");
 
-				// Check login details in database and return record Id.
-				int facilitatorRecId = loginManager.checkLoginDB(facilitatorId, pwd);
-
-				if (facilitatorRecId > -1) {
-
-					// Setup session.
-					mySession.setAttribute("facilitatorRecId", facilitatorRecId);
-					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+				System.out.println("ID: " + facilitatorId + " pwd: " + pwd);
+				
+				// Validate that fields are not empty.
+				if (facilitatorId.isEmpty() && pwd.isEmpty()) {	
 					
-					// Set up to display all facilitators sittings for next page.
-					this.setUpToDisplayAllSittings(request, facilitatorRecId);
-					
-					// Proceed to facilitator login.
-					nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
-
-				} else {
-					// Failed login.
-					request.setAttribute("error", "Login failed!");
+					nextPage = "login.jsp"; 
 					request.setAttribute("loginType", "facilitatorLogin");
+					request.setAttribute("error", "'Username' and 'Password' should not be empty");
+							
+				} else if(facilitatorId.isEmpty()) {
+					
 					nextPage = "login.jsp";
-				} 
+					request.setAttribute("loginType", "facilitatorLogin");
+					request.setAttribute("error", "'Username' should not be empty");
+							
+				} else if(pwd.isEmpty()) {
+					
+					nextPage = "login.jsp"; 
+					request.setAttribute("loginType", "facilitatorLogin");
+					request.setAttribute("error", "'Password' should not be empty");
+					
+				} else {
+				
+					// Check login details in database and return record Id.
+					int facilitatorRecId = loginManager.checkLoginDB(facilitatorId, pwd);
+	
+					if (facilitatorRecId > 0) {
+	
+						// Setup session.
+						mySession.setAttribute("facilitatorRecId", facilitatorRecId);
+						request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+						
+						// Set up to display all facilitators sittings for next page.
+						this.setUpToDisplayAllSittings(request, facilitatorRecId);
+						
+						// Proceed to facilitator login.
+						nextPage = PRIVATE_PATH+"facilitatorHome.jsp";
+	
+					} else if (facilitatorRecId == 0) {
+						
+						// Invalid username
+						request.setAttribute("error", "Invalid username.");
+						request.setAttribute("loginType", "facilitatorLogin");
+						nextPage = "login.jsp";
+						
+					} else {
+
+						// Failed login.
+						request.setAttribute("error", "Login failed. Check your username and password then try again.");
+						request.setAttribute("loginType", "facilitatorLogin");
+						nextPage = "login.jsp";
+						
+					}
+				}
 
 			} else if (aAction.equals("createSittingRequest")) {
 

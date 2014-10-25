@@ -18,9 +18,9 @@
 		<form class="form-horizontal" method="post" action="FacilitatorController">
 			<div>
 				<div class="form-group">
-					<label for="aFacilitatorId" class="col-md-4 control-label">ID:</label>
+					<label for="aFacilitatorId" class="col-md-4 control-label">Username:</label>
 				    <div class="col-md-8">
-				      <input type="text" class="form-control" id="aFacilitatorId" name="aFacilitatorId" placeholder="Facilitator ID" required>
+				      <input type="text" class="form-control" id="aFacilitatorId" name="aFacilitatorId" placeholder="Username" required>
 				    </div>
 			    </div>
 			    <div class="form-group">
