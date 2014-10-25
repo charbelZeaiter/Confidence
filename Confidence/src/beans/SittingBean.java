@@ -5,11 +5,13 @@ public class SittingBean {
 	private int id;
 	private String name;
 	private String pwd;
+	private String status;
 	
-	public SittingBean(int aId, String aName, String aPwd) {
+	public SittingBean(int aId, String aName, String aPwd, String status) {
 		this.id = aId;
 		this.name = aName;
 		this.pwd = aPwd;
+		this.status = status;
 	}
 	
 	public int getId() {
@@ -34,5 +36,13 @@ public class SittingBean {
 	
 	public void setPwd(String aPwd) {
 		this.pwd = aPwd;
+	}
+	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

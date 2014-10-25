@@ -34,7 +34,7 @@
 		.panel {
 			background-color: rgba(255, 255, 255, 0.9);
 			text-align: center;
-			width: 420px;
+			width: 500px;
 			height: 300px;
 			position:absolute;
 			margin-top:-150px;
@@ -79,6 +79,5 @@
 	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="bootstrap-3.2.0-dist/js/bootstrap.min.js" type="text/javascript"></script>
-
 </body>
 </html>

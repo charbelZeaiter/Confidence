@@ -86,6 +86,66 @@
 			</form>
 		</div>
 	</div>
+	
+	<!-- Modal Dialog -->
+	<div class="modal fade" id="feedbackForm" tabindex="-1" role="dialog" aria-labelledby="feedbackFormLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<form action="Controller" method="post">
+				<input type="hidden" id="aAction" name="aAction" value="submitSurvey" />
+				<div class="input-group">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="feedbackFormLabel">Lecture Feedback</h4>
+						</div>
+						<div class="modal-body col-md-12">
+							<div class="col-md-2"></div>
+							<div class="col-md-8">
+
+								<c:forEach items="${question}" var="question">
+									<label for="choices_${question.q_id}">${question.question}
+									</label>
+									<ul class="list-inline" id="choices_${question.q_id}">
+										<c:forEach items="${choices}" var="choice">
+											<li><div class="radio"><label> 
+												<input type="radio" name="${question.q_id}"	value="${choice}" /> ${choice}
+											</label></div></li>
+										</c:forEach>
+									</ul>
+								</c:forEach>
+
+							</div>
+							<div class="col-md-2"></div>
+						</div>
+						<div class="modal-footer">
+							<input type="submit" class="btn btn-primary">
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</form>
+				
+				<br>
+				
+				<c:if test="${ !empty questions }">
+					<p>Sort By:</p>
+					<form method="post" action="Controller?aAction=sort">
+						<div class="col-xs-3"></div>
+						<div class="col-xs-6">
+							<select class="form-control" name="sortby" onchange='this.form.submit()'">
+								<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
+								<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+							</select>
+						</div>						
+					</form>
+				</c:if>
+				
+				<br><br><br>
+				
+				<div id="dynamicBox" name="dynamicBox">
+					<!-- AJAX Content here -->
+				</div>
+			</form>
+		</div>
+	</div>
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

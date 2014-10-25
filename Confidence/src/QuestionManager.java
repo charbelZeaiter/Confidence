@@ -18,23 +18,26 @@ public class QuestionManager {
 
 	public ArrayList<HashMap<String, String>> getQuestions(String sort,int sittingId) {
 		ArrayList<HashMap<String, String>> questions = new ArrayList<HashMap<String, String>>();
+		String sqlQuery = "";
 		
 		String order = "num_votes";
 		if (sort == null || sort.equals("") || sort.equals("upvote")) {
-			order = "num_votes";
+			sqlQuery = "SELECT que_id, description, num_votes, creation_time FROM questions " +
+					"WHERE hidden = 'F' AND sitting_id = ? ORDER BY num_votes DESC";
 		} else if (sort.equals("date")) {
-			order = "creation_time";
+			sqlQuery = "SELECT que_id, description, num_votes, creation_time FROM questions " +
+					"WHERE hidden = 'F' AND sitting_id = ? ORDER BY creation_time DESC";
 		}
 
 		try {
+			System.out.println(order);
 			// Create sql statement and pass values in.
-			String sqlQuery = "SELECT que_id, description, num_votes, creation_time FROM questions " +
-					"WHERE hidden = 'F' AND sitting_id = ? ORDER BY ? DESC";
+			
 			PreparedStatement ps =  mysql.getConnection().prepareStatement(sqlQuery);
 
 			// Set values in query.
 			ps.setInt(1, sittingId);
-			ps.setString(2, order);
+			//ps.setString(2, order);
 			
 			// Execute query and loop through saving results.
 			ResultSet rs = ps.executeQuery();

@@ -42,44 +42,56 @@
 		<c:choose>
 			<c:when test="${ !empty message }">
 				<p></p>
-	   			<p style="color: green;">${message}</p>
-	   		</c:when>
-	   		<c:otherwise>
-	   			<br>
-	   		</c:otherwise>
-   		</c:choose>
+				<p style="color: green;">${message}</p>
+			</c:when>
+			<c:otherwise>
+				<br>
+			</c:otherwise>
+		</c:choose>
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-4">
 				<c:choose>
-				  <c:when test="${sittingListSize > 0}">
-				    <table width="100%" border="1">
-				    	<tr>
-				    		<th colspan="4">My Sittings</th>
-				    	</tr>
-				    	<tr>
-				    		<th>ID</th>
-				    		<th>Name</th>
-				    		<th>Password</th>
-				    		<th> </th>
-				    	</tr>
-				    	<c:forEach items="${sittingList}" var="sitting"> 
-						  <tr>
-						    <td>${sitting.id}</td>
-				    		<td>${sitting.name}</td>
-				    		<td>${sitting.pwd}</td>
-				    		<td><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
-						   </tr>
-						</c:forEach>
-				    </table>
-				  </c:when>
-				  <c:otherwise>
-				    <p>No Sittings...</p>
-				  </c:otherwise>
-			</c:choose>
+					<c:when test="${sittingListSize > 0}">
+						<table width="100%" border="1">
+							<tr>
+								<th colspan="4">My Sittings</th>
+							</tr>
+							<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Password</th>
+								<th></th>
+								<th>Status</th>
+								<th></th>
+								<th>Status</th>
+								<th></th>
+							</tr>
+							<c:forEach items="${sittingList}" var="sitting"> 
+								<tr>
+								    <td>${sitting.id}</td>
+						    		<td>${sitting.name}</td>
+						    		<td>${sitting.pwd}</td>
+						    		<td><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
+						    		<td>${sitting.status}</td>
+								    <td>
+		                            	<form method="post" action="FacilitatorController">
+		                                    <input type="HIDDEN" name="aAction" value="closeSitting" />
+		                                    <input type="HIDDEN" name="sittingId" value="${sitting.id}"> 
+		                                    <button class="btn btn-primary" type="submit">Close Sitting</button>
+		                                </form>
+								    </td>
+							   </tr>
+							</c:forEach>
+						</table>
+					</c:when>
+					<c:otherwise>
+						<p>No Sittings...</p>
+					</c:otherwise>
+				</c:choose>
 			</div>
-			<div class="col-md-4"></div>	
-		</div>			
+			<div class="col-md-4"></div>
+		</div>
 	</div>
 	<jsp:include page="footer.jsp" />
 

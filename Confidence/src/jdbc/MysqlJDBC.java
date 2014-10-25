@@ -37,4 +37,3 @@ public class MysqlJDBC {
 		return this.conn;
 	}
 }
-

@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="col-md-6 col-md-offset-3 panel panel-default" style="width: 430px">
+<div class="col-md-6 col-md-offset-3 panel panel-default" style="width: 500px; height: 400px;">
 	<h1 class="margin-top-vertical-mid">Facilitator Sign Up</h1>
 	<div>
 		<div>
@@ -17,15 +17,27 @@
 				<div class="form-group">
 					<label for="aFacilitatorId" class="col-md-4 control-label">Username:</label>
 				    <div class="col-md-8">
-				      <input type="text" class="form-control" id="aFacilitatorId" name="aFacilitatorId" maxLength="50" placeholder="Username" required>
+				    	<input type="text" class="form-control" id="aFacilitatorId" name="aFacilitatorId" maxLength="50" placeholder="Username" required>
 				    </div>
 			    </div>
 			    <div class="form-group">
 				    <label for="aPWD" class="col-md-4 control-label">Password:</label>
 				    <div class="col-md-8">
-				      <input type="password" class="form-control" id="aPWD" name="aPWD" maxLength="50" placeholder="Password" required>
+				    	<input type="password" class="form-control" id="aPWD" name="aPWD" maxLength="50" placeholder="Password" required>
 				    </div>
 			    </div>
+			    <div class="form-group">
+                    <label for="aPWD" class="col-md-4 control-label">First Name:</label>
+                    <div class="col-md-8">
+                      	<input type="text" class="form-control" id="fname" name="fname" maxLength="50" placeholder="FirstName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="aPWD" class="col-md-4 control-label">Last Name:</label>
+                    <div class="col-md-8">
+                      	<input type="text" class="form-control" id="lname" name="lname" maxLength="50" placeholder="LastName" required>
+                    </div>
+                </div>
 			</div>
 			<div class="margin-vertical-mid">
 				<input type="hidden" id="aAction" name="aAction" value="signupRequest" />

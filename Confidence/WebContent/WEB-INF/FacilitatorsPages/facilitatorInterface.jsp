@@ -74,9 +74,16 @@
 						</div>
 					</form>
 				</c:if>
-				
+				<form method="post" action="FacilitatorController?aAction=canPost">
+               		<div class="col-xs-3"></div>
+                	<div class="col-xs-6">  
+                   		<select class="form-control" name="canPost" onchange='this.form.submit()'>
+                       		<option value="open" <c:if test="${canPost =='open'}"> selected </c:if>>Open Question Posting</option>
+                         	<option value="close" <c:if test="${canPost =='close'}"> selected </c:if>>Close Question Posting</option>
+                        </select>
+                    </div>
+                </form>
 				<br><br><br>
-				
 				<div id="dynamicBox" name="dynamicBox">
 					<!-- AJAX Content here -->
 				</div>

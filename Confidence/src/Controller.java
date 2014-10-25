@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class Contoller
+ * Servlet implementation class Controller
  */
 @WebServlet("/Controller")
 public class Controller extends HttpServlet {
@@ -19,6 +19,7 @@ public class Controller extends HttpServlet {
 
 	private QuestionManager questionManager;
 	private SittingManager sittingManager;
+	private SurveyManager surveyManager;
 
 	/**
 	 * @throws ClassNotFoundException 
@@ -28,6 +29,7 @@ public class Controller extends HttpServlet {
 		super();
 		questionManager = new QuestionManager();
 		sittingManager = new SittingManager();
+		surveyManager = new SurveyManager();
 	}
 
 	/**
@@ -43,15 +45,21 @@ public class Controller extends HttpServlet {
 
 		HttpSession mySession = request.getSession();
 		Object sittingIdString = mySession.getAttribute("sittingId");
+		String sort = (String) mySession.getAttribute("sorted");
+		request.setAttribute("sorted", sort); 
+		mySession.setAttribute("sorted", sort);
 		int sittingId = 0;
 		
 		if (sittingIdString != null) {
 			sittingId = (Integer) mySession.getAttribute("sittingId");	
 		}
 		
-		if(aAction != null){
-			if(aAction.equals("navigation"))
-			{
+		if (aAction != null) {
+			if(aAction.equals("navigation")) {
+				
+				request.setAttribute("question", surveyManager.getQuestions());
+				request.setAttribute("choices", new String[] {"1", "2", "3", "4", "5"});
+				
 				// Get page to navigate to.
 				String toPage = request.getParameter("page");
 
@@ -63,13 +71,20 @@ public class Controller extends HttpServlet {
 					
 				} else if(toPage.equals("studentSittingInterface")) {
 					
-					request.setAttribute("questions", questionManager.getQuestions("", sittingId));
+					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 					nextPage = "studentSittingInterface.jsp";
 
 				} else if(toPage.equals("home")) {
 
-					request.setAttribute("questions", questionManager.getQuestions("", sittingId));
+					request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 					nextPage = "studentSittingInterface.jsp";
+
+				} else if (toPage.equals("survey")) {
+					
+					request.setAttribute("responses", surveyManager.getStats());
+					request.setAttribute("questions", surveyManager.getQuestions());
+					request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
+					nextPage = "surveyResults.jsp";
 
 				}
 				
@@ -79,47 +94,53 @@ public class Controller extends HttpServlet {
 				request.getSession().invalidate();
 				
 			} else if(aAction.equals("studentAJAX")){
-				
-				ArrayList<HashMap<String, String>> questionList = questionManager.getQuestions("", sittingId);
-				
+						
 				StringBuilder output = new StringBuilder();
 				
-				for(HashMap<String, String> item : questionList)
-				{
+				if (!sittingManager.checkSittingStatus(sittingId)) {
 					
-					output.append(
-					"<div class=\"row\">"+
-						"<div class=\"panel panel-default question\">"+
-							"<div class=\"panel-body\">"+
-								"<table>"+
-									"<tr>"+
-										"<td class=\"col-md-1\">"+
-											"<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">"
-					);
+					output.append("<div class=\"row\">");
+					output.append("<div class=\"col-md-4\">");
+					output.append("	<button class=\"btn btn-primary\" data-toggle=\"modal\"");
+					output.append("		data-target=\"#feedbackForm\">Launch survey!</button>");
+					output.append("</div>");
+					output.append("<div class=\"col-md-4\"></div>");
+					output.append("<div class=\"col-md-4\"></div>");
+					output.append("</div>");
 					
-					output.append("<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">");
-					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"que_id\" VALUE=\""+item.get("id")+"\">");
-					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"sorted\" VALUE=\"upvote\">");
-					output.append("<input type=\"image\" src=\"images/upvote-small.png\" value=\"Upvote\" style=\"width: 40px;\" />");
-					output.append("</FORM></td>");
-					output.append("<td class=\"col-md-9\">[ID"+item.get("id")+"] "+item.get("description")+"</td>");
-					output.append("<td class=\"col-md-2\" style=\"text-align: center;\">"+item.get("num_votes")+"</td>");
-					
-					output.append(	
-										"</tr>"+
-									"</table>"+
-								"</div>"+
-							"</div>"+
-						"</div>"
-					);
-					
+				} else {
+					System.out.println(sort);
+					ArrayList<HashMap<String, String>> questionList = questionManager
+							.getQuestions(sort, sittingId);
+
+					for (HashMap<String, String> item : questionList) {
+						output.append("<div class=\"row\">"
+								+ "<div class=\"panel panel-default question\">"
+								+ "<div class=\"panel-body\">"
+								+ "<table>"
+								+ "<tr>"
+								+ "<td class=\"col-md-1\">"
+								+ "<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">");
+
+						output.append("<FORM NAME=\"form1\" METHOD=\"POST\" action=\"Controller?aAction=upvote\">");
+						output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"que_id\" VALUE=\"" + item.get("id") + "\">");
+						output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"sorted\" VALUE=\"upvote\">");
+						output.append("<input type=\"image\" src=\"images/upvote-small.png\" value=\"Upvote\" style=\"width: 40px;\" />");
+						output.append("</FORM></td>");
+						output.append("<td class=\"col-md-9\">[ID" + item.get("id") + "] " + item.get("description") + "</td>");
+						output.append("<td class=\"col-md-2\" style=\"text-align: center;\">" + item.get("num_votes") + "</td>");
+
+						output.append("</tr>" + "</table>" + "</div></div>" + "</div>");
+
+					}
 				}
 				
-			    response.setContentType("text/html");  // Set content type of the response so that jQuery knows what it can expect.
-			    response.setCharacterEncoding("UTF-8"); 
-			    response.getWriter().write(output.toString());  // Write response body.
-			    
-			    return;
+				response.setContentType("text/html"); // Set content type of the response so that jQuery knows what it can expect.
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(output.toString()); // Write response body.
+
+				return;
+				
 			}
 			
 		} 
@@ -129,6 +150,7 @@ public class Controller extends HttpServlet {
 		myRequestDispatcher.forward(request, response);
 
 	}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -142,7 +164,7 @@ public class Controller extends HttpServlet {
 
 		String aAction = request.getParameter("aAction");
 
-		String nextPage = "sittingAccess.jsp";  
+		String nextPage = "studentSittingInterface.jsp";;
 		String sort = request.getParameter("sorted");
 		request.setAttribute("sorted", sort); 
 
@@ -151,6 +173,7 @@ public class Controller extends HttpServlet {
 		// Access server session.
 		HttpSession mySession = request.getSession();
 		Object sittingIdString = mySession.getAttribute("sittingId");
+		mySession.setAttribute("sorted", sort);
 		int sittingId = 0;
 		
 		if (sittingIdString != null) {
@@ -158,13 +181,28 @@ public class Controller extends HttpServlet {
 			System.out.println("SITTING ID: " + sittingId);
 		}
 		
+		request.setAttribute("question",
+				surveyManager.getQuestions());
+		request.setAttribute("choices", new String[] { "1", "2",
+				"3", "4", "5" });
+		
 		if(aAction != null) {
 			String session_id= request.getSession().getId();
-			if(aAction.equals("postque")){
+			
+			request.setAttribute("question", surveyManager.getQuestions());
+			request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
+			
+			if(aAction.equals("postque")) {
+
+				nextPage = "studentSittingInterface.jsp";
 				String question = request.getParameter("questionText");
+				boolean canPost = sittingManager.checkSittingCanPost(sittingId);
 				
 				if(question.isEmpty()) {
 					request.setAttribute("questionError", "Question cannot be empty!");
+				} else if (!canPost)  {
+					request.setAttribute("questionError",
+							"Facilitator has closed question posting.");
 				} else {
 					questionManager.submitQuestion(question, sittingId,session_id);
 				}
@@ -181,6 +219,19 @@ public class Controller extends HttpServlet {
 
 				nextPage = "studentSittingInterface.jsp";
 
+			} else if (aAction.equals("submitSurvey")) {
+				
+				for (Integer i = 1; i <= 3; i++) {
+					String in = request.getParameter(i.toString());
+					System.out.println(i.toString() + " : " + in);
+					surveyManager.respondToQuestion(i.toString(), in, sittingId);
+				}
+				
+				request.setAttribute("responses", surveyManager.getStats());
+				request.setAttribute("question", surveyManager.getQuestions());
+				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
+				nextPage = "login.jsp";
+				
 			} else if (aAction.equals("sittingAccessRequest")) {
 
 				String input = request.getParameter("aSittingId");
@@ -209,6 +260,7 @@ public class Controller extends HttpServlet {
 
 					sittingId = 0;
 					boolean exists = false;
+					boolean isOpen = false;
 					String error = "Login failed - incorrect password.";
 					try {
 						sittingId = Integer.parseInt(input);
@@ -219,13 +271,21 @@ public class Controller extends HttpServlet {
 					}
 
 					if (exists) {
-						System.out.println("Sort: " + sort + " sittingId: " + sittingId);
-						request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
-
-						mySession.setAttribute("sittingId", sittingId);
-
-						nextPage = "studentSittingInterface.jsp";
-
+						
+						isOpen = sittingManager.checkSittingStatus(sittingId);
+						
+						if (!isOpen) {
+							error = "Sitting you are trying to access is closed.";
+							request.setAttribute("error", error);
+							request.setAttribute("loginType", "studentLogin");
+							nextPage = "login.jsp";
+						} else {
+							System.out.println("Sort: " + sort + " sittingId: " + sittingId);
+							request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
+							mySession.setAttribute("sittingId", sittingId);
+							nextPage = "studentSittingInterface.jsp";
+						}
+						
 					} else {
 						// Failed login
 						request.setAttribute("error", error);
@@ -238,7 +298,6 @@ public class Controller extends HttpServlet {
 			} else if (aAction.equals("refresh")) {
 
 				String pwd = request.getParameter("aPWD");
-
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				request.setAttribute("sittingId", sittingId);
 				request.setAttribute("accessPWD", pwd);
@@ -248,7 +307,7 @@ public class Controller extends HttpServlet {
 			} else if (aAction.equals("sort")) {
 				
 				sort = request.getParameter("sortby");
-				request.setAttribute("sorted", sort);
+				mySession.setAttribute("sorted", sort);
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				nextPage = "studentSittingInterface.jsp";
 				
@@ -260,4 +319,3 @@ public class Controller extends HttpServlet {
 	}
 
 }
-
