@@ -311,6 +311,7 @@ public class Controller extends HttpServlet {
 				
 				String fname = (String) request.getParameter("firstName");
 				String lname = (String) request.getParameter("lastName");
+				System.out.println("SEARCHINGGGGGGG FORRRRRRRR " +fname + " " + lname );
 				if (fname.equals("") && lname.equals("")) {
 					request.setAttribute("searchError",
 							"Please input a first name and/or last name");
@@ -326,7 +327,15 @@ public class Controller extends HttpServlet {
 				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
 				
 				
-
+//				String fname = (String) request.getParameter("firstName");
+//				String lname = (String) request.getParameter("lastName");
+//				System.out.println("SEARCHINGGGGGGG FORRRRRRRR " +fname + " " + lname );
+//				if (fname.equals("") && lname.equals("")) {
+//					request.setAttribute("searchError",
+//							"Please input a first name and/or last name");
+//				} else {
+//					request.setAttribute("facSur",surveyManager.findFacilitator(fname, lname));
+//				}
 				nextPage = "surveyResults.jsp";
 
 			} 
