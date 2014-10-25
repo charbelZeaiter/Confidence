@@ -21,67 +21,70 @@
 		'packages' : [ 'corechart' ]
 	});
 
-	// Set a callback to run when the Google Visualization API is loaded.
-	google.setOnLoadCallback(drawChartExt);
+//Load the Visualization API and the piechart package.
+google.load('visualization', '1.0', {'packages':['corechart']});
 
-	function drawChartExt() {
-		drawChart(1);
-		drawChart(2);
-		drawChart(3);
-	}
-	// Callback that creates and populates a data table,
-	// instantiates the pie chart, passes in the data and
-	// draws it.
-	function drawChart(qid) {
+// Set a callback to run when the Google Visualization API is loaded.
+google.setOnLoadCallback(drawChartExt);
 
-		// Create the data table.
+function drawChartExt() {
+	drawChart(1);
+	drawChart(2);
+	drawChart(3);
+}
+// Callback that creates and populates a data table,
+// instantiates the pie chart, passes in the data and
+// draws it.
+function drawChart(qid) {
 
-		var index;
-		var sel = [ "1", "2", "3", "4", "5" ];
-		var chartrows = new Array();
-		var divname;
-		var count = 0;
-		var sum = 0;
-		var average;
+        // Create the data table.
+        
+        var index;
+        var sel = ["1","2","3","4","5"];
+        var chartrows = new Array();
+        var divname;
+        var count = 0;
+        var sum = 0;
+        var average;
+        
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rating');
+        data.addColumn('number', 'Votes');
+        
+        for	(index = 0; index < 5; index++) {
+             divname = "div_"+qid+"_"+sel[index];
+             
+            if (document.getElementById(divname) != null) {
+            	chartrows[index] =  parseInt(document.getElementById(divname).value);
+            	count += chartrows[index];
+            	sum += chartrows[index] * (index+1);
+            }
+        }
 
-		var data = new google.visualization.DataTable();
-		data.addColumn('string', 'Rating');
-		data.addColumn('number', 'Votes');
-
-		for (index = 0; index < 5; index++) {
-			divname = "div_" + qid + "_" + sel[index];
-
-			if (document.getElementById(divname) != null) {
-				chartrows[index] = parseInt(document.getElementById(divname).value);
-				count += chartrows[index];
-				sum += chartrows[index] * (index + 1);
-			}
-		}
-
-		data.addRows([ [ sel[0], chartrows[0] ], [ sel[1], chartrows[1] ],
-				[ sel[2], chartrows[2] ], [ sel[3], chartrows[3] ],
-				[ sel[4], chartrows[4] ] ]);
-
-		// Set chart options
-		var options = {
-			'title' : "Question " + qid + "!",
-			'width' : 400,
-			'height' : 300
-		};
-		// Instantiate and draw our chart, passing in some options.
-		var chart = new google.visualization.ColumnChart(document
-				.getElementById("chart_div_" + qid));
-		chart.draw(data, options);
-
-		document.getElementById("chart_count_" + qid).innerHTML = count
-				+ " responses";
-		if (count > 0) {
-			average = sum / count;
-			document.getElementById("chart_avg_" + qid).innerHTML = average
-					+ " average";
-		}
-
-	}
+        data.addRows([
+                [sel[0],chartrows[0]],
+        		[sel[1],chartrows[1]],
+        		[sel[2],chartrows[2]],
+        		[sel[3],chartrows[3]],
+        		[sel[4],chartrows[4]]
+        		]);
+        
+        // Set chart options
+        var options = {'title':"Question "+qid+"!",
+                       'width':400,
+                       'height':300};
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.BarChart(document.getElementById("chart_div_"+qid));
+        chart.draw(data, options);
+        
+        
+        document.getElementById("chart_count_"+qid).innerHTML = count + " responses";
+        if (count > 0) {
+	        average = sum/count;
+	        document.getElementById("chart_avg_"+qid).innerHTML = average + " average";
+        }
+       
+      }
 </script>
 </head>
 <body>
@@ -125,51 +128,8 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-		</div>
-	</div>
 
-	<!-- Modal Dialog -->
-	<div class="modal fade" id="feedbackForm" tabindex="-1" role="dialog"
-		aria-labelledby="feedbackFormLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<form action="Controller" method="post">
-				<input type="hidden" id="aAction" name="aAction"
-					value="submitSurvey" />
-				<div class="input-group">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title" id="feedbackFormLabel">Lecture
-								Feedback</h4>
-						</div>
-						<div class="modal-body col-md-12">
-							<div class="col-md-2"></div>
-							<div class="col-md-8">
 
-								<c:forEach items="${question}" var="question">
-									<label for="choices_${question.q_id}">${question.question}
-									</label>
-									<ul class="list-inline" id="choices_${question.q_id}">
-										<c:forEach items="${choices}" var="choice">
-											<li><div class="radio">
-													<label> <input type="radio" name="${question.q_id}"
-														value="${choice}" /> ${choice}
-													</label>
-												</div></li>
-										</c:forEach>
-									</ul>
-								</c:forEach>
-
-							</div>
-							<div class="col-md-2"></div>
-						</div>
-						<div class="modal-footer">
-							<input type="submit" class="btn btn-primary">
-							<button type="button" class="btn btn-primary"
-								data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</form>
 		</div>
 	</div>
 
