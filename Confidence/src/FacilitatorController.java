@@ -133,8 +133,8 @@ public class FacilitatorController extends HttpServlet {
 					output.append("<INPUT TYPE=\"HIDDEN\" NAME=\"sorted\" VALUE=\""+sort+"\">");
 					output.append("<input type=\"image\" src=\"images/tick.png\" value=\"Remove\" style=\"width: 40px;\" />");
 					output.append("</FORM></td>");
-					output.append("<td class=\"col-md-9\">[ID"+item.get("id")+"]	"+item.get("description")+"</td>");
-					output.append("<td class=\"col-md-2\" style=\"text-align: center;\">"+item.get("num_votes")+"</td>");
+					output.append("<td class=\"col-md-9\">"+item.get("description")+"</td>");
+					output.append("<td class=\"col-md-2\" style=\"text-align: center;\">Votes: "+item.get("num_votes")+"</td>");
 					output.append(			"</tr>"+
 										"</table>"+
 									"</div>"+

@@ -10,19 +10,13 @@
                 <span class="icon-bar"></span>
             </button>
             <!-- navbar-brand is hidden on larger screens, but visible when the menu is collapsed -->
-            <a class="navbar-brand" href="index.html">Business Casual</a>
+            <a class="navbar-brand" href="Controller?aAction=navigation&amp;page=home">Confidence</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="Controller?aAction=navigation&amp;page=home">Home</a>
-                </li>
-                <li>
-                    <a href="login.jsp">Placeholder</a>
-                </li>
-                <li>
-                    <a href="login.jsp">Placeholder</a>
+                    <a href="Controller?aAction=navigation&amp;page=home">Sitting Interface</a>
                 </li>
                	<li>
                     <a href="Controller?aAction=logOut">Log Out</a>
