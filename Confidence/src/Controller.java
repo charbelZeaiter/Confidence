@@ -217,11 +217,14 @@ public class Controller extends HttpServlet {
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("submitSurvey")) {
-				
 				for (Integer i = 1; i <= 3; i++) {
 					String in = request.getParameter(i.toString());
 					System.out.println(i.toString() + " : " + in);
 					surveyManager.respondToQuestion(i.toString(), in, sittingId);
+				}
+				String comment = request.getParameter("commentText");
+				if (comment != "") {
+					surveyManager.addComment(comment,sittingId);
 				}
 				
 				request.setAttribute("question", surveyManager.getQuestions());
@@ -322,6 +325,7 @@ public class Controller extends HttpServlet {
 			} else if(aAction.equals("surveyResults")) {
 				String fac_id = (String) request.getParameter("fac_id");
 				request.setAttribute("responses", surveyManager.getStats(fac_id));
+				request.setAttribute("comments", surveyManager.getComments(fac_id));
 				request.setAttribute("questions", surveyManager.getQuestions());
 				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
 				
