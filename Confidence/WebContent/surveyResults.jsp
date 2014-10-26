@@ -81,7 +81,7 @@ function drawChart(qid) {
         document.getElementById("chart_count_"+qid).innerHTML = count + " responses";
         if (count > 0) {
 	        average = sum/count;
-	        document.getElementById("chart_avg_"+qid).innerHTML = average + " average";
+	        document.getElementById("chart_avg_"+qid).innerHTML = (Math.round(average*100)/100) + " average";
         }
        
       }
@@ -113,7 +113,7 @@ function drawChart(qid) {
 		
 				<div class="col-md-12">
 					<div class="col-md-2"></div>
-					<div class="col-md-8">
+					<div class="col-md-5">
 						<c:forEach items="${questions}" var="question">
 							<label>${question.question} </label>
 							<ul>
@@ -122,6 +122,13 @@ function drawChart(qid) {
 							</ul>
 							<div id="chart_div_${question.q_id}"></div>
 							<br>
+						</c:forEach>
+					</div>
+					<div class="col-md-5">
+						<c:forEach items="${comments}" var="comment">
+							<li>
+								${comment.description} 
+							</li>
 						</c:forEach>
 					</div>
 				</div>

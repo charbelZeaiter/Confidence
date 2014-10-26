@@ -1,6 +1,7 @@
 #! /bin/bash 
 
-mysql -u root -ppassword Confidence < ./table.sql  
+mysql -u root -ppassword Confidence < ./table.sql 
+mysql -u root -ppassword Confidence < ./comments.sql   
 mysql -u root -ppassword Confidence < ./data.sql  
 mysql -u root -ppassword Confidence < ./dictionaryStudyTool.sql  
 mysql -u root -ppassword Confidence < ./question_autocorrect.sql 
