@@ -60,16 +60,13 @@
 									<div class="panel-body">
 										<table>
 											<tr>
+												<td class="col-md-9">${facSur.fname} ${facSur.lname}</td>
 												<td class="col-md-1">
-													<FORM NAME="form1" METHOD="POST"
-														action="Controller?aAction=surveyResults">
-														<INPUT TYPE="HIDDEN" NAME="fac_id" VALUE="${facSur.f_id}">
-														<input type="image" src="images/upvote-small.png"
-															value="Upvote" style="width: 40px;" />
-													</FORM>
+												<FORM NAME="form1" METHOD="POST"action="Controller?aAction=surveyResults">
+													<INPUT TYPE="HIDDEN" NAME="fac_id" VALUE="${facSur.f_id}">
+													<button type="submit" class="btn btn-link">View Stats</button>
+												</FORM>
 												</td>
-												<td class="col-md-9">${facSur.fname}
-													${facSur.lname}</td>
 											</tr>
 											
 										</table>

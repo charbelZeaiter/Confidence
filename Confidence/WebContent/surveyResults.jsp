@@ -112,21 +112,23 @@ function drawChart(qid) {
 				</c:forEach>
 		
 				<div class="col-md-12">
-					<div class="col-md-2"></div>
+					<div class="col-md-1"></div>
 					<div class="col-md-5">
+						<h3>Ratings</h3>
+						<br>
 						<c:forEach items="${questions}" var="question">
-							<label>${question.question} </label>
-							<ul>
-								<li><div id="chart_count_${question.q_id}"></div></li>
-								<li><div id="chart_avg_${question.q_id}"></div></li>
-							</ul>
+							<h5>${question.question} </h5>
+							<div id="chart_count_${question.q_id}"></div>
+							<div id="chart_avg_${question.q_id}"></div>
 							<div id="chart_div_${question.q_id}"></div>
 							<br>
 						</c:forEach>
 					</div>
 					<div class="col-md-5">
+						<h3>Comments</h3>
+						<br>
 						<c:forEach items="${comments}" var="comment">
-							<li>
+							<li style="text-align: left;">
 								${comment.description} 
 							</li>
 						</c:forEach>
