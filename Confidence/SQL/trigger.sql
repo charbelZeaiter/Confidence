@@ -19,7 +19,7 @@ BEGIN
 		insert into votes_audit (session_id,que_id,sitting_id) 
 			values (new.session_id,old.que_id,old.sitting_id);
 	else	
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT ='cannot upvote twice the same question';
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT ='You cannot upvote your own question, or the same question twice.';
 	end if;
 	END IF;
 	END;

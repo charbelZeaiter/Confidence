@@ -44,7 +44,7 @@ BEGIN
 		CLOSE c1;
 
 		if m_id >=1 then
-		select concat('similar question already asked: ',sentence)  into msg from question_h where id = m_id;
+		select concat('Similar question already asked: "', sentence, '"')  into msg from question_h where id = m_id;
 		
 		 SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
 		end if;
