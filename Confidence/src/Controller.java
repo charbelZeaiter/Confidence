@@ -226,6 +226,10 @@ public class Controller extends HttpServlet {
 					System.out.println(i.toString() + " : " + in);
 					surveyManager.respondToQuestion(i.toString(), in, sittingId);
 				}
+				String comment = request.getParameter("commentText");
++				if (comment != "") {
++					surveyManager.addComment(comment,sittingId);
++				}
 				
 				request.setAttribute("question", surveyManager.getQuestions());
 				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
@@ -330,7 +334,7 @@ public class Controller extends HttpServlet {
 				request.setAttribute("responses", surveyManager.getStats(fac_id));
 				request.setAttribute("questions", surveyManager.getQuestions());
 				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
-				
+				request.setAttribute("comments", surveyManager.getComments(fac_id));
 				
 
 				nextPage = "surveyResults.jsp";

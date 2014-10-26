@@ -201,5 +201,41 @@ public class SurveyManager {
 		}
 		
 	}
+	
+	public ArrayList<HashMap<String, String>> getComments(String fac_id) {
+		ArrayList<HashMap<String, String>> comments = new ArrayList<HashMap<String, String>>();
+		String sqlQuery = "SELECT com_id, description FROM survey_comments WHERE lecturer_id = " + fac_id;
+		
+		try {
+			// Execute query and loop through saving results.
+			ResultSet rs = mysql.select(sqlQuery);
+			while (rs.next()) {
+				HashMap<String, String> row = new HashMap<String, String>();
+				row.put("id", rs.getString("com_id"));
+				row.put("description", rs.getString("description"));
+				comments.add(row);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return comments;
+	}
+
+	public void addComment(String comment, int sittingId) {
+		try {
+				String sqlQuery = "SELECT facilitator_id FROM sittings WHERE sitting_id = " + sittingId;
+				String fac_id = "";
+				ResultSet rs = mysql.select(sqlQuery);
+					while (rs.next()) {
+						fac_id = rs.getString("facilitator_id");
+					}
+				String sql= "insert into survey_comments(lecturer_id,sitting_id,description) values (\""+fac_id+"\",\""+sittingId+"\",\""+comment+"\")";
+				mysql.insert(sql);
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 }

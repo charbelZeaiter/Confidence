@@ -129,7 +129,7 @@
 										</c:forEach>
 									</ul>
 								</c:forEach>
-
+								<input class="form-control" type="text" id="aText" name="commentText" />
 							</div>
 							<div class="col-md-2"></div>
 						</div>
