@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="col-md-6 col-md-offset-3 panel panel-default" style="width: 500px; height: 400px;">
+<div class="col-md-6 col-md-offset-3 panel panel-default" style="width: 500px; margin-left:-250px; height: 400px; margin-top:-200px;">
 	<h1 class="margin-top-vertical-mid">Facilitator Sign Up</h1>
 	<div>
 		<div>
@@ -29,13 +29,13 @@
 			    <div class="form-group">
                     <label for="aPWD" class="col-md-4 control-label">First Name:</label>
                     <div class="col-md-8">
-                      	<input type="text" class="form-control" id="fname" name="fname" maxLength="50" placeholder="FirstName" required>
+                      	<input type="text" class="form-control" id="fname" name="fname" maxLength="50" placeholder="First Name" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="aPWD" class="col-md-4 control-label">Last Name:</label>
                     <div class="col-md-8">
-                      	<input type="text" class="form-control" id="lname" name="lname" maxLength="50" placeholder="LastName" required>
+                      	<input type="text" class="form-control" id="lname" name="lname" maxLength="50" placeholder="Last Name" required>
                     </div>
                 </div>
 			</div>
