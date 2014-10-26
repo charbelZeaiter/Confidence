@@ -11,6 +11,7 @@ drop table if exists group_similarity;
 drop table if exists word_suffix;
 drop table if exists question_h;
 drop table if exists question_d;
+drop table if exists punctuation;
 
 CREATE TABLE `facilitators` (
   `facilitator_id` INT NOT NULL AUTO_INCREMENT,
