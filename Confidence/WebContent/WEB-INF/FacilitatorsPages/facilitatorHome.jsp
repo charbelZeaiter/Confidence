@@ -46,30 +46,34 @@
 					<c:when test="${sittingListSize > 0}">
 						<div class="col-md-1"></div>
 						<div class="col-md-10">
-							<table width="100%" border="1">
+							<table class="table table-bordered table-hover" width="100%">
 								<tr>
-									<th colspan="4">My Sittings</th>
-								</tr>
-								<tr>
-									<th>ID</th>
-									<th>Name</th>
-									<th>Password</th>
-									<th></th>
-									<th>Status</th>
-									<th></th>
+									<th style="text-align:center;">ID</th>
+									<th style="text-align:center;">Name</th>
+									<th style="text-align:center;">Password</th>
+									<th style="text-align:center;">Status</th>
+									<th style="text-align:center;">Access Link</th>
+									<th style="text-align:center;">Close Sitting and Launch Survey</th>
 								</tr>
 								<c:forEach items="${sittingList}" var="sitting"> 
 									<tr>
-									    <td>${sitting.id}</td>
-							    		<td>${sitting.name}</td>
-							    		<td>${sitting.pwd}</td>
-							    		<td><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
-							    		<td>${sitting.status}</td>
-									    <td>
+									    <td style="vertical-align:middle">${sitting.id}</td>
+							    		<td style="vertical-align:middle">${sitting.name}</td>
+							    		<td style="vertical-align:middle">${sitting.pwd}</td>
+							    		<td style="vertical-align:middle">${sitting.status}</td>
+							    		<td style="vertical-align:middle"><a href="FacilitatorController?aAction=navigation&amp;page=facilitatorInterface&sittingId=${sitting.id}&sittingName=${sitting.name}&qwerty=${sitting.pwd}&sorted=upvote">Access</a></td>
+									    <td style="vertical-align:middle">
 			                            	<form method="post" action="FacilitatorController">
 			                                    <input type="HIDDEN" name="aAction" value="closeSitting" />
-			                                    <input type="HIDDEN" name="sittingId" value="${sitting.id}"> 
-			                                    <button class="btn btn-primary" type="submit">Close Sitting</button>
+			                                    <input type="HIDDEN" name="sittingId" value="${sitting.id}">
+			                                    <c:choose>
+				                                    <c:when test="${sitting.status == 'Open'}">
+				                                    	<button class="btn btn-primary" type="submit">Close Sitting</button>
+				                                    </c:when>
+				                                    <c:otherwise>
+				                                    	<button class="btn btn-primary disabled" type="submit">Close Sitting</button>
+				                                    </c:otherwise>
+				                               	</c:choose>
 			                                </form>
 									    </td>
 								   </tr>

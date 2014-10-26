@@ -1,7 +1,7 @@
 <footer>
 		<div class="row">
 			<div class="col-lg-12 text-center">
-				<p>COMP4920 Project ~ Confidence ©</p>
+				<p style="color: gray;"><i>COMP4920 Project ~ Confidence ©</i></p>
 			</div>
 		</div>
 </footer>
