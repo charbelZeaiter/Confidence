@@ -1,7 +1,6 @@
 #! /bin/bash 
 
 mysql -u root -proot Confidence < ./table.sql 
-mysql -u root -proot Confidence < ./comments.sql   
 mysql -u root -proot Confidence < ./data.sql  
 mysql -u root -proot Confidence < ./dictionaryStudyTool.sql  
 mysql -u root -proot Confidence < ./question_autocorrect.sql 
