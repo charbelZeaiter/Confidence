@@ -127,3 +127,7 @@ create table question_d (
 create table excluded_word (
   word varchar(100)
 );
+
+create table punctuation( 
+symbol varchar(1)
+);
