@@ -52,8 +52,8 @@
 									<th style="text-align:center;">Name</th>
 									<th style="text-align:center;">Password</th>
 									<th style="text-align:center;">Status</th>
-									<th></th>
-									<th></th>
+									<th style="text-align:center;">Access Link</th>
+									<th style="text-align:center;">Close Sitting and Launch Survey</th>
 								</tr>
 								<c:forEach items="${sittingList}" var="sitting"> 
 									<tr>
