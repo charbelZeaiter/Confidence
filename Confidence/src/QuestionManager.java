@@ -30,7 +30,6 @@ public class QuestionManager {
 		}
 
 		try {
-			System.out.println(order);
 			// Create sql statement and pass values in.
 			
 			PreparedStatement ps =  mysql.getConnection().prepareStatement(sqlQuery);
