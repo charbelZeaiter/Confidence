@@ -351,7 +351,7 @@ public class FacilitatorController extends HttpServlet {
 
 					// Insert sitting into database.
 					int newId = sittingManager.insertNewSitting(facilitatorRecordId, pwd, name);
-					surveyManager.insertNewSitting(facilitatorRecordId, sittingId);
+					surveyManager.insertNewSitting(facilitatorRecordId, newId);
 					
 					if (newId > -1) {
 						
