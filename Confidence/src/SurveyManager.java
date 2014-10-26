@@ -221,7 +221,7 @@ public class SurveyManager {
 		return comments;
 	}
 
-	public void addComment(String comment, String sittingId) {
+	public void addComment(String comment, int sittingId) {
 		try {
 				String sqlQuery = "SELECT facilitator_id FROM sittings WHERE sitting_id = " + sittingId;
 				String fac_id = "";
