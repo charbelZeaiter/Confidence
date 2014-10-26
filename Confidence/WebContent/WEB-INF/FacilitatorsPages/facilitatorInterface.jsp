@@ -17,7 +17,7 @@
 	<!-- Bootstrap -->
 	<link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Custom CSS -->
-	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    <link rel="stylesheet" href="bootstrap-theme/css/business-casual.css">
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script>
@@ -38,67 +38,62 @@
 	</script>
 </head>
 <body>
-	<div id="wrap">
-		<div class="row">
-			<div class="col-md-12">
-				<h1>Facilitator Interface</h1>
-			</div>
-		</div>
-		<div class="row">
-			<!-- Nav include -->
-			<jsp:include page="nav.jsp" />
-		</div>
-		<br />
-		<div class="row">
-			<div class="col-md-4">
-				Sitting ID: ${sittingId}<br />
-				Sitting Name: ${sittingName}<br />
-				Sitting Password: ${sittingPwd}<br />
-			</div>
-			<div class="col-md-4"></div>
-			<div class="col-md-4"></div>
-		</div>
-		<br />
-		<div class="col-md-4"></div>
-		<div class="col-md-4">
-			<div class="row">
-				<c:if test="${ !empty questions }">
-					<p>Sort By:</p>
-					<form method="post" action="FacilitatorController?aAction=sort">
-						<div class="col-xs-3"></div>
-						<div class="col-xs-6">	
-							<select class="form-control" name="sortby" onchange='this.form.submit()'>
-								<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
-								<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
-							</select>
-						</div>
-					</form>
-				</c:if>
-				<form method="post" action="FacilitatorController?aAction=canPost">
-               		<div class="col-xs-3"></div>
-                	<div class="col-xs-6">  
-                   		<select class="form-control" name="canPost" onchange='this.form.submit()'>
-                       		<option value="open" <c:if test="${canPost =='open'}"> selected </c:if>>Open Question Posting</option>
-                         	<option value="close" <c:if test="${canPost =='close'}"> selected </c:if>>Close Question Posting</option>
-                        </select>
-                    </div>
-                </form>
-				<br><br><br>
-				<div id="dynamicBox" name="dynamicBox">
-					<!-- AJAX Content here -->
-				</div>
-				
-			</div>
-		</div>
-		<div class="col-md-4" style="text-align: right;">
-			<form method="post" action="FacilitatorController?aAction=refresh">
-				<input type="hidden" id="aAction" value="refresh" />
-				<input type="HIDDEN" name="sorted" value="${sorted}">
-				<button class="btn btn-primary" type="submit">Refresh!</button>
-			</form>		
-		</div>
-	</div>
-	<jsp:include page="footer.jsp" />
 
+	<div class="brand">Facilitator Home</div>
+	
+	<!-- Nav include -->
+	<jsp:include page="nav.jsp" />
+	
+		<div class="container">
+		<div class="row">
+            <div class="box">
+                <div class="col-lg-12">
+                    <hr><h2 class="intro-text text-center"><strong>Sitting "${sittingName}"</strong></h2><hr>
+                </div>
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8 text-center">
+					<c:choose>
+						<c:when test="${ !empty error }">
+							<p></p>
+							<p style="color: red;">${error}</p>
+						</c:when>
+					</c:choose>
+					<p><b>Sitting ID:</b> ${sittingId}</p>
+					<p><b>Sitting Password:</b> ${sittingPwd}</p>
+					
+					<c:if test="${ !empty questions }">
+						<p>Sort By:</p>
+						<form method="post" action="FacilitatorController?aAction=sort">
+							<div class="col-xs-3"></div>
+							<div class="col-xs-6">	
+								<select class="form-control" name="sortby" onchange='this.form.submit()'>
+									<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
+									<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+								</select>
+							</div>
+						</form>
+						<br>
+					</c:if>
+					<br>
+					<form method="post" action="FacilitatorController?aAction=canPost">
+	               		<div class="col-xs-3"></div>
+	                	<div class="col-xs-6">  
+	                   		<select class="form-control" name="canPost" onchange='this.form.submit()'>
+	                       		<option value="open" <c:if test="${canPost =='open'}"> selected </c:if>>Open Question Posting</option>
+	                         	<option value="close" <c:if test="${canPost =='close'}"> selected </c:if>>Close Question Posting</option>
+	                        </select>
+	                    </div>
+	                </form>
+					<br><br><br>
+					<div id="dynamicBox" name="dynamicBox">
+						<!-- AJAX Content here -->
+					</div>
+				</div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+ 	</div>
+ 
+	<jsp:include page="footer.jsp" />
 </body>
 </html>

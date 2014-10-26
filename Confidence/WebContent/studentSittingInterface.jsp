@@ -12,7 +12,7 @@
 	<!-- Bootstrap -->
 	<link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Custom CSS -->
-	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    <link rel="stylesheet" href="bootstrap-theme/css/business-casual.css">	
 	
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script>
@@ -26,68 +26,66 @@
     
 </head>
 <body>
-	<div id="wrap">
-		<div class="row">
-			<div class="col-md-12">
-				<h1>Student Interface</h1>
-			</div>
-		</div>
-		<div class="row">
-			<!-- Nav include -->
-			<jsp:include page="nav.jsp" />
-		</div>
-		<br>
-		<div class="col-md-4">
-			<c:if test="${ !empty questionError }">
-				<p style="color:red;"> ${questionError} </p>
-			</c:if>
-		</div>
-		<div class="col-md-4">
-			<div class="row">
 
-				<form method="post" action="Controller?aAction=postque&amp;page=studentSittingInterface">
-					<input type="hidden" id="aAction" value="post_text" />
-					<div class="input-group">
-						<input class="form-control" type="text" id="aText" name="questionText" /> <span class="input-group-btn">
-						    <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
-							<button class="btn btn-primary" type="submit">Post!</button>
-						</span>
-					</div>
-				</form>
-				
-				<br>
-				
-				<c:if test="${ !empty questions }">
-					<p>Sort By:</p>
-					<form method="post" action="Controller?aAction=sort">
-						<div class="col-xs-3"></div>
-						<div class="col-xs-6">
-							<select class="form-control" name="sortby" onchange='this.form.submit()'">
-								<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
-								<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
-							</select>
-						</div>						
-					</form>
-				</c:if>
-				
-				<br><br><br>
-				
-				<div id="dynamicBox" name="dynamicBox">
-					<!-- AJAX Content here -->
-				</div>
-			
-			</div>
-		</div>
-		<div class="col-md-4" style="text-align: right;">
-			<form method="post" action="Controller?aAction=refresh">
-				<input type="hidden" id="aAction" value="refresh" />
-				<input type="HIDDEN" name="sorted" value="${sorted}"> 
-				<button class="btn btn-primary" type="submit">Refresh!</button>
-			</form>
-		</div>
-	</div>
+	<div class="brand">Student Home</div>
 	
-	<!-- Modal Dialog -->
+	<!-- Nav include -->
+	<jsp:include page="nav.jsp" />
+	
+	<div class="container">
+		<div class="row">
+            <div class="box">
+                <div class="col-lg-12">
+                    <hr><h2 class="intro-text text-center"><strong>Student Interface</strong></h2><hr>
+                </div>
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8 text-center">
+					<c:choose>
+						<c:when test="${ !empty questionError }">
+							<p></p>
+							<p style="color: red;">${questionError}</p>
+						</c:when>
+						<c:otherwise>
+							<br>
+						</c:otherwise>
+					</c:choose>
+					<form method="post" action="Controller?aAction=postque&amp;page=studentSittingInterface">
+						<input type="hidden" id="aAction" value="post_text" />
+						<div class="input-group">
+							<input class="form-control" type="text" id="aText" name="questionText" /> <span class="input-group-btn">
+							    <INPUT TYPE="HIDDEN" NAME="sorted" VALUE="${sorted}">
+								<button class="btn btn-primary" type="submit">Post!</button>
+							</span>
+						</div>
+					</form>
+					
+					<br>
+					
+					<c:if test="${ !empty questions }">
+						<p>Sort By:</p>
+						<form method="post" action="Controller?aAction=sort">
+							<div class="col-xs-3"></div>
+							<div class="col-xs-6">
+								<select class="form-control" name="sortby" onchange='this.form.submit()'">
+									<option value="upvote" <c:if test="${sorted =='upvote'}"> selected </c:if>>Up Votes</option>
+									<option value="date" <c:if test="${sorted =='date'}"> selected </c:if>>Most Recent</option>
+								</select>
+							</div>						
+						</form>
+					</c:if>
+					
+					<br><br><br>
+					
+					<div id="dynamicBox" name="dynamicBox">
+						<!-- AJAX Content here -->
+					</div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+ 	</div>
+ 	
+ 	<!-- Modal Dialog -->
 	<div class="modal fade" id="feedbackForm" tabindex="-1" role="dialog" aria-labelledby="feedbackFormLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<form action="Controller" method="post">
@@ -146,6 +144,7 @@
 			</form>
 		</div>
 	</div>
+ 
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

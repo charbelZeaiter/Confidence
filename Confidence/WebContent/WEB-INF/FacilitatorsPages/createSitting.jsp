@@ -11,57 +11,61 @@
 	<!-- Bootstrap -->
 	<link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Custom CSS -->
-	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    <link rel="stylesheet" href="bootstrap-theme/css/business-casual.css">
 </head>
 <body>
-	<div id="wrap">
+
+	<div class="brand">Facilitator Home</div>
+	
+	<!-- Nav include -->
+	<jsp:include page="nav.jsp" />
+	
+		<div class="container">
 		<div class="row">
-			<div class="col-md-12">
-				<h1>Create a Sitting</h1>
-			</div>
-		</div>
-		<div class="row">
-			<!-- Nav include -->
-			<jsp:include page="nav.jsp" />
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<br>
-				<div class="row">
-					<div class="col-md-4"></div>
-					<div class="col-md-4">
-						<c:if test="${ !empty error }">
+            <div class="box">
+                <div class="col-lg-12">
+                    <hr><h2 class="intro-text text-center"><strong>Sitting Manager</strong></h2><hr>
+                </div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6 text-center">
+					<c:choose>
+						<c:when test="${ !empty error }">
+							<p></p>
 							<p style="color: red;">${error}</p>
-						</c:if>
-						<form class="form-horizontal" method="post" action="FacilitatorController">
-							<div>
-								<div class="form-group">
-									<label for="aFacilitatorId" class="col-md-4 control-label">Sitting Name:</label>
-								    <div class="col-md-8">
-								      <input type="text" class="form-control" id="aName" name="aName" maxLength="50" placeholder="e.g. COMP4920 Week 1" required>
-								    </div>
+						</c:when>
+						<c:otherwise>
+							<br>
+						</c:otherwise>
+					</c:choose>
+					<form class="form-horizontal" method="post" action="FacilitatorController">
+						<div>
+							<div class="form-group">
+								<label for="aFacilitatorId" class="col-md-4 control-label">Sitting Name:</label>
+							    <div class="col-md-8">
+							      <input type="text" class="form-control" id="aName" name="aName" maxLength="50" placeholder="e.g. COMP4920 Week 1" required>
 							    </div>
-							    <div class="form-group">
-								    <label for="aPWD" class="col-md-4 control-label">Password:</label>
-								    <div class="col-md-8">
-								      <input type="password" class="form-control" id="aPWD" name="aPWD" maxLength="50" placeholder="Password to give students" required>
-								    </div>
+						    </div>
+						    <div class="form-group">
+							    <label for="aPWD" class="col-md-4 control-label">Password:</label>
+							    <div class="col-md-8">
+							      <input type="password" class="form-control" id="aPWD" name="aPWD" maxLength="50" placeholder="Password to give students" required>
 							    </div>
-							</div>
-							<div class="margin-vertical-mid">
-								<input type="hidden" id="aAction" name="aAction" value="createSittingRequest"/>
-								<input class="btn btn-large btn-primary" type="submit" value="Create">
-							</div>
-						</form>
+						    </div>
+						</div>
 						<br>
 						<p><i>The Sitting ID will be auto-generated.</i></p>
-					</div>
-					<div class="col-md-4"></div>
+						<br>
+						<div class="margin-vertical-mid">
+							<input type="hidden" id="aAction" name="aAction" value="createSittingRequest"/>
+							<input class="btn btn-large btn-primary" type="submit" value="Create">
+						</div>
+					</form>
 				</div>
-			</div>
-		</div>
-	</div>
-
+                <div class="clearfix"></div>
+            </div>
+        </div>
+ 	</div>
+ 
 	<jsp:include page="footer.jsp" />
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

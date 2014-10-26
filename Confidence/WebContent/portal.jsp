@@ -1,4 +1,4 @@
-<div class="col-md-6 col-md-offset-3 panel panel-default">				
+<div class="col-md-6 col-md-offset-3 panel panel-default" style="width: 500px; margin-left: -250px;">				
 	<h1 class="margin-vertical-large">Confidence</h1>
 	<div class="margin-vertical-large">
 		<a class="btn btn-large btn-primary" href="Controller?aAction=navigation&amp;page=studentLogin">I'm a Student</a>
