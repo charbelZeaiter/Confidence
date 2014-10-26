@@ -81,10 +81,8 @@ public class Controller extends HttpServlet {
 
 				} else if (toPage.equals("survey")) {
 					
-					request.setAttribute("responses", surveyManager.getStats());
-					request.setAttribute("questions", surveyManager.getQuestions());
-					request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
-					nextPage = "surveyResults.jsp";
+					
+					nextPage = "surveySearch.jsp";
 
 				}
 				
@@ -109,7 +107,6 @@ public class Controller extends HttpServlet {
 					output.append("</div>");
 					
 				} else {
-					System.out.println(sort);
 					ArrayList<HashMap<String, String>> questionList = questionManager
 							.getQuestions(sort, sittingId);
 
@@ -227,7 +224,6 @@ public class Controller extends HttpServlet {
 					surveyManager.respondToQuestion(i.toString(), in, sittingId);
 				}
 				
-				request.setAttribute("responses", surveyManager.getStats());
 				request.setAttribute("question", surveyManager.getQuestions());
 				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
 				nextPage = "login.jsp";
@@ -311,7 +307,29 @@ public class Controller extends HttpServlet {
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 				nextPage = "studentSittingInterface.jsp";
 				
-			}
+			} else if(aAction.equals("surveySearch")) {
+				
+				String fname = (String) request.getParameter("firstName");
+				String lname = (String) request.getParameter("lastName");
+				if (fname.equals("") && lname.equals("")) {
+					request.setAttribute("searchError",
+							"Please input a first name and/or last name");
+				} else {
+					request.setAttribute("facSur",surveyManager.findFacilitator(fname, lname));
+				}
+				nextPage = "surveySearch.jsp";
+				
+			} else if(aAction.equals("surveyResults")) {
+				String fac_id = (String) request.getParameter("fac_id");
+				request.setAttribute("responses", surveyManager.getStats(fac_id));
+				request.setAttribute("questions", surveyManager.getQuestions());
+				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
+				
+				
+
+				nextPage = "surveyResults.jsp";
+
+			} 
 		}
 
 		RequestDispatcher myRequestDispatcher = request.getRequestDispatcher("/"+nextPage);
