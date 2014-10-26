@@ -7,6 +7,7 @@ BEGIN
 	DECLARE firstVote integer ;
 	set firstVote=0;
 	BEGIN  
+	if new.num_votes <> old.num_votes then
 	select 1 
 	into firstvote 
 	from votes_audit 
@@ -19,6 +20,7 @@ BEGIN
 			values (new.session_id,old.que_id,old.sitting_id);
 	else	
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT ='cannot upvote twice the same question';
+	end if;
 	END IF;
 	END;
 END $$
