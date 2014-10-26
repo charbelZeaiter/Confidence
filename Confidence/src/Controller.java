@@ -227,9 +227,9 @@ public class Controller extends HttpServlet {
 					surveyManager.respondToQuestion(i.toString(), in, sittingId);
 				}
 				String comment = request.getParameter("commentText");
-+				if (comment != "") {
-+					surveyManager.addComment(comment,sittingId);
-+				}
+				if (comment != "") {
+					surveyManager.addComment(comment,sittingId);
+				}
 				
 				request.setAttribute("question", surveyManager.getQuestions());
 				request.setAttribute("choices", new String[] { "1", "2", "3", "4", "5" });
