@@ -22,7 +22,9 @@ BEGIN
 	declare cat integer default 0;
 	DECLARE var1 VARCHAR(100);
 	DECLARE var2 INTEGER;
-
+	declare question_mark integer default 0;
+	declare cur_punct varchar(1);
+	DECLARE c_punct CURSOR FOR select symbol from punctuation;
 	DECLARE c_entries CURSOR FOR 
 	select word ,count(*) as "a" 
 	from entries 
@@ -48,8 +50,20 @@ BEGIN
         SET item   =  SUBSTR(fullstr, inipos, endpos - inipos);
 		SET position = position +1;
 		
+
+	 	if item like '%?%' then set item =replace(item,'?','') ;set question_mark=1 ;end if;
+		open c_punct;
+		rem_punct :loop 
+		fetch c_punct into cur_punct;
+		if notfound =1 then set notfound=0; leave rem_punct; end if;
+	 	set item =replace(item,cur_punct,'');
+		end loop;
+		close c_punct;
+
 		
-		if length(item) >= 3 then
+		
+		if length(item) >= 3 and not item regexp binary '[A-Z]'then
+
 		select category into cat
 		from word_group where word=item limit 1;
 		 if cat = 9 then  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Please do not post any rude words, question has been deleted'; end if;
@@ -83,13 +97,15 @@ BEGIN
 				close c_entries;
 			end if;
 		end if;
+		
 		if trim(item)<>'' and item is not null then 
-				SET final = concat(final,concat(' ',lower(item)));
+				SET final = concat(final,concat(' ',item));
 		end if;
         SET inipos = endpos + 1;
 		
     UNTIL inipos >= maxlen 		
 	END REPEAT; 
+	if question_mark=1 then set final=concat(final,'?'); end if; 
 	return trim(final);
 END //
 DELIMITER ;
