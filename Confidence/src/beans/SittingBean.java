@@ -39,7 +39,12 @@ public class SittingBean {
 	}
 	
 	public String getStatus() {
-		return this.status;
+		if (this.status.equals("O")) {
+			return "Open";
+		} else if (this.status.equals("C")) {
+			return "Closed";
+		}
+		return "ERROR";
 	}
 	
 	public void setStatus(String status) {
