@@ -56,11 +56,12 @@ public class QuestionManager {
 		return questions;
 	}
 
-	public void submitQuestion(String question, int sittingId ,String sessionId) {
+	public String submitQuestion(String question, int sittingId ,String sessionId) {
 		Date dt = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String currentTime = sdf.format(dt);
 		
+		String resultString = "Question Successfully Posted";
 		try {
 			// Create sql statement and pass values in.
 			String sqlQuery = "insert into questions(description, sitting_id,session_id, creation_time) values (?, ?, ?, ?)";
@@ -76,10 +77,16 @@ public class QuestionManager {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			resultString = e.getMessage();
 		}
+		
+		return resultString;
 	}
 
-	public void upvoteQuestion(String questionId, String sessionId) {
+	public String upvoteQuestion(String questionId, String sessionId) {
+		
+		String resultString = "Question Successfully Up-Voted";
+		
 		try {
 			// Create sql statement and pass values in.
 			String sqlQuery = "UPDATE questions SET num_votes = num_votes + 1 ,session_id = ? WHERE que_id = ?;";
@@ -93,7 +100,10 @@ public class QuestionManager {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			resultString = e.getMessage();
 		}
+		
+		return resultString;
 	}	
 	
 	

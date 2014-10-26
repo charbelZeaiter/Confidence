@@ -20,7 +20,7 @@
         $(document).ready(function() {
         		setInterval(function() {
         			$.get("Controller?aAction=studentAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
-            }, 2000);
+            }, 1000);
         });
     </script>
     
@@ -49,6 +49,13 @@
 							<br>
 						</c:otherwise>
 					</c:choose>
+					
+					<div style="border:3px dashed pink;">
+					Sitting Id: ${sittingBean.id} <br />
+					Sitting Name: ${sittingBean.name} <br />
+					Sitting Password: ${sittingBean.pwd} <br />
+					</div>
+					
 					<form method="post" action="Controller?aAction=postque&amp;page=studentSittingInterface">
 						<input type="hidden" id="aAction" value="post_text" />
 						<div class="input-group">
@@ -75,6 +82,18 @@
 					</c:if>
 					
 					<br><br><br>
+					
+					<c:if test="${ !empty submitResultString }">
+						<div style="border:3px dashed pink;">
+						Result : ${submitResultString}
+						</div>
+					</c:if>
+					
+					<c:if test="${ !empty upvoteResultString }">
+						<div style="border:3px dashed pink;">
+						Result : ${upvoteResultString}
+						</div>
+					</c:if>
 					
 					<div id="dynamicBox" name="dynamicBox">
 						<!-- AJAX Content here -->

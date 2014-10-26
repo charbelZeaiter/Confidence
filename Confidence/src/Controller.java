@@ -204,7 +204,8 @@ public class Controller extends HttpServlet {
 					request.setAttribute("questionError",
 							"Facilitator has closed question posting.");
 				} else {
-					questionManager.submitQuestion(question, sittingId,session_id);
+					String resultString = questionManager.submitQuestion(question, sittingId,session_id);
+					request.setAttribute("submitResultString", resultString);
 				}
 				
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
@@ -214,9 +215,11 @@ public class Controller extends HttpServlet {
 			} else if (aAction.equals("upvote")) {
 
 				String que_id = request.getParameter("que_id");
-				questionManager.upvoteQuestion(que_id,session_id);
+				String resultString = questionManager.upvoteQuestion(que_id,session_id);
+				
+				request.setAttribute("upvoteResultString", resultString);
 				request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
-
+				
 				nextPage = "studentSittingInterface.jsp";
 
 			} else if (aAction.equals("submitSurvey")) {
@@ -283,6 +286,8 @@ public class Controller extends HttpServlet {
 							System.out.println("Sort: " + sort + " sittingId: " + sittingId);
 							request.setAttribute("questions", questionManager.getQuestions(sort, sittingId));
 							mySession.setAttribute("sittingId", sittingId);
+							mySession.setAttribute("sittingBean", sittingManager.getSittingsInfoDB(sittingId).get(0));
+							
 							nextPage = "studentSittingInterface.jsp";
 						}
 						

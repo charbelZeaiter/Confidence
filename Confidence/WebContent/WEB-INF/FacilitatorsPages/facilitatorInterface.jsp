@@ -25,7 +25,7 @@
         $(document).ready(function() {
         		setInterval(function() {
         			$.get("FacilitatorController?aAction=facilitatorAJAX", function(responseText) { $('#dynamicBox').html(responseText); });
-            }, 2000);
+            }, 1000);
         });
     </script>
         
@@ -61,7 +61,7 @@
 					<p><b>Sitting ID:</b> ${sittingId}</p>
 					<p><b>Sitting Password:</b> ${sittingPwd}</p>
 					
-					<c:if test="${ !empty questions }">
+					
 						<p>Sort By:</p>
 						<form method="post" action="FacilitatorController?aAction=sort">
 							<div class="col-xs-3"></div>
@@ -73,7 +73,7 @@
 							</div>
 						</form>
 						<br>
-					</c:if>
+				
 					<br>
 					<form method="post" action="FacilitatorController?aAction=canPost">
 	               		<div class="col-xs-3"></div>
